@@ -74,6 +74,12 @@ resource "aws_cognito_user_pool" "main" {
   username_attributes      = ["email"]
   auto_verified_attributes = ["email"]
 
+  # Optional MFA — users can enable TOTP in their account settings
+  mfa_configuration = "OPTIONAL"
+  software_token_mfa_configuration {
+    enabled = true
+  }
+
   password_policy {
     minimum_length    = 8
     require_lowercase = true
@@ -81,6 +87,11 @@ resource "aws_cognito_user_pool" "main" {
     require_symbols   = false
     require_uppercase = true
   }
+
+  # Note: advanced_security_mode (Threat Protection) requires the PLUS tier
+  # which costs extra. Omitted to stay on the ESSENTIALS tier / free tier.
+  # If upgraded to PLUS in the future, add:
+  #   user_pool_add_ons { advanced_security_mode = "AUDIT" }
 
   # Expose name and picture from social provider tokens
   schema {
@@ -149,6 +160,9 @@ resource "aws_cognito_user_pool_client" "main" {
   # No client secret — native apps cannot keep secrets secure
   generate_secret = false
 
+  # Prevent user enumeration — always returns generic error messages
+  prevent_user_existence_errors = "ENABLED"
+
   explicit_auth_flows = [
     "ALLOW_USER_SRP_AUTH",
     "ALLOW_REFRESH_TOKEN_AUTH",
@@ -161,15 +175,15 @@ resource "aws_cognito_user_pool_client" "main" {
   ] : ["COGNITO"]
 
   # Windows: localhost:7890 (port 80 requires admin on Windows; 7890 does not)
-  # Android: custom URI scheme
+  # Android: app-specific custom URI scheme (not generic "myapp")
   callback_urls = [
     "http://localhost:7890",
-    "myapp://callback",
+    "selimcelemsaaapp://callback",
   ]
 
   logout_urls = [
     "http://localhost:7890",
-    "myapp://logout",
+    "selimcelemsaaapp://logout",
   ]
 
   allowed_oauth_flows                  = ["code"]
@@ -190,35 +204,100 @@ resource "aws_cognito_user_pool_client" "main" {
   depends_on = [aws_cognito_identity_provider.google]
 }
 
-# ─── IAM Policy — Scoped S3 access ───────────────────────────────────────────
-# Attached to roles or users that need to read/write app data in this bucket.
-# The app uses Cognito Identity Pools to get temporary credentials with this policy.
+# ─── Cognito Identity Pool ─────────────────────────────────────────────────
+# Exchanges Cognito ID tokens for temporary, per-user AWS credentials.
+# This is the only way authenticated mobile users get S3 access.
 
-resource "aws_iam_policy" "s3_app_access" {
-  name        = "${var.project_name}-s3-access-${local.suffix}"
-  description = "Scoped read/write access to the SAA-C03 practice app S3 bucket only"
+resource "aws_cognito_identity_pool" "main" {
+  identity_pool_name               = "${var.project_name}-identity-${local.suffix}"
+  allow_unauthenticated_identities = false
+
+  cognito_identity_providers {
+    client_id               = aws_cognito_user_pool_client.main.id
+    provider_name           = aws_cognito_user_pool.main.endpoint
+    server_side_token_check = true
+  }
+
+  tags = local.tags
+}
+
+# ─── IAM Role — Authenticated Cognito users ──────────────────────────────────
+
+resource "aws_iam_role" "cognito_authenticated" {
+  name = "${var.project_name}-auth-role-${local.suffix}"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Principal = {
+          Federated = "cognito-identity.amazonaws.com"
+        }
+        Action = "sts:AssumeRoleWithWebIdentity"
+        Condition = {
+          StringEquals = {
+            "cognito-identity.amazonaws.com:aud" = aws_cognito_identity_pool.main.id
+          }
+          "ForAnyValue:StringLike" = {
+            "cognito-identity.amazonaws.com:amr" = "authenticated"
+          }
+        }
+      }
+    ]
+  })
+
+  tags = local.tags
+}
+
+# ─── Per-user S3 access (scoped to scores/{identity-id}/*) ──────────────────
+# Each user can ONLY read/write their own scores folder.
+# The ${cognito-identity.amazonaws.com:sub} variable resolves to the
+# Cognito Identity Pool identity ID at request time.
+
+resource "aws_iam_role_policy" "cognito_s3_per_user" {
+  name = "${var.project_name}-s3-per-user"
+  role = aws_iam_role.cognito_authenticated.id
 
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
       {
-        Sid      = "ListBucket"
-        Effect   = "Allow"
-        Action   = ["s3:ListBucket"]
-        Resource = [aws_s3_bucket.main.arn]
-      },
-      {
-        Sid    = "ReadWriteObjects"
+        Sid    = "AllowPerUserReadWrite"
         Effect = "Allow"
         Action = [
           "s3:GetObject",
           "s3:PutObject",
           "s3:DeleteObject",
         ]
-        Resource = ["${aws_s3_bucket.main.arn}/*"]
+        Resource = "${aws_s3_bucket.main.arn}/scores/$${cognito-identity.amazonaws.com:sub}/*"
+      },
+      {
+        Sid      = "AllowListBucketScoped"
+        Effect   = "Allow"
+        Action   = ["s3:ListBucket"]
+        Resource = aws_s3_bucket.main.arn
+        Condition = {
+          StringLike = {
+            "s3:prefix" = "scores/$${cognito-identity.amazonaws.com:sub}/*"
+          }
+        }
+      },
+      {
+        Sid      = "AllowReadQuestions"
+        Effect   = "Allow"
+        Action   = ["s3:GetObject"]
+        Resource = "${aws_s3_bucket.main.arn}/questions.json"
       },
     ]
   })
+}
 
-  tags = local.tags
+# ─── Attach role to Identity Pool ────────────────────────────────────────────
+
+resource "aws_cognito_identity_pool_roles_attachment" "main" {
+  identity_pool_id = aws_cognito_identity_pool.main.id
+  roles = {
+    authenticated = aws_iam_role.cognito_authenticated.arn
+  }
 }

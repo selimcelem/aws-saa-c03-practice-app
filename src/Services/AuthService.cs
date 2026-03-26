@@ -61,6 +61,17 @@ public class AuthService
         return JsonSerializer.Deserialize<TokenData>(json!)!.AccessToken;
     }
 
+    public async Task<string?> GetIdTokenAsync()
+    {
+        var json = await SecureStorage.Default.GetAsync(TokenStorageKey);
+        if (string.IsNullOrEmpty(json)) return null;
+        var tokens = JsonSerializer.Deserialize<TokenData>(json)!;
+        if (tokens.ExpiresAt > DateTimeOffset.UtcNow.AddMinutes(5)) return tokens.IdToken;
+        if (!await RefreshAsync(tokens.RefreshToken)) return null;
+        json = await SecureStorage.Default.GetAsync(TokenStorageKey);
+        return JsonSerializer.Deserialize<TokenData>(json!)!.IdToken;
+    }
+
     public async Task<UserInfo?> GetUserInfoAsync()
     {
         var token = await GetAccessTokenAsync();
@@ -84,7 +95,13 @@ public class AuthService
         var redirectUri = _settings.Settings.OAuthCallbackAndroid;
         var authUrl = BuildAuthUrl(challenge, redirectUri);
         _androidCallbackTcs = new TaskCompletionSource<Uri?>();
-        await Launcher.Default.OpenAsync(authUrl);
+        // Use Chrome Custom Tabs for a cleaner in-app browser experience
+        // (minimal toolbar instead of full browser with prominent URL bar)
+        var customTabsIntent = new AndroidX.Browser.CustomTabs.CustomTabsIntent.Builder()
+            .SetShowTitle(true)
+            .Build();
+        customTabsIntent.LaunchUrl(Platform.CurrentActivity!,
+            Android.Net.Uri.Parse(authUrl)!);
         Uri? callbackUri;
         try
         {

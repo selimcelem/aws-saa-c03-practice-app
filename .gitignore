@@ -60,3 +60,6 @@ nuget.config.local
 # AWS credentials (extra safety)
 credentials
 .aws/
+
+# Claude Code local config
+.claude/

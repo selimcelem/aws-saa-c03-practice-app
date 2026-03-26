@@ -47,9 +47,7 @@ public partial class ResultsViewModel : BaseViewModel
         IsBusy = true;
         try
         {
-            // Load session
-            var sessions = await _db.GetAllSessionsAsync("");  // temp load all
-            var session = sessions.FirstOrDefault(s => s.Id == id);
+            var session = await _db.GetSessionByIdAsync(id);
             if (session is null) return;
 
             _result = await _db.BuildResultAsync(session);

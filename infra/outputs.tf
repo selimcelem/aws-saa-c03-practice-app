@@ -31,6 +31,11 @@ output "region" {
   value       = var.region
 }
 
+output "cognito_identity_pool_id" {
+  description = "Cognito Identity Pool ID — goes into CognitoIdentityPoolId in appsettings.json"
+  value       = aws_cognito_identity_pool.main.id
+}
+
 output "google_idp_configured" {
   description = "Whether the Google identity provider has been wired in"
   value       = length(aws_cognito_identity_provider.google) > 0

@@ -35,27 +35,36 @@
                 </Border>
 
                 <!-- Option buttons — BackgroundColor driven by ViewModel Color properties -->
+                <!-- Answer options — using Border+Label for reliable text wrapping -->
                 <VerticalStackLayout Spacing="10">
-                    <Button Text="{Binding CurrentQuestion.Options[0]}"
-                            Command="{Binding SelectAnswerCommand}" CommandParameter="0"
-                            Style="{StaticResource AnswerButtonStyle}"
-                            BackgroundColor="{Binding Opt0Colour}"
-                            IsEnabled="{Binding AnswerRevealed, Converter={StaticResource InvertBool}}" />
-                    <Button Text="{Binding CurrentQuestion.Options[1]}"
-                            Command="{Binding SelectAnswerCommand}" CommandParameter="1"
-                            Style="{StaticResource AnswerButtonStyle}"
-                            BackgroundColor="{Binding Opt1Colour}"
-                            IsEnabled="{Binding AnswerRevealed, Converter={StaticResource InvertBool}}" />
-                    <Button Text="{Binding CurrentQuestion.Options[2]}"
-                            Command="{Binding SelectAnswerCommand}" CommandParameter="2"
-                            Style="{StaticResource AnswerButtonStyle}"
-                            BackgroundColor="{Binding Opt2Colour}"
-                            IsEnabled="{Binding AnswerRevealed, Converter={StaticResource InvertBool}}" />
-                    <Button Text="{Binding CurrentQuestion.Options[3]}"
-                            Command="{Binding SelectAnswerCommand}" CommandParameter="3"
-                            Style="{StaticResource AnswerButtonStyle}"
-                            BackgroundColor="{Binding Opt3Colour}"
-                            IsEnabled="{Binding AnswerRevealed, Converter={StaticResource InvertBool}}" />
+                    <Border Style="{StaticResource AnswerOptionStyle}"
+                            BackgroundColor="{Binding Opt0Colour}">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SelectAnswerCommand}" CommandParameter="0" />
+                        </Border.GestureRecognizers>
+                        <Label Text="{Binding Option0Text}" Style="{StaticResource AnswerLabelStyle}" />
+                    </Border>
+                    <Border Style="{StaticResource AnswerOptionStyle}"
+                            BackgroundColor="{Binding Opt1Colour}">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SelectAnswerCommand}" CommandParameter="1" />
+                        </Border.GestureRecognizers>
+                        <Label Text="{Binding Option1Text}" Style="{StaticResource AnswerLabelStyle}" />
+                    </Border>
+                    <Border Style="{StaticResource AnswerOptionStyle}"
+                            BackgroundColor="{Binding Opt2Colour}">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SelectAnswerCommand}" CommandParameter="2" />
+                        </Border.GestureRecognizers>
+                        <Label Text="{Binding Option2Text}" Style="{StaticResource AnswerLabelStyle}" />
+                    </Border>
+                    <Border Style="{StaticResource AnswerOptionStyle}"
+                            BackgroundColor="{Binding Opt3Colour}">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SelectAnswerCommand}" CommandParameter="3" />
+                        </Border.GestureRecognizers>
+                        <Label Text="{Binding Option3Text}" Style="{StaticResource AnswerLabelStyle}" />
+                    </Border>
                 </VerticalStackLayout>
 
                 <!-- Answer reveal panel -->

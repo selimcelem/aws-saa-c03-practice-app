@@ -7,10 +7,11 @@ public class AppSettings
     public string AwsRegion { get; set; } = "eu-west-1";
     public string CognitoUserPoolId { get; set; } = "";
     public string CognitoClientId { get; set; } = "";
+    public string CognitoIdentityPoolId { get; set; } = "";
     public string CognitoDomain { get; set; } = "";
     public string S3BucketName { get; set; } = "";
     public string OAuthCallbackWindows { get; set; } = "http://localhost:7890";
-    public string OAuthCallbackAndroid { get; set; } = "myapp://callback";
+    public string OAuthCallbackAndroid { get; set; } = "selimcelemsaaapp://callback";
 }
 
 public class SettingsService

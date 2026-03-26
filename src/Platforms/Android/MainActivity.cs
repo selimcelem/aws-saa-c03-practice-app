@@ -12,18 +12,18 @@ namespace AwsSaaC03Practice;
                            ConfigChanges.UiMode | ConfigChanges.ScreenLayout |
                            ConfigChanges.SmallestScreenSize | ConfigChanges.Density,
     LaunchMode = LaunchMode.SingleTask)]
-// Catch the myapp://callback URI from the system browser after OAuth
+// Catch the selimcelemsaaapp://callback URI from Custom Tabs after OAuth
 [IntentFilter(
     new[] { Intent.ActionView },
     Categories = new[] { Intent.CategoryDefault, Intent.CategoryBrowsable },
-    DataScheme = "myapp",
+    DataScheme = "selimcelemsaaapp",
     DataHost = "callback")]
 public class MainActivity : MauiAppCompatActivity
 {
     protected override void OnNewIntent(Intent? intent)
     {
         base.OnNewIntent(intent);
-        if (intent?.Data is not null && intent.Data.Scheme == "myapp")
+        if (intent?.Data is not null && intent.Data.Scheme == "selimcelemsaaapp")
         {
             AuthService.HandleAndroidCallback(new Uri(intent.DataString!));
         }

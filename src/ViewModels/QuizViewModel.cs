@@ -20,6 +20,8 @@ public partial class QuizViewModel : BaseViewModel, IDisposable
     private DateTime _questionStart;
     private IDispatcherTimer? _timer;
     private QuizSession? _currentSession;
+    private int[] _shuffleMap = new int[4]; // maps display index → original option index
+    private int _shuffledCorrectIndex;
 
     // ── Navigation params ───────────────────────────────────────────────────
     [ObservableProperty] private string _modeParam = "Random";
@@ -45,6 +47,12 @@ public partial class QuizViewModel : BaseViewModel, IDisposable
     [ObservableProperty] private Color _opt1Colour = Color.FromArgb("#1c2128");
     [ObservableProperty] private Color _opt2Colour = Color.FromArgb("#1c2128");
     [ObservableProperty] private Color _opt3Colour = Color.FromArgb("#1c2128");
+
+    // Shuffled option texts — display order differs from JSON order each time
+    [ObservableProperty] private string _option0Text = "";
+    [ObservableProperty] private string _option1Text = "";
+    [ObservableProperty] private string _option2Text = "";
+    [ObservableProperty] private string _option3Text = "";
 
     private QuizMode _mode;
     private TimeSpan _remaining;
@@ -90,8 +98,20 @@ public partial class QuizViewModel : BaseViewModel, IDisposable
 
     private void ShowQuestion(int index)
     {
+        var q = _deck[index];
         CurrentIndex = index;
-        CurrentQuestion = _deck[index];
+        CurrentQuestion = q;
+
+        // Shuffle display order of options so the correct answer isn't always in the same position
+        _shuffleMap = Enumerable.Range(0, q.Options.Count)
+            .OrderBy(_ => Random.Shared.Next()).ToArray();
+        _shuffledCorrectIndex = Array.IndexOf(_shuffleMap, q.Correct);
+
+        Option0Text = q.Options[_shuffleMap[0]];
+        Option1Text = q.Options[_shuffleMap[1]];
+        Option2Text = q.Options[_shuffleMap[2]];
+        Option3Text = q.Options[_shuffleMap[3]];
+
         SelectedOptionIndex = null;
         AnswerRevealed = false;
         ResetOptionColours();
@@ -108,17 +128,21 @@ public partial class QuizViewModel : BaseViewModel, IDisposable
         SelectedOptionIndex = int.Parse(indexStr);
         AnswerRevealed = true;
 
-        var correct = CurrentQuestion.Correct;
-        SetOptionColour(SelectedOptionIndex.Value, correct);
+        // Highlight using shuffled positions
+        SetOptionColour(SelectedOptionIndex.Value, _shuffledCorrectIndex);
+
+        // Map display indices back to original JSON indices for recording
+        var originalSelected = _shuffleMap[SelectedOptionIndex.Value];
+        var originalCorrect  = CurrentQuestion.Correct;
 
         _answers.Add(new AnswerRecord
         {
             QuestionId     = CurrentQuestion.Id,
             Domain         = CurrentQuestion.Domain,
             Category       = CurrentQuestion.Category,
-            SelectedOption = SelectedOptionIndex.Value,
-            CorrectOption  = correct,
-            IsCorrect      = SelectedOptionIndex.Value == correct,
+            SelectedOption = originalSelected,
+            CorrectOption  = originalCorrect,
+            IsCorrect      = originalSelected == originalCorrect,
             SecondsSpent   = (DateTime.Now - _questionStart).TotalSeconds,
         });
     }

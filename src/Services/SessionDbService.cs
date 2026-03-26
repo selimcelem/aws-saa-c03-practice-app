@@ -105,6 +105,14 @@ public class SessionDbService
         return streak;
     }
 
+    public async Task<QuizSession?> GetSessionByIdAsync(int id)
+    {
+        var db = await GetDb();
+        return await db.Table<QuizSession>()
+            .Where(s => s.Id == id)
+            .FirstOrDefaultAsync();
+    }
+
     public async Task<QuizSession?> GetLastSessionAsync(string userSub)
     {
         var db = await GetDb();

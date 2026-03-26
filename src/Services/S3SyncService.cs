@@ -1,7 +1,6 @@
-using System.Text;
 using System.Text.Json;
 using Amazon;
-using Amazon.Runtime;
+using Amazon.CognitoIdentity;
 using Amazon.S3;
 using Amazon.S3.Model;
 using AwsSaaC03Practice.Models;
@@ -9,34 +8,58 @@ using AwsSaaC03Practice.Models;
 namespace AwsSaaC03Practice.Services;
 
 /// <summary>
-/// Backs up session history to S3 as JSON under scores/{userSub}/sessions.json.
-/// Uses the default AWS credential chain (~/.aws/credentials or environment vars).
+/// Backs up session history to S3 under scores/{identityId}/sessions.json.
+/// Uses Cognito Identity Pool to get temporary, per-user AWS credentials.
+/// The IAM policy scopes each user to their own folder only.
 /// </summary>
 public class S3SyncService
 {
     private readonly SettingsService _settings;
+    private readonly AuthService _auth;
     private IAmazonS3? _s3;
+    private string? _identityId;
 
-    public S3SyncService(SettingsService settings) => _settings = settings;
+    public S3SyncService(SettingsService settings, AuthService auth)
+    {
+        _settings = settings;
+        _auth = auth;
+    }
 
     public string SyncStatus { get; private set; } = "Not synced";
 
-    private IAmazonS3 GetClient()
+    private async Task<(IAmazonS3 client, string identityId)?> GetAuthenticatedClientAsync()
     {
-        if (_s3 is not null) return _s3;
-        var region = RegionEndpoint.GetBySystemName(_settings.Settings.AwsRegion);
-        _s3 = new AmazonS3Client(new EnvironmentVariablesAWSCredentials(), region);
-        return _s3;
+        if (_s3 is not null && _identityId is not null)
+            return (_s3, _identityId);
+
+        var idToken = await _auth.GetIdTokenAsync();
+        if (string.IsNullOrEmpty(idToken)) return null;
+
+        var s = _settings.Settings;
+        var region = RegionEndpoint.GetBySystemName(s.AwsRegion);
+        var providerName = $"cognito-idp.{s.AwsRegion}.amazonaws.com/{s.CognitoUserPoolId}";
+
+        var credentials = new CognitoAWSCredentials(s.CognitoIdentityPoolId, region);
+        credentials.AddLogin(providerName, idToken);
+
+        // Resolve the identity ID (used as S3 key prefix)
+        _identityId = await credentials.GetIdentityIdAsync();
+        _s3 = new AmazonS3Client(credentials, region);
+        return (_s3, _identityId);
     }
 
     public async Task UploadSessionsAsync(string userSub, List<QuizSession> sessions)
     {
         try
         {
-            SyncStatus = "Syncing…";
+            SyncStatus = "Syncing\u2026";
+            var result = await GetAuthenticatedClientAsync();
+            if (result is null) { SyncStatus = "Sync skipped (not authenticated)"; return; }
+
+            var (client, identityId) = result.Value;
             var json = JsonSerializer.Serialize(sessions,
                 new JsonSerializerOptions { WriteIndented = false });
-            var key = $"scores/{userSub}/sessions.json";
+            var key = $"scores/{identityId}/sessions.json";
 
             var req = new PutObjectRequest
             {
@@ -45,7 +68,7 @@ public class S3SyncService
                 ContentBody = json,
                 ContentType = "application/json",
             };
-            await GetClient().PutObjectAsync(req);
+            await client.PutObjectAsync(req);
             SyncStatus = $"Synced {DateTime.Now:HH:mm}";
         }
         catch (Exception ex)
@@ -58,13 +81,17 @@ public class S3SyncService
     {
         try
         {
-            var key = $"scores/{userSub}/sessions.json";
+            var result = await GetAuthenticatedClientAsync();
+            if (result is null) return null;
+
+            var (client, identityId) = result.Value;
+            var key = $"scores/{identityId}/sessions.json";
             var req = new GetObjectRequest
             {
                 BucketName = _settings.Settings.S3BucketName,
                 Key        = key,
             };
-            using var resp = await GetClient().GetObjectAsync(req);
+            using var resp = await client.GetObjectAsync(req);
             using var reader = new StreamReader(resp.ResponseStream);
             var json = await reader.ReadToEndAsync();
             return JsonSerializer.Deserialize<List<QuizSession>>(json);
@@ -77,5 +104,13 @@ public class S3SyncService
         {
             return null;
         }
+    }
+
+    /// <summary>Clears cached credentials (call on sign-out).</summary>
+    public void ClearCache()
+    {
+        _s3?.Dispose();
+        _s3 = null;
+        _identityId = null;
     }
 }

@@ -2,6 +2,107 @@
 
 ---
 
+## Security Hardening for Play Store
+**Date:** 2026-03-26
+**Status:** Complete
+
+### Changes made
+
+#### 1. APK Secrets Exposure — Audited, no action needed
+All values in `appsettings.json` are configuration identifiers, not secrets:
+- `CognitoClientId` — public by AWS design (Cognito public clients have no client secret)
+- `CognitoUserPoolId`, `CognitoDomain`, `S3BucketName` — infrastructure identifiers, not credentials
+- `AwsRegion`, `OAuthCallback*` — public configuration values
+- Google OAuth client ID/secret — exist only server-side in Terraform (`sensitive = true`)
+- AWS SDK credentials — not in the APK; obtained at runtime via Cognito Identity Pool
+
+#### 2. S3 Access Hardening — Per-user scoping via Identity Pool
+**Before:** The IAM policy `s3_app_access` granted read/write to ALL objects in the S3 bucket. The app used `EnvironmentVariablesAWSCredentials` — unusable on mobile devices.
+
+**After:**
+- Added **Cognito Identity Pool** (`aws_cognito_identity_pool.main`) that exchanges ID tokens for temporary AWS credentials
+- Created **per-user IAM role** (`aws_iam_role.cognito_authenticated`) with inline policy scoped to `scores/${cognito-identity.amazonaws.com:sub}/*`
+- Each user can ONLY access their own folder — no cross-user data access possible
+- Read-only access to `questions.json` for all authenticated users
+- `S3SyncService` now uses `CognitoAWSCredentials` instead of `EnvironmentVariablesAWSCredentials`
+- Added `AWSSDK.CognitoIdentity` NuGet package
+- Added `CognitoIdentityPoolId` to `AppSettings` and `appsettings.example.json`
+- Removed the old broad `aws_iam_policy.s3_app_access` resource
+
+#### 3. Cognito Hardening
+- **MFA:** Enabled as OPTIONAL (`mfa_configuration = "OPTIONAL"`, `software_token_mfa_configuration { enabled = true }`) — users can enable TOTP in their account
+- **Token expiry:** Already correct: 1h access token, 1h ID token, 30d refresh token
+- **Anti-enumeration:** Added `prevent_user_existence_errors = "ENABLED"` on the App Client — prevents attackers from discovering which emails have accounts
+- **Advanced security:** `user_pool_add_ons { advanced_security_mode = "AUDIT" }` was NOT applied — requires Cognito PLUS tier (additional cost). Documented as a future upgrade option in `main.tf`.
+- **Rate limiting:** Built into Cognito service by default; no additional configuration needed
+
+#### 4. Android Manifest Permissions — Audited, minimal changes
+- Kept `INTERNET` and `ACCESS_NETWORK_STATE` (required by MAUI and HTTP calls)
+- Set `android:allowBackup="false"` — prevents `adb backup` extraction of app data
+- Set `android:usesCleartextTraffic="false"` — blocks all non-HTTPS traffic
+- Removed `BrowserTabActivity` (MSAL artifact, unused)
+- Removed `<queries>` entry for `http` scheme (only `https` retained)
+- Added `android:networkSecurityConfig` reference for cert pinning
+
+#### 5. OAuth Callback URI — Renamed to app-specific scheme
+Changed `myapp://callback` → `selimcelemsaaapp://callback` everywhere:
+- `MainActivity.cs` — `IntentFilter DataScheme` and scheme check
+- `SettingsService.cs` — default `OAuthCallbackAndroid` value
+- `appsettings.example.json`, `.env.example`
+- Terraform `aws_cognito_user_pool_client.main` — `callback_urls` and `logout_urls`
+
+This prevents other apps from intercepting the OAuth callback via the generic `myapp://` scheme.
+
+#### 6. Certificate Pinning — Android network security config
+Created `Platforms/Android/Resources/xml/network_security_config.xml`:
+- Pins `amazonaws.com` and `amazoncognito.com` (including subdomains) to Amazon Root CA 1-4 and Starfield Services Root CA G2
+- Pin set expires `2027-01-01` — must be reviewed before this date
+- Blocks all cleartext traffic (`cleartextTrafficPermitted="false"`)
+- Exception for `localhost` (Windows OAuth callback during development)
+
+**Note:** This is Android-only (OS-level enforcement). Windows currently relies on the default .NET TLS validation chain. For production Windows release, consider adding `HttpClientHandler.ServerCertificateCustomValidationCallback` pinning.
+
+#### 7. R8 / ProGuard Obfuscation — Enabled for Release builds
+Added to `.csproj` for Android Release configuration:
+- `AndroidLinkMode=SdkOnly` — IL linker removes unused SDK code
+- `RunAOTCompilation=true` — ahead-of-time compilation
+- `AndroidEnableProfiledAot=true` — profiled AOT for faster startup
+- `PublishTrimmed=true` — tree-shakes unused code
+- `ProguardConfiguration=Platforms\Android\proguard-rules.pro` — keeps reflection targets: AWS SDK, SQLite models, JSON serialisation, LiveCharts, SkiaSharp
+
+#### 8. Privacy Policy — PRIVACY_POLICY.md created
+Covers: data collected (email, display name, quiz scores), storage location (AWS S3 eu-west-1), no data selling/sharing, data retention, children's privacy. Contact email is a placeholder — **must be updated before Play Store submission**.
+
+#### 9. Bug Fixes (also in this pass)
+- **Crash on exam completion:** `ResultsViewModel` was loading sessions filtered by `UserSub == ""`, missing logged-in users' sessions. Fixed: added `GetSessionByIdAsync(int id)` to `SessionDbService`, updated `ResultsViewModel` to use it.
+- **Answer always index 1:** Options displayed in JSON order (81/100 had `correct: 1`). Fixed: `QuizViewModel.ShowQuestion()` now shuffles option display order and maps answers back to original indices.
+- **Ugly OAuth URL on Android:** Switched from `Launcher.OpenAsync()` to Chrome Custom Tabs (`AndroidX.Browser.CustomTabs.CustomTabsIntent`) for a cleaner in-app toolbar.
+- **Answer button text truncation:** Replaced `Button` elements with `Border` + `Label` + `TapGestureRecognizer` using `LineBreakMode="WordWrap"` for reliable text wrapping.
+- **Global crash logging:** Added `AppDomain.UnhandledException` and `TaskScheduler.UnobservedTaskException` handlers that write to `{AppDataDirectory}/crash.log`.
+
+### Terraform apply result
+```
+Apply complete! Resources: 4 added, 1 changed, 0 destroyed.
+  + aws_cognito_identity_pool.main
+  + aws_iam_role.cognito_authenticated
+  + aws_iam_role_policy.cognito_s3_per_user
+  + aws_cognito_identity_pool_roles_attachment.main
+  ~ aws_cognito_user_pool_client.main (callback URIs, prevent_user_existence_errors)
+  - aws_iam_policy.s3_app_access (replaced by per-user role policy)
+```
+
+### Still needed before Play Store submission
+- [ ] Replace `[your-email@example.com]` in `PRIVACY_POLICY.md` with a real contact email
+- [ ] Host the privacy policy at a public URL and add it to the Play Console listing
+- [ ] Generate a release signing keystore and configure it in the csproj
+- [ ] Update `CognitoIdentityPoolId` in `appsettings.json` with the Terraform output value (`eu-west-1:eb8572ad-8d4e-4014-8e8d-09bde1e1ed92`)
+- [ ] Run a full Android release build and test the APK on a physical device
+- [ ] Review certificate pin expiry (2027-01-01) and set a calendar reminder to update
+- [ ] Consider upgrading to Cognito PLUS tier for Threat Protection if budget allows
+- [ ] Add Windows-side certificate pinning for the AWS SDK HttpClient
+
+---
+
 ## [Phase 1] — Question Bank (100 Questions)
 **Date:** 2026-03-26
 **Status:** Complete
