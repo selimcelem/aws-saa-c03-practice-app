@@ -129,9 +129,9 @@ aws-saa-c03-practice-app/
 
 ---
 
-## Phase 6 — 1000 Questions
+## Upcoming: 1000-Question Expansion
 
-The question bank will be expanded to 1000 questions maintaining domain proportions. See `docs/build-log.md` for progress.
+The question bank will be expanded from 100 to 1000 questions, maintaining SAA-C03 domain proportions. See `docs/build-log.md` for progress.
 
 ---
 
