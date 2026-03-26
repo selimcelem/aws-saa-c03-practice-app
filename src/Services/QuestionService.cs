@@ -19,6 +19,17 @@ public class QuestionService
             _allQuestions = await JsonSerializer.DeserializeAsync<List<Question>>(stream,
                 new JsonSerializerOptions { PropertyNameCaseInsensitive = true })
                 ?? throw new Exception("Failed to parse questions.json");
+
+            // Warn about questions where correct answer is significantly longer than distractors
+            foreach (var q in _allQuestions)
+            {
+                if (q.Options.Count != 4 || q.Correct < 0 || q.Correct >= q.Options.Count) continue;
+                var correctLen = q.Options[q.Correct].Length;
+                var otherLens = q.Options.Where((_, i) => i != q.Correct).Select(o => o.Length).ToList();
+                var avgOther = otherLens.Average();
+                if (avgOther > 0 && correctLen > avgOther * 1.4)
+                    Console.WriteLine($"[Questions] Length bias in {q.Id}: correct={correctLen}ch, avg_other={avgOther:F0}ch ({correctLen / avgOther:F1}x)");
+            }
         }
         finally { _lock.Release(); }
     }

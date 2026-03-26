@@ -116,8 +116,11 @@ public class AuthService
 #else
         var redirectUri = _settings.Settings.OAuthCallbackWindows;
         var authUrl = BuildAuthUrl(challenge, redirectUri);
+        // Start listener BEFORE opening browser to avoid race condition
+        // where a fast OAuth flow redirects before the listener is ready
+        var codeTask = WaitForCodeWindowsAsync(CancellationToken.None);
         await Launcher.Default.OpenAsync(authUrl);
-        var code = await WaitForCodeWindowsAsync(CancellationToken.None);
+        var code = await codeTask;
 #endif
         if (string.IsNullOrEmpty(code)) return false;
         return await ExchangeCodeAsync(code, verifier, redirectUri);
@@ -158,13 +161,20 @@ public class AuthService
             var ctx = ctxTask.Result;
             var code = ctx.Request.QueryString["code"];
 
-            // Respond to browser so the tab can show a completion message
+            // Respond to browser with a styled success page
             var html = Encoding.UTF8.GetBytes(
-                "<html><head><title>Auth complete</title></head>" +
-                "<body style='background:#0d1117;color:#c9d1d9;font-family:monospace;" +
-                "display:flex;align-items:center;justify-content:center;height:100vh;margin:0'>" +
-                "<p>Authentication complete. You may close this tab.</p>" +
-                "<script>setTimeout(()=>window.close(),1500)</script></body></html>");
+                """
+                <!DOCTYPE html>
+                <html><head><meta charset="utf-8"><title>Login Successful</title></head>
+                <body style="background:#0d1117;color:#c9d1d9;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;flex-direction:column">
+                <div style="text-align:center;padding:40px;border:1px solid #30363d;border-radius:16px;background:#161b22;max-width:400px">
+                <div style="font-size:48px;margin-bottom:16px">&#10003;</div>
+                <h1 style="font-size:22px;margin:0 0 8px 0;color:#3fb950">Login Successful!</h1>
+                <p style="font-size:14px;color:#8b949e;margin:0">You can close this tab and return to the app.</p>
+                </div>
+                <script>setTimeout(()=>window.close(),2000)</script>
+                </body></html>
+                """);
 
             ctx.Response.ContentType = "text/html";
             ctx.Response.ContentLength64 = html.Length;
