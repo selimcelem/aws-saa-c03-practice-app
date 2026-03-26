@@ -52,3 +52,33 @@ node -e "require('./src/Data/questions.json'); console.log('Valid')"
 Phase 2 — Initialise local Git repo, create `.gitignore` and `.env.example`, make initial commit, and push to GitHub.
 
 ---
+
+## [Phase 2] — Repo and Git Setup
+**Date:** 2026-03-26
+**Status:** Complete (pending GitHub remote)
+
+### What was done
+- Initialised a local git repository in `aws-saa-c03-practice-app/`
+- Created `.gitignore` covering: `.env`, `*.env`, `terraform.tfvars`, `*.tfstate`, `*.tfstate.backup`, `.terraform/`, `bin/`, `obj/`, `*.user`, `.vs/`, `appsettings.local.json`, Android keystores, SQLite databases
+- Created `.env.example` with placeholder keys for: `AWS_REGION`, `COGNITO_USER_POOL_ID`, `COGNITO_CLIENT_ID`, `COGNITO_DOMAIN`, `S3_BUCKET_NAME`, `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `OAUTH_CALLBACK_WINDOWS`, `OAUTH_CALLBACK_ANDROID`
+- Created `README.md` with full prerequisites, setup, destroy, and rebuild instructions
+- Made initial commit with all Phase 1 + Phase 2 files:
+  ```
+  d4b402a Phase 1 & 2: Add 100-question SAA-C03 bank, repo structure, and gitignore
+  ```
+
+### Why
+Git history gives a complete audit trail. The `.gitignore` is the primary security control preventing accidental secret commits. `.env.example` documents the contract between the repo and the runtime environment without exposing real values.
+
+### How to reproduce on a new machine
+```bash
+# On a fresh clone, there is nothing to do — these files are in the repo.
+# To verify .gitignore is protecting secrets:
+git check-ignore -v .env                    # Should return: .gitignore:3:.env
+git check-ignore -v infra/terraform.tfvars  # Should return: .gitignore:7:terraform.tfvars
+```
+
+### What's next
+ACTION REQUIRED: Push to GitHub. See instructions below, then Phase 3 — Terraform infrastructure.
+
+---
