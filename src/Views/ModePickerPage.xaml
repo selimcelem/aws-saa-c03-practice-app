@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="AwsSaaC03Practice.Views.ModePickerPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Grid RowDefinitions="Auto,*,Auto" Padding="20,16">
+
+        <VerticalStackLayout Grid.Row="0" Spacing="4" Margin="0,0,0,24">
+            <Label Text="Choose a Mode" Style="{StaticResource HeadingStyle}" />
+            <Label Text="Select how you want to study today."
+                   Style="{StaticResource SubheadingStyle}" />
+        </VerticalStackLayout>
+
+        <VerticalStackLayout Grid.Row="1" Spacing="14">
+
+            <!-- Random -->
+            <Border Style="{StaticResource CardStyle}">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding SelectModeCommand}" CommandParameter="Random" />
+                </Border.GestureRecognizers>
+                <Grid ColumnDefinitions="Auto,*,Auto">
+                    <Label Text="∞" FontSize="32" TextColor="{StaticResource Accent}"
+                           VerticalOptions="Center" Margin="0,0,16,0" />
+                    <VerticalStackLayout Grid.Column="1" Spacing="2">
+                        <Label Text="Random" FontAttributes="Bold" FontSize="17" />
+                        <Label Text="Endless mode — stop anytime and see results."
+                               Style="{StaticResource SubheadingStyle}" />
+                    </VerticalStackLayout>
+                    <Label Grid.Column="2" Text="›" FontSize="22"
+                           TextColor="{StaticResource TextSecondary}" VerticalOptions="Center" />
+                </Grid>
+            </Border>
+
+            <!-- Exam Simulation -->
+            <Border Style="{StaticResource CardStyle}">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding SelectModeCommand}" CommandParameter="ExamSim" />
+                </Border.GestureRecognizers>
+                <Grid ColumnDefinitions="Auto,*,Auto">
+                    <Label Text="⏱" FontSize="32" TextColor="{StaticResource Warning}"
+                           VerticalOptions="Center" Margin="0,0,16,0" />
+                    <VerticalStackLayout Grid.Column="1" Spacing="2">
+                        <Label Text="Exam Simulation" FontAttributes="Bold" FontSize="17" />
+                        <Label Text="65 questions · 130-minute countdown · SAA-C03 style."
+                               Style="{StaticResource SubheadingStyle}" />
+                    </VerticalStackLayout>
+                    <Label Grid.Column="2" Text="›" FontSize="22"
+                           TextColor="{StaticResource TextSecondary}" VerticalOptions="Center" />
+                </Grid>
+            </Border>
+
+            <!-- Quick 30 -->
+            <Border Style="{StaticResource CardStyle}">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding SelectModeCommand}" CommandParameter="Quick30" />
+                </Border.GestureRecognizers>
+                <Grid ColumnDefinitions="Auto,*,Auto">
+                    <Label Text="30" FontSize="28" FontAttributes="Bold" TextColor="{StaticResource Success}"
+                           VerticalOptions="Center" Margin="0,0,16,0" />
+                    <VerticalStackLayout Grid.Column="1" Spacing="2">
+                        <Label Text="Quick 30" FontAttributes="Bold" FontSize="17" />
+                        <Label Text="30 questions · No timer · Great for a focused session."
+                               Style="{StaticResource SubheadingStyle}" />
+                    </VerticalStackLayout>
+                    <Label Grid.Column="2" Text="›" FontSize="22"
+                           TextColor="{StaticResource TextSecondary}" VerticalOptions="Center" />
+                </Grid>
+            </Border>
+
+            <!-- Quick 10 -->
+            <Border Style="{StaticResource CardStyle}">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding SelectModeCommand}" CommandParameter="Quick10" />
+                </Border.GestureRecognizers>
+                <Grid ColumnDefinitions="Auto,*,Auto">
+                    <Label Text="10" FontSize="28" FontAttributes="Bold" TextColor="{StaticResource Accent}"
+                           VerticalOptions="Center" Margin="0,0,16,0" />
+                    <VerticalStackLayout Grid.Column="1" Spacing="2">
+                        <Label Text="Quick 10" FontAttributes="Bold" FontSize="17" />
+                        <Label Text="10 questions · No timer · 5-minute micro-session."
+                               Style="{StaticResource SubheadingStyle}" />
+                    </VerticalStackLayout>
+                    <Label Grid.Column="2" Text="›" FontSize="22"
+                           TextColor="{StaticResource TextSecondary}" VerticalOptions="Center" />
+                </Grid>
+            </Border>
+
+        </VerticalStackLayout>
+
+        <Button Grid.Row="2" Text="← Back to Dashboard"
+                Style="{StaticResource SecondaryButtonStyle}"
+                Command="{Binding GoBackCommand}"
+                Margin="0,12,0,0" />
+    </Grid>
+</ContentPage>

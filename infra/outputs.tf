@@ -33,5 +33,5 @@ output "region" {
 
 output "google_idp_configured" {
   description = "Whether the Google identity provider has been wired in"
-  value       = var.google_client_id != "" ? true : false
+  value       = length(aws_cognito_identity_provider.google) > 0
 }

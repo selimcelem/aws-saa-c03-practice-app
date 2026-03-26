@@ -41,6 +41,9 @@ google-services.json
 .vscode/
 !.vscode/extensions.json
 
+# App runtime config (populated from .env — never commit real values)
+src/Resources/Raw/appsettings.json
+
 # NuGet
 *.nupkg
 packages/

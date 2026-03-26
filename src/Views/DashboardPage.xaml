@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="AwsSaaC03Practice.Views.DashboardPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:vm="clr-namespace:AwsSaaC03Practice.ViewModels"
+    xmlns:model="clr-namespace:AwsSaaC03Practice.Models">
+
+    <Grid RowDefinitions="Auto,*,Auto" Padding="20,16">
+
+        <!-- Header -->
+        <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,0,0,16">
+            <VerticalStackLayout>
+                <Label Text="{Binding UserName, StringFormat='Hey, {0}'}"
+                       Style="{StaticResource HeadingStyle}" />
+                <Label Text="{Binding UserEmail}" Style="{StaticResource SubheadingStyle}" />
+            </VerticalStackLayout>
+            <Button Grid.Column="1" Text="Sign out" VerticalOptions="Center"
+                    Style="{StaticResource DangerButtonStyle}"
+                    Command="{Binding SignOutCommand}" FontSize="12" />
+        </Grid>
+
+        <!-- Scrollable content -->
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Spacing="16">
+
+                <!-- Metric row -->
+                <Grid ColumnDefinitions="*,*,*" ColumnSpacing="10">
+                    <Border Style="{StaticResource MetricCardStyle}">
+                        <VerticalStackLayout>
+                            <Label Text="{Binding OverallScore, StringFormat='{0}%'}"
+                                   FontSize="28" FontAttributes="Bold" TextColor="{StaticResource Accent}"
+                                   HorizontalOptions="Center" />
+                            <Label Text="Overall Score" Style="{StaticResource SubheadingStyle}"
+                                   HorizontalOptions="Center" />
+                        </VerticalStackLayout>
+                    </Border>
+                    <Border Grid.Column="1" Style="{StaticResource MetricCardStyle}">
+                        <VerticalStackLayout>
+                            <Label Text="{Binding StudyStreak, StringFormat='{0}🔥'}"
+                                   FontSize="28" FontAttributes="Bold" TextColor="{StaticResource Warning}"
+                                   HorizontalOptions="Center" />
+                            <Label Text="Day Streak" Style="{StaticResource SubheadingStyle}"
+                                   HorizontalOptions="Center" />
+                        </VerticalStackLayout>
+                    </Border>
+                    <Border Grid.Column="2" Style="{StaticResource MetricCardStyle}">
+                        <VerticalStackLayout>
+                            <Label Text="{Binding TotalSessions}"
+                                   FontSize="28" FontAttributes="Bold" TextColor="{StaticResource Success}"
+                                   HorizontalOptions="Center" />
+                            <Label Text="Sessions" Style="{StaticResource SubheadingStyle}"
+                                   HorizontalOptions="Center" />
+                        </VerticalStackLayout>
+                    </Border>
+                </Grid>
+
+                <!-- Last session card -->
+                <Border Style="{StaticResource CardStyle}">
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="Last Session" Style="{StaticResource SubheadingStyle}" />
+                        <Label Text="{Binding LastSessionSummary}"
+                               TextColor="{StaticResource TextPrimary}" FontSize="14" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Domain scores -->
+                <Border Style="{StaticResource CardStyle}"
+                        IsVisible="{Binding DomainScores.Count, Converter={x:Static CountToVisibility.Instance}}">
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="Domain Performance" Style="{StaticResource SubheadingStyle}" />
+                        <BindableLayout.ItemsSource>
+                            <x:Array Type="{x:Type model:DomainScore}" />
+                        </BindableLayout.ItemsSource>
+                        <VerticalStackLayout BindableLayout.ItemsSource="{Binding DomainScores}" Spacing="8">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="model:DomainScore">
+                                    <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,6">
+                                        <Label Text="{Binding Domain}" FontSize="12"
+                                               TextColor="{StaticResource TextSecondary}" />
+                                        <Label Grid.Column="1"
+                                               Text="{Binding Percent, StringFormat='{0}%'}"
+                                               FontSize="12" TextColor="{Binding Colour}" />
+                                        <Border Grid.Row="1" Grid.ColumnSpan="2"
+                                                StrokeShape="RoundRectangle 3"
+                                                BackgroundColor="{StaticResource BgCardAlt}"
+                                                StrokeThickness="0">
+                                            <BoxView HorizontalOptions="Start"
+                                                     BackgroundColor="{Binding Colour}"
+                                                     HeightRequest="6"
+                                                     WidthRequest="{Binding Percent, Converter={x:Static PercentToWidth.Instance}}" />
+                                        </Border>
+                                    </Grid>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </VerticalStackLayout>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Sync status -->
+                <Label Text="{Binding SyncStatus}"
+                       Style="{StaticResource SubheadingStyle}"
+                       HorizontalOptions="End" FontSize="11"
+                       IsVisible="{Binding SyncStatus, Converter={x:Static StringHelper.IsNotEmpty}}" />
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- Start studying button -->
+        <Button Grid.Row="2" Text="Start Studying  →"
+                Command="{Binding GoToModePickerCommand}"
+                Margin="0,12,0,0" FontSize="17" />
+
+    </Grid>
+</ContentPage>

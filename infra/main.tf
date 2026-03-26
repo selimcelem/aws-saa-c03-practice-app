@@ -160,14 +160,15 @@ resource "aws_cognito_user_pool_client" "main" {
     "Google",
   ] : ["COGNITO"]
 
-  # Windows: localhost callback; Android: custom URI scheme
+  # Windows: localhost:7890 (port 80 requires admin on Windows; 7890 does not)
+  # Android: custom URI scheme
   callback_urls = [
-    "http://localhost",
+    "http://localhost:7890",
     "myapp://callback",
   ]
 
   logout_urls = [
-    "http://localhost",
+    "http://localhost:7890",
     "myapp://logout",
   ]
 

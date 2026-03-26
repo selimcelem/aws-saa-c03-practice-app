@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="AwsSaaC03Practice.Views.QuizPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Grid RowDefinitions="Auto,*,Auto" Padding="20,16">
+
+        <!-- Header: progress + timer + stop -->
+        <Grid Grid.Row="0" ColumnDefinitions="*,Auto,Auto" Margin="0,0,0,16">
+            <VerticalStackLayout>
+                <Label Text="{Binding ProgressText}" Style="{StaticResource SubheadingStyle}" />
+                <Label Text="{Binding CurrentQuestion.Domain}" FontSize="11"
+                       TextColor="{StaticResource AccentSubtle}" />
+            </VerticalStackLayout>
+            <Label Grid.Column="1" Text="{Binding TimerText}"
+                   IsVisible="{Binding TimerVisible}"
+                   TextColor="{StaticResource Warning}" FontAttributes="Bold"
+                   FontSize="20" VerticalOptions="Center" Margin="0,0,12,0"
+                   FontFamily="OpenSansRegular" />
+            <Button Grid.Column="2" Text="Stop"
+                    Style="{StaticResource DangerButtonStyle}"
+                    Command="{Binding StopCommand}"
+                    FontSize="13" Padding="12,8" />
+        </Grid>
+
+        <!-- Question + answers scroll -->
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Spacing="16">
+
+                <!-- Question text -->
+                <Border Style="{StaticResource CardStyle}">
+                    <Label Text="{Binding CurrentQuestion.Text}"
+                           FontSize="16" LineHeight="1.5"
+                           TextColor="{StaticResource TextPrimary}" />
+                </Border>
+
+                <!-- Option buttons -->
+                <VerticalStackLayout Spacing="10">
+                    <!-- Option 0 -->
+                    <Button Text="{Binding CurrentQuestion.Options[0]}"
+                            Command="{Binding SelectAnswerCommand}" CommandParameter="0"
+                            Style="{StaticResource AnswerButtonStyle}"
+                            BackgroundColor="{Binding Opt0Correct, Converter={x:Static OptionColourConverter.Correct},
+                                             FallbackValue={StaticResource BgCardAlt}}"
+                            IsEnabled="{Binding AnswerRevealed, Converter={x:Static InvertBool.Instance}}" />
+                    <!-- Option 1 -->
+                    <Button Text="{Binding CurrentQuestion.Options[1]}"
+                            Command="{Binding SelectAnswerCommand}" CommandParameter="1"
+                            Style="{StaticResource AnswerButtonStyle}"
+                            IsEnabled="{Binding AnswerRevealed, Converter={x:Static InvertBool.Instance}}" />
+                    <!-- Option 2 -->
+                    <Button Text="{Binding CurrentQuestion.Options[2]}"
+                            Command="{Binding SelectAnswerCommand}" CommandParameter="2"
+                            Style="{StaticResource AnswerButtonStyle}"
+                            IsEnabled="{Binding AnswerRevealed, Converter={x:Static InvertBool.Instance}}" />
+                    <!-- Option 3 -->
+                    <Button Text="{Binding CurrentQuestion.Options[3]}"
+                            Command="{Binding SelectAnswerCommand}" CommandParameter="3"
+                            Style="{StaticResource AnswerButtonStyle}"
+                            IsEnabled="{Binding AnswerRevealed, Converter={x:Static InvertBool.Instance}}" />
+                </VerticalStackLayout>
+
+                <!-- Answer reveal panel -->
+                <Border Style="{StaticResource CardStyle}"
+                        IsVisible="{Binding AnswerRevealed}"
+                        BackgroundColor="#1a2744">
+                    <VerticalStackLayout Spacing="10">
+                        <!-- Category pill -->
+                        <Border Style="{StaticResource PillStyle}"
+                                BackgroundColor="{StaticResource AccentSubtle}"
+                                HorizontalOptions="Start">
+                            <Label Text="{Binding CurrentQuestion.Category}"
+                                   TextColor="{StaticResource Accent}" FontSize="12" />
+                        </Border>
+                        <!-- Explanation -->
+                        <Label Text="{Binding CurrentQuestion.Explanation}"
+                               FontSize="14" LineHeight="1.5"
+                               TextColor="{StaticResource TextSecondary}" />
+                    </VerticalStackLayout>
+                </Border>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- Next button (only visible after answer revealed) -->
+        <Button Grid.Row="2" Text="Next  →"
+                Command="{Binding NextCommand}"
+                IsVisible="{Binding AnswerRevealed}"
+                Margin="0,12,0,0" FontSize="16" />
+
+    </Grid>
+</ContentPage>

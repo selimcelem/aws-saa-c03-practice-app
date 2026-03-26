@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="AwsSaaC03Practice.Views.LoginPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:vm="clr-namespace:AwsSaaC03Practice.ViewModels">
+
+    <Grid RowDefinitions="*,Auto,*" Padding="32">
+
+        <!-- Logo / title -->
+        <VerticalStackLayout Grid.Row="0" VerticalOptions="End" Spacing="8">
+            <Label Text="☁" FontSize="80" HorizontalOptions="Center"
+                   TextColor="{StaticResource Accent}" />
+            <Label Text="AWS SAA-C03" Style="{StaticResource HeadingStyle}"
+                   HorizontalOptions="Center" FontSize="28" />
+            <Label Text="Solutions Architect Practice" HorizontalOptions="Center"
+                   TextColor="{StaticResource TextSecondary}" FontSize="14" />
+        </VerticalStackLayout>
+
+        <!-- Sign-in card -->
+        <Border Grid.Row="1" Style="{StaticResource CardStyle}" Margin="0,32">
+            <VerticalStackLayout Spacing="16">
+                <Label Text="Sign in to track your progress and sync your scores across devices."
+                       TextColor="{StaticResource TextSecondary}" HorizontalTextAlignment="Center"
+                       FontSize="14" />
+
+                <Button Text="Sign in with Google"
+                        Command="{Binding SignInCommand}"
+                        IsEnabled="{Binding IsNotBusy}" />
+
+                <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}"
+                                   Color="{StaticResource Accent}"
+                                   HorizontalOptions="Center" />
+
+                <Label Text="{Binding ErrorMessage}"
+                       TextColor="{StaticResource Danger}"
+                       IsVisible="{Binding ErrorMessage, Converter={x:Static StringHelper.IsNotEmpty}}"
+                       HorizontalTextAlignment="Center" FontSize="13" />
+            </VerticalStackLayout>
+        </Border>
+
+        <!-- Footer -->
+        <Label Grid.Row="2" VerticalOptions="Start"
+               Text="100 exam-style questions · Scenario-based · SAA-C03 aligned"
+               TextColor="{StaticResource TextSecondary}"
+               HorizontalOptions="Center" FontSize="12" HorizontalTextAlignment="Center" />
+
+    </Grid>
+</ContentPage>
