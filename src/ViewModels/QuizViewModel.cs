@@ -64,6 +64,7 @@ public partial class QuizViewModel : BaseViewModel, IDisposable
 
     public async Task InitialiseAsync()
     {
+        await _questions.EnsureLoadedAsync();
         _mode = Enum.Parse<QuizMode>(ModeParam);
         var ids = string.IsNullOrEmpty(IdsParam)
             ? null : IdsParam.Split(',').ToList();
@@ -174,16 +175,36 @@ public partial class QuizViewModel : BaseViewModel, IDisposable
         _timer?.Stop();
         if (_currentSession is null) return;
 
-        _currentSession.FinishedAt = DateTime.Now;
-        _currentSession.TotalQuestions = _answers.Count;
-        _currentSession.CorrectAnswers = _answers.Count(a => a.IsCorrect);
-        _currentSession.Completed = completed;
-        _currentSession.AnswerDataJson = JsonSerializer.Serialize(_answers);
-        await _db.SaveSessionAsync(_currentSession);
+        try
+        {
+            Console.WriteLine($"[Quiz] Finishing session (completed={completed}, answers={_answers.Count})");
 
-        // Navigate to results
-        var sessionId = _currentSession.Id;
-        await Shell.Current.GoToAsync($"results?sessionId={sessionId}");
+            _currentSession.FinishedAt = DateTime.Now;
+            _currentSession.TotalQuestions = _answers.Count;
+            _currentSession.CorrectAnswers = _answers.Count(a => a.IsCorrect);
+            _currentSession.Completed = completed;
+            _currentSession.AnswerDataJson = JsonSerializer.Serialize(_answers);
+            await _db.SaveSessionAsync(_currentSession);
+
+            var sessionId = _currentSession.Id;
+            Console.WriteLine($"[Quiz] Session saved (id={sessionId}), navigating to results");
+            await Shell.Current.GoToAsync($"results?sessionId={sessionId}");
+            Console.WriteLine($"[Quiz] Navigation to results complete");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[Quiz] EXCEPTION in FinishSessionAsync: {ex}");
+            App.LogCrash("QuizViewModel.FinishSessionAsync", ex);
+            try
+            {
+                await Shell.Current.DisplayAlert("Error", $"Failed to show results: {ex.Message}", "OK");
+                await Shell.Current.GoToAsync("//dashboard");
+            }
+            catch (Exception navEx)
+            {
+                Console.WriteLine($"[Quiz] EXCEPTION in error recovery: {navEx}");
+            }
+        }
     }
 
     private void OnTimerTick(object? sender, EventArgs e)

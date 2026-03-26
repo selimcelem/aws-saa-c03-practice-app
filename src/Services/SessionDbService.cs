@@ -38,8 +38,10 @@ public class SessionDbService
 
     public async Task<SessionResult> BuildResultAsync(QuizSession session)
     {
-        var answers = JsonSerializer.Deserialize<List<AnswerRecord>>(session.AnswerDataJson)
-            ?? new List<AnswerRecord>();
+        var json = session.AnswerDataJson;
+        var answers = string.IsNullOrEmpty(json)
+            ? new List<AnswerRecord>()
+            : JsonSerializer.Deserialize<List<AnswerRecord>>(json) ?? new List<AnswerRecord>();
 
         var result = new SessionResult
         {
@@ -120,5 +122,11 @@ public class SessionDbService
             .Where(s => s.UserSub == userSub)
             .OrderByDescending(s => s.StartedAt)
             .FirstOrDefaultAsync();
+    }
+
+    public async Task DeleteAllSessionsAsync(string userSub)
+    {
+        var db = await GetDb();
+        await db.ExecuteAsync("DELETE FROM sessions WHERE UserSub = ?", userSub);
     }
 }

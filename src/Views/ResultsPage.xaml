@@ -3,145 +3,163 @@
     x:Class="AwsSaaC03Practice.Views.ResultsPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
+    xmlns:views="clr-namespace:AwsSaaC03Practice.Views"
     xmlns:model="clr-namespace:AwsSaaC03Practice.Models">
 
-    <ScrollView Padding="20,16">
-        <VerticalStackLayout Spacing="16">
-
-            <!-- Title -->
-            <Label Text="Session Results" Style="{StaticResource HeadingStyle}" />
-
-            <!-- ── Metric cards row ── -->
-            <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="10">
-                <Border Style="{StaticResource MetricCardStyle}">
-                    <VerticalStackLayout>
-                        <Label Text="{Binding ScoreText}" FontSize="26" FontAttributes="Bold"
-                               TextColor="{StaticResource Accent}" HorizontalOptions="Center" />
-                        <Label Text="Score" Style="{StaticResource SubheadingStyle}"
-                               HorizontalOptions="Center" />
-                    </VerticalStackLayout>
-                </Border>
-                <Border Grid.Column="1" Style="{StaticResource MetricCardStyle}">
-                    <VerticalStackLayout>
-                        <Label Text="{Binding CorrectText}" FontSize="20" FontAttributes="Bold"
-                               TextColor="{StaticResource TextPrimary}" HorizontalOptions="Center" />
-                        <Label Text="Correct" Style="{StaticResource SubheadingStyle}"
-                               HorizontalOptions="Center" />
-                    </VerticalStackLayout>
-                </Border>
-                <Border Grid.Column="2" Style="{StaticResource MetricCardStyle}">
-                    <VerticalStackLayout>
-                        <Label Text="{Binding TimeText}" FontSize="20" FontAttributes="Bold"
-                               TextColor="{StaticResource TextPrimary}" HorizontalOptions="Center" />
-                        <Label Text="Time" Style="{StaticResource SubheadingStyle}"
-                               HorizontalOptions="Center" />
-                    </VerticalStackLayout>
-                </Border>
-                <Border Grid.Column="3" Style="{StaticResource MetricCardStyle}">
-                    <VerticalStackLayout>
-                        <Label Text="{Binding AvgTimeText}" FontSize="20" FontAttributes="Bold"
-                               TextColor="{StaticResource TextPrimary}" HorizontalOptions="Center" />
-                        <Label Text="Avg / Q" Style="{StaticResource SubheadingStyle}"
-                               HorizontalOptions="Center" />
-                    </VerticalStackLayout>
-                </Border>
-            </Grid>
-
-            <!-- ── Charts row ── -->
-            <Grid ColumnDefinitions="*,*" ColumnSpacing="12"
-                  RowDefinitions="280">
-                <!-- Domain bar chart -->
-                <Border Style="{StaticResource CardStyle}">
-                    <VerticalStackLayout Spacing="8">
-                        <Label Text="Domain Breakdown" Style="{StaticResource SubheadingStyle}" />
-                        <lvc:CartesianChart
-                            Series="{Binding DomainBarSeries}"
-                            XAxes="{Binding DomainBarXAxes}"
-                            YAxes="{Binding DomainBarYAxes}"
-                            HeightRequest="200"
-                            TooltipPosition="Hidden"
-                            BackgroundColor="Transparent" />
-                    </VerticalStackLayout>
-                </Border>
-
-                <!-- Radar chart -->
-                <Border Grid.Column="1" Style="{StaticResource CardStyle}">
-                    <VerticalStackLayout Spacing="8">
-                        <Label Text="Category Shape" Style="{StaticResource SubheadingStyle}" />
-                        <lvc:PolarChart
-                            Series="{Binding RadarSeries}"
-                            AngleAxes="{Binding RadarAngleAxes}"
-                            HeightRequest="200"
-                            TooltipPosition="Hidden"
-                            BackgroundColor="Transparent" />
-                    </VerticalStackLayout>
-                </Border>
-            </Grid>
-
-            <!-- ── Needs work pills ── -->
-            <Border Style="{StaticResource CardStyle}"
-                    IsVisible="{Binding NeedsWork.Count, Converter={StaticResource CountToVisible}}">
-                <VerticalStackLayout Spacing="10">
-                    <Label Text="Needs Work  (&lt;65%)" TextColor="{StaticResource Danger}"
-                           FontAttributes="Bold" FontSize="14" />
-                    <FlexLayout BindableLayout.ItemsSource="{Binding NeedsWork}"
-                                Wrap="Wrap" Direction="Row">
-                        <BindableLayout.ItemTemplate>
-                            <DataTemplate x:DataType="model:CategoryScore">
-                                <Border Style="{StaticResource PillStyle}"
-                                        BackgroundColor="#2d1a1a" Margin="0,0,6,6">
-                                    <Label TextColor="{StaticResource Danger}" FontSize="12"
-                                           Text="{Binding Category, StringFormat='{0} ({1:F0}%)'}" />
-                                </Border>
-                            </DataTemplate>
-                        </BindableLayout.ItemTemplate>
-                    </FlexLayout>
-                </VerticalStackLayout>
-            </Border>
-
-            <!-- ── Strong areas pills ── -->
-            <Border Style="{StaticResource CardStyle}"
-                    IsVisible="{Binding StrongAreas.Count, Converter={StaticResource CountToVisible}}">
-                <VerticalStackLayout Spacing="10">
-                    <Label Text="Strong Areas  (&gt;80%)" TextColor="{StaticResource Success}"
-                           FontAttributes="Bold" FontSize="14" />
-                    <FlexLayout BindableLayout.ItemsSource="{Binding StrongAreas}"
-                                Wrap="Wrap" Direction="Row">
-                        <BindableLayout.ItemTemplate>
-                            <DataTemplate x:DataType="model:CategoryScore">
-                                <Border Style="{StaticResource PillStyle}"
-                                        BackgroundColor="#0d2b18" Margin="0,0,6,6">
-                                    <Label TextColor="{StaticResource Success}" FontSize="12"
-                                           Text="{Binding Category, StringFormat='{0} ({1:F0}%)'}" />
-                                </Border>
-                            </DataTemplate>
-                        </BindableLayout.ItemTemplate>
-                    </FlexLayout>
-                </VerticalStackLayout>
-            </Border>
-
-            <!-- S3 sync -->
-            <Label Text="{Binding SyncStatus}" Style="{StaticResource SubheadingStyle}"
-                   HorizontalOptions="End" FontSize="11" />
-
-            <!-- ── Action buttons ── -->
-            <Grid ColumnDefinitions="*,*,*" ColumnSpacing="10" Margin="0,4,0,16">
-                <Button Text="Retry Wrong Answers"
-                        Command="{Binding RetryWrongCommand}"
-                        Style="{StaticResource SecondaryButtonStyle}"
-                        FontSize="13" />
-                <Button Grid.Column="1"
-                        Text="{Binding WeakestCategory, StringFormat='Drill {0}'}"
-                        Command="{Binding DrillWeakestCommand}"
-                        Style="{StaticResource SecondaryButtonStyle}"
-                        FontSize="13"
-                        IsVisible="{Binding WeakestCategory, Converter={StaticResource IsNotEmpty}}" />
-                <Button Grid.Column="2" Text="Home"
-                        Command="{Binding GoHomeCommand}"
-                        FontSize="13" />
-            </Grid>
-
+    <Grid>
+        <!-- Loading indicator -->
+        <VerticalStackLayout IsVisible="{Binding IsBusy}"
+                             VerticalOptions="Center" HorizontalOptions="Center" Spacing="12">
+            <ActivityIndicator IsRunning="True" Color="{StaticResource Accent}" />
+            <Label Text="Loading results..." Style="{StaticResource SubheadingStyle}"
+                   HorizontalOptions="Center" />
         </VerticalStackLayout>
-    </ScrollView>
+
+        <!-- Error message -->
+        <VerticalStackLayout IsVisible="{Binding ErrorMessage, Converter={StaticResource IsNotEmpty}}"
+                             VerticalOptions="Center" HorizontalOptions="Center" Spacing="12"
+                             Padding="20">
+            <Label Text="{Binding ErrorMessage}" TextColor="{StaticResource Danger}"
+                   HorizontalOptions="Center" FontSize="14" />
+            <Button Text="Back to Dashboard" Command="{Binding GoHomeCommand}" />
+        </VerticalStackLayout>
+
+        <!-- Results content -->
+        <ScrollView Padding="16,12" IsVisible="{Binding HasResults}">
+            <VerticalStackLayout Spacing="12">
+
+                <Label Text="Session Results" Style="{StaticResource HeadingStyle}" />
+
+                <!-- ── Metric cards: 2x2 grid for compact display ── -->
+                <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto"
+                      ColumnSpacing="8" RowSpacing="8">
+                    <Border Style="{StaticResource MetricCardStyle}" Padding="10,8">
+                        <VerticalStackLayout>
+                            <Label Text="{Binding ScoreText}" FontSize="22" FontAttributes="Bold"
+                                   TextColor="{StaticResource Accent}" HorizontalOptions="Center"
+                                   LineBreakMode="NoWrap" />
+                            <Label Text="Score" FontSize="11" TextColor="{StaticResource TextSecondary}"
+                                   HorizontalOptions="Center" />
+                        </VerticalStackLayout>
+                    </Border>
+                    <Border Grid.Column="1" Style="{StaticResource MetricCardStyle}" Padding="10,8">
+                        <VerticalStackLayout>
+                            <Label Text="{Binding CorrectText}" FontSize="18" FontAttributes="Bold"
+                                   TextColor="{StaticResource TextPrimary}" HorizontalOptions="Center"
+                                   LineBreakMode="NoWrap" />
+                            <Label Text="Correct" FontSize="11" TextColor="{StaticResource TextSecondary}"
+                                   HorizontalOptions="Center" />
+                        </VerticalStackLayout>
+                    </Border>
+                    <Border Grid.Row="1" Style="{StaticResource MetricCardStyle}" Padding="10,8">
+                        <VerticalStackLayout>
+                            <Label Text="{Binding TimeText}" FontSize="18" FontAttributes="Bold"
+                                   TextColor="{StaticResource TextPrimary}" HorizontalOptions="Center"
+                                   LineBreakMode="NoWrap" />
+                            <Label Text="Time" FontSize="11" TextColor="{StaticResource TextSecondary}"
+                                   HorizontalOptions="Center" />
+                        </VerticalStackLayout>
+                    </Border>
+                    <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource MetricCardStyle}" Padding="10,8">
+                        <VerticalStackLayout>
+                            <Label Text="{Binding AvgTimeText}" FontSize="18" FontAttributes="Bold"
+                                   TextColor="{StaticResource TextPrimary}" HorizontalOptions="Center"
+                                   LineBreakMode="NoWrap" />
+                            <Label Text="Avg / Q" FontSize="11" TextColor="{StaticResource TextSecondary}"
+                                   HorizontalOptions="Center" />
+                        </VerticalStackLayout>
+                    </Border>
+                </Grid>
+
+                <!-- ── Domain bar chart (custom SkiaSharp) ── -->
+                <Border Style="{StaticResource CardStyle}" IsVisible="{Binding HasResults}">
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="Domain Breakdown" Style="{StaticResource SubheadingStyle}" />
+                        <views:BarChartView Items="{Binding DomainScores}"
+                                            HeightRequest="220" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- ── Category radar chart (custom SkiaSharp) ── -->
+                <Border Style="{StaticResource CardStyle}" IsVisible="{Binding HasRadarData}">
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="Category Breakdown" Style="{StaticResource SubheadingStyle}" />
+                        <views:RadarChartView Items="{Binding TopCategories}"
+                                              HeightRequest="340" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- ── Needs Work pills ── -->
+                <Border Style="{StaticResource CardStyle}"
+                        IsVisible="{Binding NeedsWork.Count, Converter={StaticResource CountToVisible}}">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Needs Work (&lt;65%)" TextColor="{StaticResource Danger}"
+                               FontAttributes="Bold" FontSize="14" />
+                        <FlexLayout BindableLayout.ItemsSource="{Binding NeedsWork}"
+                                    Wrap="Wrap" Direction="Row"
+                                    AlignContent="Start" AlignItems="Start"
+                                    JustifyContent="Start">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="model:CategoryScore">
+                                    <Border StrokeShape="RoundRectangle 14"
+                                            Padding="10,6" StrokeThickness="0"
+                                            BackgroundColor="#2d1a1a" Margin="0,0,6,6">
+                                        <Label TextColor="{StaticResource Danger}" FontSize="12"
+                                               Text="{Binding Display}" LineBreakMode="NoWrap" />
+                                    </Border>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </FlexLayout>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- ── Strong Areas pills ── -->
+                <Border Style="{StaticResource CardStyle}"
+                        IsVisible="{Binding StrongAreas.Count, Converter={StaticResource CountToVisible}}">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Strong Areas (&gt;80%)" TextColor="{StaticResource Success}"
+                               FontAttributes="Bold" FontSize="14" />
+                        <FlexLayout BindableLayout.ItemsSource="{Binding StrongAreas}"
+                                    Wrap="Wrap" Direction="Row"
+                                    AlignContent="Start" AlignItems="Start"
+                                    JustifyContent="Start">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="model:CategoryScore">
+                                    <Border StrokeShape="RoundRectangle 14"
+                                            Padding="10,6" StrokeThickness="0"
+                                            BackgroundColor="#0d2b18" Margin="0,0,6,6">
+                                        <Label TextColor="{StaticResource Success}" FontSize="12"
+                                               Text="{Binding Display}" LineBreakMode="NoWrap" />
+                                    </Border>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </FlexLayout>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- S3 sync -->
+                <Label Text="{Binding SyncStatus}" Style="{StaticResource SubheadingStyle}"
+                       HorizontalOptions="End" FontSize="11" />
+
+                <!-- ── Action buttons ── -->
+                <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8" Margin="0,4,0,16">
+                    <Button Text="Retry Wrong"
+                            Command="{Binding RetryWrongCommand}"
+                            Style="{StaticResource SecondaryButtonStyle}"
+                            FontSize="12" Padding="8,10" />
+                    <Button Grid.Column="1"
+                            Text="{Binding WeakestCategory, StringFormat='Drill weakest: {0}'}"
+                            Command="{Binding DrillWeakestCommand}"
+                            Style="{StaticResource SecondaryButtonStyle}"
+                            FontSize="11" Padding="6,10"
+                            LineBreakMode="TailTruncation"
+                            IsVisible="{Binding WeakestCategory, Converter={StaticResource IsNotEmpty}}" />
+                    <Button Grid.Column="2" Text="Home"
+                            Command="{Binding GoHomeCommand}"
+                            FontSize="12" Padding="8,10" />
+                </Grid>
+
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
 </ContentPage>

@@ -49,3 +49,13 @@ public class PercentToWidth : IValueConverter
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
         => throw new NotImplementedException();
 }
+
+/// <summary>Maps a 0.0–1.0 fraction to an AbsoluteLayout.LayoutBounds Rect for proportional bar fill.</summary>
+public class FractionToRect : IValueConverter
+{
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+        => value is double d ? new Rect(0, 0, Math.Max(0.001, Math.Min(1.0, d)), 1) : new Rect(0, 0, 0.001, 1);
+
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+        => throw new NotImplementedException();
+}

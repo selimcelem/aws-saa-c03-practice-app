@@ -9,13 +9,17 @@
     <Grid RowDefinitions="Auto,*,Auto" Padding="20,16">
 
         <!-- Header -->
-        <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,0,0,16">
+        <Grid Grid.Row="0" ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8" Margin="0,0,0,16">
             <VerticalStackLayout>
                 <Label Text="{Binding UserName, StringFormat='Hey, {0}'}"
                        Style="{StaticResource HeadingStyle}" />
                 <Label Text="{Binding UserEmail}" Style="{StaticResource SubheadingStyle}" />
             </VerticalStackLayout>
-            <Button Grid.Column="1" Text="Sign out" VerticalOptions="Center"
+            <Button Grid.Column="1" Text="Reset Data" VerticalOptions="Center"
+                    Style="{StaticResource DangerButtonStyle}"
+                    Command="{Binding ResetAllDataCommand}" FontSize="11"
+                    Padding="10,8" />
+            <Button Grid.Column="2" Text="Sign out" VerticalOptions="Center"
                     Style="{StaticResource DangerButtonStyle}"
                     Command="{Binding SignOutCommand}" FontSize="12" />
         </Grid>
@@ -72,21 +76,22 @@
                         <VerticalStackLayout BindableLayout.ItemsSource="{Binding DomainScores}" Spacing="8">
                             <BindableLayout.ItemTemplate>
                                 <DataTemplate x:DataType="model:DomainScore">
-                                    <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,6">
+                                    <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,8">
                                         <Label Text="{Binding Domain}" FontSize="12"
                                                TextColor="{StaticResource TextSecondary}" />
                                         <Label Grid.Column="1"
                                                Text="{Binding Percent, StringFormat='{0}%'}"
                                                FontSize="12" TextColor="{Binding Colour}" />
-                                        <Border Grid.Row="1" Grid.ColumnSpan="2"
-                                                StrokeShape="RoundRectangle 3"
-                                                BackgroundColor="{StaticResource BgCardAlt}"
-                                                StrokeThickness="0">
-                                            <BoxView HorizontalOptions="Start"
+                                        <AbsoluteLayout Grid.Row="1" Grid.ColumnSpan="2" HeightRequest="8">
+                                            <BoxView AbsoluteLayout.LayoutBounds="0,0,1,1"
+                                                     AbsoluteLayout.LayoutFlags="All"
+                                                     BackgroundColor="{StaticResource BgCardAlt}"
+                                                     CornerRadius="4" />
+                                            <BoxView AbsoluteLayout.LayoutBounds="{Binding Fraction, Converter={StaticResource FractionToRect}}"
+                                                     AbsoluteLayout.LayoutFlags="All"
                                                      BackgroundColor="{Binding Colour}"
-                                                     HeightRequest="6"
-                                                     WidthRequest="{Binding Percent, Converter={StaticResource PercentToWidth}}" />
-                                        </Border>
+                                                     CornerRadius="4" />
+                                        </AbsoluteLayout>
                                     </Grid>
                                 </DataTemplate>
                             </BindableLayout.ItemTemplate>

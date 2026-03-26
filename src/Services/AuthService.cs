@@ -41,6 +41,7 @@ public class AuthService
     {
         try
         {
+            await _settings.EnsureLoadedAsync();
             var json = await SecureStorage.Default.GetAsync(TokenStorageKey);
             if (string.IsNullOrEmpty(json)) return false;
             var tokens = JsonSerializer.Deserialize<TokenData>(json)!;
@@ -74,6 +75,7 @@ public class AuthService
 
     public async Task<UserInfo?> GetUserInfoAsync()
     {
+        await _settings.EnsureLoadedAsync();
         var token = await GetAccessTokenAsync();
         if (token is null) return null;
         var req = new HttpRequestMessage(HttpMethod.Get,
@@ -88,6 +90,7 @@ public class AuthService
 
     public async Task<bool> SignInWithGoogleAsync()
     {
+        await _settings.EnsureLoadedAsync();
         var verifier  = GenerateCodeVerifier();
         var challenge = GenerateCodeChallenge(verifier);
 

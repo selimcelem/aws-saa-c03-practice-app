@@ -1,5 +1,6 @@
 using LiveChartsCore.SkiaSharpView.Maui;
 using Microsoft.Extensions.Logging;
+using SkiaSharp.Views.Maui.Controls.Hosting;
 using AwsSaaC03Practice.Services;
 using AwsSaaC03Practice.ViewModels;
 using AwsSaaC03Practice.Views;
@@ -14,7 +15,8 @@ public static class MauiProgram
 
         builder
             .UseMauiApp<App>()
-            .UseLiveCharts()    // Includes SkiaSharp setup
+            .UseSkiaSharp()
+            .UseLiveCharts()
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -50,19 +52,10 @@ public static class MauiProgram
         builder.Services.AddSingleton<AppShell>();
         builder.Services.AddSingleton<App>();
 
-        var app = builder.Build();
+        return builder.Build();
 
-        // ── Bootstrap: load settings and question bank before UI starts ──────
-        var settings  = app.Services.GetRequiredService<SettingsService>();
-        var questions = app.Services.GetRequiredService<QuestionService>();
-
-        // Run bootstrap synchronously on the main thread — app is not yet shown
-        Task.Run(async () =>
-        {
-            await settings.LoadAsync();
-            await questions.LoadAsync();
-        }).GetAwaiter().GetResult();
-
-        return app;
+        // NOTE: No synchronous bootstrap here — services lazy-initialize on first access.
+        // The previous Task.Run().GetAwaiter().GetResult() blocked the main thread during
+        // WinUI3 composition initialization, causing intermittent exit code -1073741189.
     }
 }

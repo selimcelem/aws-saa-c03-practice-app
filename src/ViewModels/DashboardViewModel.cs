@@ -75,11 +75,19 @@ public partial class DashboardViewModel : BaseViewModel
                                      $"on {last.StartedAt:MMM d}";
             }
 
-            // Background S3 sync
+            // Background S3 sync — marshal property change to UI thread
             _ = Task.Run(async () =>
             {
-                await _s3.UploadSessionsAsync(UserSub, sessions);
-                SyncStatus = _s3.SyncStatus;
+                try
+                {
+                    await _s3.UploadSessionsAsync(UserSub, sessions);
+                    MainThread.BeginInvokeOnMainThread(() => SyncStatus = _s3.SyncStatus);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"[Dashboard] S3 sync error (non-fatal): {ex.Message}");
+                    MainThread.BeginInvokeOnMainThread(() => SyncStatus = $"Sync failed: {ex.Message}");
+                }
             });
         }
         finally { IsBusy = false; }
@@ -95,4 +103,31 @@ public partial class DashboardViewModel : BaseViewModel
     [RelayCommand]
     private async Task GoToModePicker() =>
         await Shell.Current.GoToAsync("//modepicker");
+
+    [RelayCommand]
+    private async Task ResetAllDataAsync()
+    {
+        bool confirmed = await Shell.Current.DisplayAlert(
+            "Reset All Data",
+            "This will permanently delete all your quiz history, scores, and streak. This cannot be undone. Are you sure?",
+            "Reset", "Cancel");
+
+        if (!confirmed) return;
+
+        IsBusy = true;
+        try
+        {
+            await _db.DeleteAllSessionsAsync(UserSub);
+            await _s3.DeleteUserDataAsync();
+
+            // Reset displayed stats
+            OverallScore = 0;
+            TotalSessions = 0;
+            StudyStreak = 0;
+            LastSessionSummary = "No sessions yet";
+            DomainScores = new();
+            SyncStatus = "Data reset";
+        }
+        finally { IsBusy = false; }
+    }
 }

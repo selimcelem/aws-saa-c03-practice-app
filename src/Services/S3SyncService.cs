@@ -36,6 +36,11 @@ public class S3SyncService
         if (string.IsNullOrEmpty(idToken)) return null;
 
         var s = _settings.Settings;
+        if (string.IsNullOrEmpty(s.CognitoIdentityPoolId))
+        {
+            SyncStatus = "Sync skipped (Identity Pool not configured)";
+            return null;
+        }
         var region = RegionEndpoint.GetBySystemName(s.AwsRegion);
         var providerName = $"cognito-idp.{s.AwsRegion}.amazonaws.com/{s.CognitoUserPoolId}";
 
@@ -104,6 +109,20 @@ public class S3SyncService
         {
             return null;
         }
+    }
+
+    public async Task DeleteUserDataAsync()
+    {
+        try
+        {
+            var result = await GetAuthenticatedClientAsync();
+            if (result is null) return;
+
+            var (client, identityId) = result.Value;
+            var key = $"scores/{identityId}/sessions.json";
+            await client.DeleteObjectAsync(_settings.Settings.S3BucketName, key);
+        }
+        catch { /* best-effort: local data is already cleared */ }
     }
 
     /// <summary>Clears cached credentials (call on sign-out).</summary>

@@ -16,6 +16,17 @@ public partial class ResultsPage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
-        await _vm.LoadCommand.ExecuteAsync(null);
+        try
+        {
+            // Call the method directly — RelayCommand.ExecuteAsync swallows exceptions
+            await _vm.LoadResultsAsync();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[ResultsPage] UNHANDLED in OnAppearing: {ex}");
+            App.LogCrash("ResultsPage.OnAppearing", ex);
+            await DisplayAlert("Error", $"Failed to load results: {ex.Message}", "OK");
+            await Shell.Current.GoToAsync("//dashboard");
+        }
     }
 }

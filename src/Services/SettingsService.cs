@@ -17,17 +17,29 @@ public class AppSettings
 public class SettingsService
 {
     private AppSettings? _settings;
+    private readonly SemaphoreSlim _lock = new(1, 1);
+
     public AppSettings Settings => _settings
-        ?? throw new InvalidOperationException("SettingsService not loaded. Call LoadAsync() first.");
+        ?? throw new InvalidOperationException("SettingsService not loaded. Call EnsureLoadedAsync() first.");
 
-    public async Task LoadAsync()
+    public async Task EnsureLoadedAsync()
     {
-        using var stream = await FileSystem.OpenAppPackageFileAsync("appsettings.json");
-        _settings = await JsonSerializer.DeserializeAsync<AppSettings>(stream,
-            new JsonSerializerOptions { PropertyNameCaseInsensitive = true })
-            ?? throw new Exception("Failed to parse appsettings.json");
+        if (_settings is not null) return;
+        await _lock.WaitAsync();
+        try
+        {
+            if (_settings is not null) return;
+            using var stream = await FileSystem.OpenAppPackageFileAsync("appsettings.json");
+            _settings = await JsonSerializer.DeserializeAsync<AppSettings>(stream,
+                new JsonSerializerOptions { PropertyNameCaseInsensitive = true })
+                ?? throw new Exception("Failed to parse appsettings.json");
 
-        if (string.IsNullOrEmpty(_settings.CognitoClientId))
-            throw new Exception("appsettings.json is missing CognitoClientId. Copy appsettings.example.json, fill in values, and save as appsettings.json.");
+            if (string.IsNullOrEmpty(_settings.CognitoClientId))
+                throw new Exception("appsettings.json is missing CognitoClientId.");
+        }
+        finally { _lock.Release(); }
     }
+
+    // Keep for backward compat — delegates to EnsureLoadedAsync
+    public Task LoadAsync() => EnsureLoadedAsync();
 }

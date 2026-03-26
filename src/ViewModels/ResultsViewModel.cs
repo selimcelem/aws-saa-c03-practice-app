@@ -1,9 +1,5 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using LiveChartsCore;
-using LiveChartsCore.SkiaSharpView;
-using LiveChartsCore.SkiaSharpView.Painting;
-using SkiaSharp;
 using AwsSaaC03Practice.Models;
 using AwsSaaC03Practice.Services;
 
@@ -27,134 +23,96 @@ public partial class ResultsViewModel : BaseViewModel
     [ObservableProperty] private List<DomainScore> _domainScores = new();
     [ObservableProperty] private string _weakestCategory = "";
     [ObservableProperty] private string _syncStatus = "";
+    [ObservableProperty] private bool _hasResults;
+    [ObservableProperty] private string _errorMessage = "";
 
-    // LiveCharts
-    [ObservableProperty] private ISeries[] _domainBarSeries = Array.Empty<ISeries>();
-    [ObservableProperty] private Axis[] _domainBarYAxes = Array.Empty<Axis>();
-    [ObservableProperty] private Axis[] _domainBarXAxes = Array.Empty<Axis>();
-    [ObservableProperty] private ISeries[] _radarSeries = Array.Empty<ISeries>();
-    [ObservableProperty] private PolarAxis[] _radarAngleAxes = Array.Empty<PolarAxis>();
+    // Custom SkiaSharp chart data
+    [ObservableProperty] private List<CategoryScore> _topCategories = new();
+    [ObservableProperty] private bool _hasRadarData;
 
     public ResultsViewModel(SessionDbService db, S3SyncService s3, AuthService auth)
     {
         _db = db; _s3 = s3; _auth = auth;
     }
 
-    [RelayCommand]
-    public async Task LoadAsync()
+    public async Task LoadResultsAsync()
     {
-        if (!int.TryParse(SessionIdParam, out var id)) return;
+        if (!int.TryParse(SessionIdParam, out var id))
+        {
+            Console.WriteLine($"[Results] Invalid SessionIdParam: '{SessionIdParam}'");
+            ErrorMessage = "Invalid session ID.";
+            return;
+        }
+
         IsBusy = true;
         try
         {
+            Console.WriteLine($"[Results] Loading session {id}");
             var session = await _db.GetSessionByIdAsync(id);
-            if (session is null) return;
+            if (session is null)
+            {
+                Console.WriteLine($"[Results] Session {id} not found in DB");
+                ErrorMessage = "Session not found.";
+                return;
+            }
 
+            Console.WriteLine($"[Results] Building result for session {id} ({session.TotalQuestions}Q)");
             _result = await _db.BuildResultAsync(session);
 
             // Metric cards
             ScoreText   = $"{_result.ScorePercent}%";
-            CorrectText = $"{_result.Correct} / {_result.Total}";
+            CorrectText = $"{_result.Correct}/{_result.Total}";
             TimeText    = _result.Duration.TotalMinutes < 1
                 ? $"{(int)_result.Duration.TotalSeconds}s"
                 : $"{(int)_result.Duration.TotalMinutes}m {_result.Duration.Seconds}s";
-            AvgTimeText = $"{_result.AvgSecondsPerQuestion:F1}s / Q";
+            AvgTimeText = $"{_result.AvgSecondsPerQuestion:F1}s";
 
-            DomainScores = _result.DomainScores;
-            NeedsWork    = _result.CategoryScores.Where(c => c.Percent < 65).OrderBy(c => c.Percent).ToList();
-            StrongAreas  = _result.CategoryScores.Where(c => c.Percent > 80).OrderByDescending(c => c.Percent).ToList();
+            DomainScores = _result.DomainScores ?? new();
+            NeedsWork    = (_result.CategoryScores ?? new()).Where(c => c.Percent < 65).OrderBy(c => c.Percent).ToList();
+            StrongAreas  = (_result.CategoryScores ?? new()).Where(c => c.Percent > 80).OrderByDescending(c => c.Percent).ToList();
             WeakestCategory = _result.WeakestCategory ?? "";
 
-            BuildBarChart(_result.DomainScores);
-            BuildRadarChart(_result.CategoryScores);
-
-            // Sync result to S3
-            var user = await _auth.GetUserInfoAsync();
-            if (user is not null)
+            // Radar chart data — top 8 categories by question count
+            if (_result.CategoryScores is { Count: >= 3 })
             {
-                var allSessions = await _db.GetAllSessionsAsync(user.Sub);
-                _ = Task.Run(async () =>
-                {
-                    await _s3.UploadSessionsAsync(user.Sub, allSessions);
-                    SyncStatus = _s3.SyncStatus;
-                });
+                TopCategories = _result.CategoryScores
+                    .OrderByDescending(c => c.Total)
+                    .Take(8)
+                    .OrderBy(c => c.Category)
+                    .ToList();
+                HasRadarData = true;
             }
+
+            HasResults = true;
+            Console.WriteLine($"[Results] Load complete — {_result.ScorePercent}%");
+
+            _ = SyncToS3Async();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[Results] EXCEPTION in LoadResultsAsync: {ex}");
+            App.LogCrash("ResultsViewModel.LoadResultsAsync", ex);
+            ErrorMessage = $"Error loading results: {ex.Message}";
         }
         finally { IsBusy = false; }
     }
 
-    private void BuildBarChart(List<DomainScore> domains)
+    private async Task SyncToS3Async()
     {
-        // Abbreviated domain labels
-        var labels = domains.Select(d => d.Domain.Replace("Design ", "").Replace(" Architectures", "")).ToArray();
-
-        DomainBarSeries = new ISeries[]
+        try
         {
-            new RowSeries<double>
-            {
-                Values      = domains.Select(d => d.Percent).ToArray(),
-                Fill        = new SolidColorPaint(SKColor.Parse("#58a6ff")),
-                Stroke      = null,
-                MaxBarWidth = 30,
-                DataLabelsPaint = new SolidColorPaint(SKColor.Parse("#c9d1d9")),
-                DataLabelsPosition = LiveChartsCore.Measure.DataLabelsPosition.End,
-                DataLabelsFormatter = p => $"{p.Model:F0}%",
-                DataLabelsPadding = new LiveChartsCore.Drawing.Padding(4),
-            }
-        };
+            var user = await _auth.GetUserInfoAsync();
+            if (user is null) return;
 
-        DomainBarYAxes = new Axis[]
+            var allSessions = await _db.GetAllSessionsAsync(user.Sub);
+            await _s3.UploadSessionsAsync(user.Sub, allSessions);
+            MainThread.BeginInvokeOnMainThread(() => SyncStatus = _s3.SyncStatus);
+        }
+        catch (Exception ex)
         {
-            new Axis
-            {
-                Labels = labels,
-                LabelsPaint = new SolidColorPaint(SKColor.Parse("#c9d1d9")),
-                TicksPaint  = null,
-                SeparatorsPaint = null,
-            }
-        };
-
-        DomainBarXAxes = new Axis[]
-        {
-            new Axis
-            {
-                MinLimit = 0, MaxLimit = 100,
-                LabelsPaint = new SolidColorPaint(SKColor.Parse("#8b949e")),
-                SeparatorsPaint = new SolidColorPaint(SKColor.Parse("#30363d")),
-                TicksPaint = null,
-                Labeler = v => $"{v:F0}%",
-            }
-        };
-    }
-
-    private void BuildRadarChart(List<CategoryScore> categories)
-    {
-        // Limit to top N categories by total attempts for readability
-        var top = categories.OrderByDescending(c => c.Total).Take(10).OrderBy(c => c.Category).ToList();
-
-        RadarSeries = new ISeries[]
-        {
-            new PolarLineSeries<double>
-            {
-                Values = top.Select(c => c.Percent).ToArray(),
-                IsClosed = true,
-                Fill     = new SolidColorPaint(SKColor.Parse("#58a6ff").WithAlpha(40)),
-                Stroke   = new SolidColorPaint(SKColor.Parse("#58a6ff"), 2),
-                GeometrySize = 6,
-                GeometryFill = new SolidColorPaint(SKColor.Parse("#58a6ff")),
-                DataLabelsPaint = null,
-            }
-        };
-
-        RadarAngleAxes = new PolarAxis[]
-        {
-            new PolarAxis
-            {
-                Labels = top.Select(c => c.Category).ToArray(),
-                LabelsPaint = new SolidColorPaint(SKColor.Parse("#c9d1d9")),
-                SeparatorsPaint = new SolidColorPaint(SKColor.Parse("#30363d")),
-            }
-        };
+            Console.WriteLine($"[Results] S3 sync error (non-fatal): {ex.Message}");
+            MainThread.BeginInvokeOnMainThread(() => SyncStatus = $"Sync failed: {ex.Message}");
+        }
     }
 
     // ── Action buttons ───────────────────────────────────────────────────────

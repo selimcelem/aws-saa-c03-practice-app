@@ -6,24 +6,34 @@ namespace AwsSaaC03Practice.Services;
 public class QuestionService
 {
     private List<Question>? _allQuestions;
+    private readonly SemaphoreSlim _lock = new(1, 1);
 
-    public async Task LoadAsync()
+    public async Task EnsureLoadedAsync()
     {
-        using var stream = await FileSystem.OpenAppPackageFileAsync("questions.json");
-        _allQuestions = await JsonSerializer.DeserializeAsync<List<Question>>(stream,
-            new JsonSerializerOptions { PropertyNameCaseInsensitive = true })
-            ?? throw new Exception("Failed to parse questions.json");
+        if (_allQuestions is not null) return;
+        await _lock.WaitAsync();
+        try
+        {
+            if (_allQuestions is not null) return;
+            using var stream = await FileSystem.OpenAppPackageFileAsync("questions.json");
+            _allQuestions = await JsonSerializer.DeserializeAsync<List<Question>>(stream,
+                new JsonSerializerOptions { PropertyNameCaseInsensitive = true })
+                ?? throw new Exception("Failed to parse questions.json");
+        }
+        finally { _lock.Release(); }
     }
 
+    // Keep for backward compat
+    public Task LoadAsync() => EnsureLoadedAsync();
+
     public IReadOnlyList<Question> All =>
-        _allQuestions ?? throw new InvalidOperationException("Questions not loaded.");
+        _allQuestions ?? throw new InvalidOperationException("Questions not loaded. Call EnsureLoadedAsync() first.");
 
     public List<Question> GetForMode(QuizMode mode, string? filterCategory = null,
         List<string>? specificIds = null)
     {
         IEnumerable<Question> pool = All;
 
-        // Override pool for special modes
         if (specificIds?.Count > 0)
         {
             var idSet = specificIds.ToHashSet();
@@ -34,10 +44,7 @@ public class QuestionService
             pool = All.Where(q => q.Category == filterCategory);
         }
 
-        // Shuffle
         var shuffled = pool.OrderBy(_ => Random.Shared.Next()).ToList();
-
-        // Trim to count
         var count = mode.QuestionCount();
         return count.HasValue ? shuffled.Take(count.Value).ToList() : shuffled;
     }

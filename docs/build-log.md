@@ -330,3 +330,124 @@ Apply complete! Resources: 4 added, 1 changed, 0 destroyed.
 - [ ] Add Windows-side certificate pinning for the AWS SDK HttpClient
 
 ---
+
+## [Phase 5] — UI Fixes and Polish
+**Date:** 2026-03-26
+**Status:** Complete
+
+### What was done
+
+#### 1. Config fixes
+- Added `CognitoIdentityPoolId` to `appsettings.json` (was missing, causing "Value cannot be null" sync error on dashboard)
+- Fixed `OAuthCallbackAndroid` from `myapp://callback` to `selimcelemsaaapp://callback` in `appsettings.json`
+- Added graceful null check in `S3SyncService.GetAuthenticatedClientAsync()` — returns "Sync skipped" instead of crashing when Identity Pool ID is missing
+
+#### 2. Results screen crash fix (Android)
+- **Root cause:** `ResultsPage.xaml` had broken `StringFormat='{0} ({1:F0}%)'` in category pill labels — MAUI binding only supplies `{0}`, so `{1}` threw `FormatException`
+- **Fix:** Added `Display` computed property to `CategoryScore`; pills bind to `Display` directly
+- **Additional root cause:** LiveCharts `CartesianChart`/`PolarChart` controls bound to `Array.Empty<ISeries>()`/`Array.Empty<Axis>()` at init — SkiaSharp native render callback crashed on Android with empty axes before `LoadAsync` ran
+- **Fix:** Chart properties initialize as `null`; entire results content hidden via `IsVisible="{Binding HasResults}"` until data loads
+- **Background thread crash:** `SyncStatus = _s3.SyncStatus` inside `Task.Run` set an `[ObservableProperty]` from a thread-pool thread, crashing Android's UI framework. Fixed with `MainThread.BeginInvokeOnMainThread()`
+- **Silent exception swallowing:** `ResultsPage.OnAppearing` called `LoadCommand.ExecuteAsync()` — CommunityToolkit `[RelayCommand]` catches exceptions internally. Changed to call `LoadResultsAsync()` directly so try-catch actually fires
+
+#### 3. SkiaSharp handler registration fix (Android)
+- **Root cause:** `MauiProgram.cs` called `.UseLiveCharts()` but NOT `.UseSkiaSharp()`. LiveCharts' own setup does not register the underlying SkiaSharp platform handlers (`SKCanvasView`, `CPURenderMode`)
+- **Fix:** Added `.UseSkiaSharp()` before `.UseLiveCharts()` in the MAUI builder chain
+- **Logcat error was:** `HandlerNotFoundException: Handler not found for view LiveChartsCore.SkiaSharpView.Maui.Rendering.CPURenderMode`
+
+#### 4. Bar chart rewrite — LiveCharts → custom SkiaSharp
+- **Problem:** LiveCharts `ColumnSeries`/`RowSeries` produced garbled X-axis labels on Windows (corrupted text like "ScSecSecGrGr6.6.6.6..."), stacked duplicate data labels inside bars on Android, and failed to render on some Android devices
+- **Fix:** Created `Views/BarChartView.cs` — custom `SKCanvasView` that draws vertical bars, Y-axis gridlines with 0%/25%/50%/75%/100% labels, percentage values above each bar, and clean abbreviated X-axis domain names ("Secure", "Resilient", "High-Perf", "Cost-Opt")
+- Uses `IgnorePixelScaling = true` for correct DPI handling on Windows and proper redraw on resize
+- `ResultsViewModel` no longer imports LiveCharts — all bar chart properties removed, `DomainScores` list bound directly to `BarChartView.Items`
+
+#### 5. Radar chart rewrite — LiveCharts PolarChart → custom SkiaSharp
+- **Problem:** LiveCharts `PolarChart` was completely broken on both platforms — labels overlapped in center on Windows, only 2 labels rendered on Android
+- **Fix:** Created `Views/RadarChartView.cs` — custom `SKCanvasView` spider chart drawn with SkiaSharp directly
+- Draws concentric polygon grid rings (25/50/75/100%), spokes, data polygon with semi-transparent fill, dots at data points, and positioned category labels with percentage values
+- Label font size fixed at 12px/10px (was proportional to canvas width, causing massive text on Windows)
+- Limited to top 8 categories by question count; requires minimum 3 categories to render
+- Controlled by `HasRadarData` binding flag
+
+#### 6. Metric cards layout fix
+- **Problem:** 4-column grid on Android caused text wrapping ("20" / "%" on separate lines, "Correc t" splitting)
+- **Fix:** Changed to 2×2 grid; reduced font sizes (score 22px, others 18px, subtitles 11px); added `LineBreakMode="NoWrap"`; reduced card padding to `10,8`
+
+#### 7. Dashboard progress bars fix
+- **Problem:** `PercentToWidth` converter returned fixed `d * 2.0` pixels (max 200px) — invisible on wide Windows screens
+- **Fix:** Replaced `BoxView` + `WidthRequest` with `AbsoluteLayout` proportional sizing. Background track fills 100%, colored fill bar bound to `Fraction` (0.0–1.0) via new `FractionToRect` converter. 83% now visually fills 83% of the container regardless of screen width
+- Added `Fraction` property to `DomainScore`
+
+#### 8. Needs Work / Strong Areas pills fix
+- **Problem:** On Android some pills cut off at bottom (FlexLayout measurement bug)
+- **Fix:** Added `AlignContent="Start"`, `AlignItems="Start"`, `JustifyContent="Start"` on FlexLayout; inline pill styling with `LineBreakMode="NoWrap"`
+
+#### 9. Answer option shuffle
+- Confirmed existing implementation in `QuizViewModel.ShowQuestion()` already randomises option display positions per question via `_shuffleMap` — display order differs from JSON order each time, correct index tracked via `_shuffledCorrectIndex`, answer recording maps back to original indices
+
+#### 10. "Drill weakest" button improvement
+- `SessionResult.WeakestCategory` now filters to `Percent < 65` — button hidden when all categories scored 65%+
+- Button text changed from "Drill {0}" to "Drill weakest: {0}" for clarity
+
+#### 11. Bar chart top label clipping fix (Android)
+- Increased `topPad` from 10 to 22 in `BarChartView` so percentage labels above 100% bars are not clipped by the chart container edge
+
+#### 12. Windows intermittent launch crash fix
+- **Root cause:** `MauiProgram.CreateMauiApp()` had `Task.Run(async () => { ... }).GetAwaiter().GetResult()` which blocked the main thread while WinUI3's composition system was initializing — intermittent race condition producing exit code `-1073741189` (`0xC000027B`)
+- **Fix:** Removed synchronous blocking from `CreateMauiApp()` entirely. `SettingsService` and `QuestionService` now lazy-initialize on first access via `EnsureLoadedAsync()` with `SemaphoreSlim` double-check locking. `AuthService` calls `EnsureLoadedAsync` at its entry points (`TryAutoLoginAsync`, `SignInWithGoogleAsync`, `GetUserInfoAsync`). `QuizViewModel` calls `questions.EnsureLoadedAsync()` before accessing the question bank
+- Added `MauiWinUIApplication.Current.UnhandledException` handler (Windows-specific)
+- Crash log writes to `D:\Projects\aws-saa-c03-practice-app\crash.log` in dev, `AppDataDirectory` elsewhere
+- Verified: 5/5 consecutive launches successful with zero crashes
+
+#### 13. Reset All Data feature
+- Added `ResetAllDataCommand` to `DashboardViewModel` with confirmation dialog ("This will permanently delete all your quiz history...")
+- `SessionDbService.DeleteAllSessionsAsync()` clears local SQLite
+- `S3SyncService.DeleteUserDataAsync()` deletes user's `sessions.json` from S3 (best-effort)
+- "Reset Data" button in dashboard header, styled with `DangerButtonStyle`
+
+### Why
+The app was functionally complete after Phase 4 but had critical rendering bugs (LiveCharts broken on both platforms), a data leak pattern (S3 sync crash), and an intermittent Windows launch crash. This phase replaced unreliable third-party chart rendering with direct SkiaSharp drawing, fixed all platform-specific layout issues, and eliminated the startup race condition.
+
+### How to reproduce on a new machine
+```bash
+cd src
+dotnet build -f net8.0-windows10.0.19041.0    # Windows — 0 errors
+dotnet build -f net8.0-android                  # Android — requires Android SDK
+```
+
+### What's next
+Phase 6 — Expand the question bank from 100 to 1000 questions.
+
+---
+
+## [Phase 6] — Question Bank Expansion (100 → 1000)
+**Date:** 2026-03-26
+**Status:** Not started (design spec complete)
+
+### What was done
+- Created design specification at `docs/superpowers/specs/2026-03-26-question-bank-expansion-design.md`
+- Defined target distribution: 300 Secure, 260 Resilient, 240 High-Performing, 200 Cost-Optimized (matches SAA-C03 exam weightings)
+- Defined ID sequence: existing `q001`–`q100` unchanged, new questions `q101`–`q1000`
+- Schema unchanged — same JSON format, 0-based correct index, 4 options each
+- Identified ~15 new AWS service categories to add (Network Firewall, AppSync, Step Functions, EventBridge, etc.)
+- No questions have been generated yet — the question bank remains at 100 questions
+
+### Current state
+| Domain | Current | Target | Remaining |
+|---|---|---|---|
+| Design Secure Architectures | 30 | 300 | 270 |
+| Design Resilient Architectures | 26 | 260 | 234 |
+| Design High-Performing Architectures | 24 | 240 | 216 |
+| Design Cost-Optimized Architectures | 20 | 200 | 180 |
+| **Total** | **100** | **1000** | **900** |
+
+### Why
+100 questions is enough for a few practice sessions but users quickly see repeats. 1000 questions with broader service coverage gives realistic exam preparation with minimal repetition across sessions.
+
+### How to reproduce on a new machine
+No action needed — the current 100-question bank is committed at `src/Data/questions.json`. The expansion spec is at `docs/superpowers/specs/2026-03-26-question-bank-expansion-design.md`.
+
+### What's next
+Generate 900 new questions in batches, validate JSON schema and correct-answer indices, update the `questions.json` file, and verify all quiz modes still work with the larger dataset.
+
+---
