@@ -36,11 +36,15 @@ public partial class QuizViewModel : BaseViewModel, IDisposable
     [ObservableProperty] private bool _timerVisible;
     [ObservableProperty] private string _progressText = "";
 
-    // Per-option state after reveal
-    [ObservableProperty] private bool _opt0Correct; [ObservableProperty] private bool _opt0Wrong;
-    [ObservableProperty] private bool _opt1Correct; [ObservableProperty] private bool _opt1Wrong;
-    [ObservableProperty] private bool _opt2Correct; [ObservableProperty] private bool _opt2Wrong;
-    [ObservableProperty] private bool _opt3Correct; [ObservableProperty] private bool _opt3Wrong;
+    // Per-option button background colour after answer is revealed
+    private static readonly Color _colDefault = Color.FromArgb("#1c2128");
+    private static readonly Color _colGreen   = Color.FromArgb("#0d2b18");
+    private static readonly Color _colRed     = Color.FromArgb("#2d1a1a");
+
+    [ObservableProperty] private Color _opt0Colour = Color.FromArgb("#1c2128");
+    [ObservableProperty] private Color _opt1Colour = Color.FromArgb("#1c2128");
+    [ObservableProperty] private Color _opt2Colour = Color.FromArgb("#1c2128");
+    [ObservableProperty] private Color _opt3Colour = Color.FromArgb("#1c2128");
 
     private QuizMode _mode;
     private TimeSpan _remaining;
@@ -174,30 +178,27 @@ public partial class QuizViewModel : BaseViewModel, IDisposable
 
     private void ResetOptionColours()
     {
-        Opt0Correct = Opt0Wrong = Opt1Correct = Opt1Wrong =
-        Opt2Correct = Opt2Wrong = Opt3Correct = Opt3Wrong = false;
+        Opt0Colour = Opt1Colour = Opt2Colour = Opt3Colour = _colDefault;
     }
 
     private void SetOptionColour(int selected, int correct)
     {
-        // Mark the correct answer green always
-        switch (correct)
-        {
-            case 0: Opt0Correct = true; break;
-            case 1: Opt1Correct = true; break;
-            case 2: Opt2Correct = true; break;
-            case 3: Opt3Correct = true; break;
-        }
-        // If selected != correct, mark selected red
+        ResetOptionColours();
+        // Always highlight the correct answer green
+        SetColour(correct, _colGreen);
+        // If the user was wrong, highlight their pick red
         if (selected != correct)
+            SetColour(selected, _colRed);
+    }
+
+    private void SetColour(int index, Color colour)
+    {
+        switch (index)
         {
-            switch (selected)
-            {
-                case 0: Opt0Wrong = true; break;
-                case 1: Opt1Wrong = true; break;
-                case 2: Opt2Wrong = true; break;
-                case 3: Opt3Wrong = true; break;
-            }
+            case 0: Opt0Colour = colour; break;
+            case 1: Opt1Colour = colour; break;
+            case 2: Opt2Colour = colour; break;
+            case 3: Opt3Colour = colour; break;
         }
     }
 

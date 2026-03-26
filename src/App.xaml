@@ -2,9 +2,16 @@
 <Application
     x:Class="AwsSaaC03Practice.App"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:AwsSaaC03Practice">
     <Application.Resources>
         <ResourceDictionary>
+            <!-- ── Converters (referenced as StaticResource in all views) ── -->
+            <local:StringHelper x:Key="IsNotEmpty" />
+            <local:CountToVisibility x:Key="CountToVisible" />
+            <local:InvertBool x:Key="InvertBool" />
+            <local:PercentToWidth x:Key="PercentToWidth" />
+
             <!-- ── Colour palette ── -->
             <Color x:Key="BgPage">#0d1117</Color>
             <Color x:Key="BgCard">#161b22</Color>

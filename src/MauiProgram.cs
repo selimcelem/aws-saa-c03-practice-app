@@ -14,8 +14,7 @@ public static class MauiProgram
 
         builder
             .UseMauiApp<App>()
-            .UseSkiaSharp()     // Required by LiveChartsCore
-            .UseLiveCharts()
+            .UseLiveCharts()    // Includes SkiaSharp setup
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");

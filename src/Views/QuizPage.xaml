@@ -16,8 +16,7 @@
             <Label Grid.Column="1" Text="{Binding TimerText}"
                    IsVisible="{Binding TimerVisible}"
                    TextColor="{StaticResource Warning}" FontAttributes="Bold"
-                   FontSize="20" VerticalOptions="Center" Margin="0,0,12,0"
-                   FontFamily="OpenSansRegular" />
+                   FontSize="20" VerticalOptions="Center" Margin="0,0,12,0" />
             <Button Grid.Column="2" Text="Stop"
                     Style="{StaticResource DangerButtonStyle}"
                     Command="{Binding StopCommand}"
@@ -35,30 +34,28 @@
                            TextColor="{StaticResource TextPrimary}" />
                 </Border>
 
-                <!-- Option buttons -->
+                <!-- Option buttons — BackgroundColor driven by ViewModel Color properties -->
                 <VerticalStackLayout Spacing="10">
-                    <!-- Option 0 -->
                     <Button Text="{Binding CurrentQuestion.Options[0]}"
                             Command="{Binding SelectAnswerCommand}" CommandParameter="0"
                             Style="{StaticResource AnswerButtonStyle}"
-                            BackgroundColor="{Binding Opt0Correct, Converter={x:Static OptionColourConverter.Correct},
-                                             FallbackValue={StaticResource BgCardAlt}}"
-                            IsEnabled="{Binding AnswerRevealed, Converter={x:Static InvertBool.Instance}}" />
-                    <!-- Option 1 -->
+                            BackgroundColor="{Binding Opt0Colour}"
+                            IsEnabled="{Binding AnswerRevealed, Converter={StaticResource InvertBool}}" />
                     <Button Text="{Binding CurrentQuestion.Options[1]}"
                             Command="{Binding SelectAnswerCommand}" CommandParameter="1"
                             Style="{StaticResource AnswerButtonStyle}"
-                            IsEnabled="{Binding AnswerRevealed, Converter={x:Static InvertBool.Instance}}" />
-                    <!-- Option 2 -->
+                            BackgroundColor="{Binding Opt1Colour}"
+                            IsEnabled="{Binding AnswerRevealed, Converter={StaticResource InvertBool}}" />
                     <Button Text="{Binding CurrentQuestion.Options[2]}"
                             Command="{Binding SelectAnswerCommand}" CommandParameter="2"
                             Style="{StaticResource AnswerButtonStyle}"
-                            IsEnabled="{Binding AnswerRevealed, Converter={x:Static InvertBool.Instance}}" />
-                    <!-- Option 3 -->
+                            BackgroundColor="{Binding Opt2Colour}"
+                            IsEnabled="{Binding AnswerRevealed, Converter={StaticResource InvertBool}}" />
                     <Button Text="{Binding CurrentQuestion.Options[3]}"
                             Command="{Binding SelectAnswerCommand}" CommandParameter="3"
                             Style="{StaticResource AnswerButtonStyle}"
-                            IsEnabled="{Binding AnswerRevealed, Converter={x:Static InvertBool.Instance}}" />
+                            BackgroundColor="{Binding Opt3Colour}"
+                            IsEnabled="{Binding AnswerRevealed, Converter={StaticResource InvertBool}}" />
                 </VerticalStackLayout>
 
                 <!-- Answer reveal panel -->
@@ -66,14 +63,12 @@
                         IsVisible="{Binding AnswerRevealed}"
                         BackgroundColor="#1a2744">
                     <VerticalStackLayout Spacing="10">
-                        <!-- Category pill -->
                         <Border Style="{StaticResource PillStyle}"
                                 BackgroundColor="{StaticResource AccentSubtle}"
                                 HorizontalOptions="Start">
                             <Label Text="{Binding CurrentQuestion.Category}"
                                    TextColor="{StaticResource Accent}" FontSize="12" />
                         </Border>
-                        <!-- Explanation -->
                         <Label Text="{Binding CurrentQuestion.Explanation}"
                                FontSize="14" LineHeight="1.5"
                                TextColor="{StaticResource TextSecondary}" />
@@ -83,7 +78,7 @@
             </VerticalStackLayout>
         </ScrollView>
 
-        <!-- Next button (only visible after answer revealed) -->
+        <!-- Next button -->
         <Button Grid.Row="2" Text="Next  →"
                 Command="{Binding NextCommand}"
                 IsVisible="{Binding AnswerRevealed}"

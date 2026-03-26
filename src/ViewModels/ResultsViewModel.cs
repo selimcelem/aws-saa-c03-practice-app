@@ -155,7 +155,6 @@ public partial class ResultsViewModel : BaseViewModel
                 Labels = top.Select(c => c.Category).ToArray(),
                 LabelsPaint = new SolidColorPaint(SKColor.Parse("#c9d1d9")),
                 SeparatorsPaint = new SolidColorPaint(SKColor.Parse("#30363d")),
-                TicksPaint = null,
             }
         };
     }

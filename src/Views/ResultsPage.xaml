@@ -81,16 +81,16 @@
 
             <!-- ── Needs work pills ── -->
             <Border Style="{StaticResource CardStyle}"
-                    IsVisible="{Binding NeedsWork.Count, Converter={x:Static CountToVisibility.Instance}}">
+                    IsVisible="{Binding NeedsWork.Count, Converter={StaticResource CountToVisible}}">
                 <VerticalStackLayout Spacing="10">
                     <Label Text="Needs Work  (&lt;65%)" TextColor="{StaticResource Danger}"
                            FontAttributes="Bold" FontSize="14" />
                     <FlexLayout BindableLayout.ItemsSource="{Binding NeedsWork}"
-                                Wrap="Wrap" Direction="Row" Gap="8">
+                                Wrap="Wrap" Direction="Row">
                         <BindableLayout.ItemTemplate>
                             <DataTemplate x:DataType="model:CategoryScore">
                                 <Border Style="{StaticResource PillStyle}"
-                                        BackgroundColor="#2d1a1a">
+                                        BackgroundColor="#2d1a1a" Margin="0,0,6,6">
                                     <Label TextColor="{StaticResource Danger}" FontSize="12"
                                            Text="{Binding Category, StringFormat='{0} ({1:F0}%)'}" />
                                 </Border>
@@ -102,16 +102,16 @@
 
             <!-- ── Strong areas pills ── -->
             <Border Style="{StaticResource CardStyle}"
-                    IsVisible="{Binding StrongAreas.Count, Converter={x:Static CountToVisibility.Instance}}">
+                    IsVisible="{Binding StrongAreas.Count, Converter={StaticResource CountToVisible}}">
                 <VerticalStackLayout Spacing="10">
                     <Label Text="Strong Areas  (&gt;80%)" TextColor="{StaticResource Success}"
                            FontAttributes="Bold" FontSize="14" />
                     <FlexLayout BindableLayout.ItemsSource="{Binding StrongAreas}"
-                                Wrap="Wrap" Direction="Row" Gap="8">
+                                Wrap="Wrap" Direction="Row">
                         <BindableLayout.ItemTemplate>
                             <DataTemplate x:DataType="model:CategoryScore">
                                 <Border Style="{StaticResource PillStyle}"
-                                        BackgroundColor="#0d2b18">
+                                        BackgroundColor="#0d2b18" Margin="0,0,6,6">
                                     <Label TextColor="{StaticResource Success}" FontSize="12"
                                            Text="{Binding Category, StringFormat='{0} ({1:F0}%)'}" />
                                 </Border>
@@ -136,7 +136,7 @@
                         Command="{Binding DrillWeakestCommand}"
                         Style="{StaticResource SecondaryButtonStyle}"
                         FontSize="13"
-                        IsVisible="{Binding WeakestCategory, Converter={x:Static StringHelper.IsNotEmpty}}" />
+                        IsVisible="{Binding WeakestCategory, Converter={StaticResource IsNotEmpty}}" />
                 <Button Grid.Column="2" Text="Home"
                         Command="{Binding GoHomeCommand}"
                         FontSize="13" />
