@@ -79,6 +79,58 @@ git check-ignore -v infra/terraform.tfvars  # Should return: .gitignore:7:terraf
 ```
 
 ### What's next
-ACTION REQUIRED: Push to GitHub. See instructions below, then Phase 3 — Terraform infrastructure.
+Phase 3 — Terraform infrastructure.
+
+---
+
+## [Phase 3] — AWS Infrastructure via Terraform
+**Date:** 2026-03-26
+**Status:** Complete (pending first terraform apply + Google OAuth setup)
+
+### What was done
+Created three Terraform files in `infra/`:
+
+**`infra/main.tf`** provisions:
+| Resource | Details |
+|---|---|
+| `aws_s3_bucket.main` | Private bucket, public access blocked, versioning off. Name: `saa-c03-practice-<random>` |
+| `aws_s3_object.questions` | Uploads `src/Data/questions.json` to the bucket on apply |
+| `aws_cognito_user_pool.main` | Email-based auth, password policy, `eu-west-1` |
+| `aws_cognito_user_pool_domain.main` | Hosted UI domain for OAuth redirects |
+| `aws_cognito_identity_provider.google` | Google IDP — created only when `google_client_id` variable is non-empty (second apply) |
+| `aws_cognito_user_pool_client.main` | Public client (no secret), SRP + refresh auth, callbacks: `http://localhost` + `myapp://callback` |
+| `aws_iam_policy.s3_app_access` | Scoped to `s3:ListBucket`, `s3:GetObject`, `s3:PutObject`, `s3:DeleteObject` on this bucket only |
+
+**`infra/variables.tf`** — region, project_name, environment, google_client_id (sensitive), google_client_secret (sensitive)
+
+**`infra/outputs.tf`** — cognito_user_pool_id, cognito_client_id, cognito_domain, cognito_hosted_ui_url, s3_bucket_name, region
+
+All resources tagged: `Project = "saa-c03-practice-app"`, `Environment = "dev"`
+
+### Why
+- Local Terraform state only — no S3 backend, zero extra cost, instant destroy/rebuild
+- Google IDP uses `count = var.google_client_id != "" ? 1 : 0` to support a two-phase apply (create infrastructure first, then wire OAuth after getting the Cognito domain)
+- No client secret on the Cognito App Client — native mobile and desktop apps cannot securely store secrets
+
+### How to reproduce on a new machine
+```bash
+# Prerequisites: AWS CLI configured (aws configure), Terraform installed
+
+cd infra
+terraform init
+terraform apply         # First apply — no Google credentials yet
+# Note outputs; set up Google OAuth (see Phase 3 ACTION REQUIRED steps)
+# Create infra/terraform.tfvars with google_client_id and google_client_secret
+terraform apply         # Second apply — wires Google into Cognito
+
+# Save outputs to file (non-sensitive, can be committed)
+terraform output -json > outputs.json
+
+# To destroy everything and reach $0:
+terraform destroy
+```
+
+### What's next
+ACTION REQUIRED (below): First terraform apply, then Google OAuth setup, then second apply. After confirmation — Phase 4: Build the .NET MAUI app.
 
 ---
