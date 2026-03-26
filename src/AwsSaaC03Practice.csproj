@@ -45,6 +45,11 @@
   <!-- Android-only packages -->
   <ItemGroup Condition="'$(TargetFramework)' == 'net8.0-android'">
     <PackageReference Include="Xamarin.AndroidX.Browser" Version="1.8.0.1" />
+    <!-- Pin AndroidX Collection to a single version family to prevent duplicate class errors.
+         Collection.Jvm 1.4.x absorbed classes that Collection.Ktx 1.2.x contained separately. -->
+    <PackageReference Include="Xamarin.AndroidX.Collection" Version="1.4.0.3" />
+    <PackageReference Include="Xamarin.AndroidX.Collection.Jvm" Version="1.4.0.3" />
+    <PackageReference Include="Xamarin.AndroidX.Collection.Ktx" Version="1.4.0.3" />
   </ItemGroup>
 
 </Project>
