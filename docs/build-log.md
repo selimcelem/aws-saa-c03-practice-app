@@ -2,6 +2,27 @@
 
 ---
 
+## Current Status — Last updated 2026-03-28
+
+### Completed
+- Phases 1-12 complete -- app built, tested, signed release APK working on device
+- CI/CD pipeline working (GitHub Actions)
+- Ko-fi support button integrated
+- Privacy policy live at GitHub URL
+- Release keystore generated and backed up
+
+### Waiting
+- Google Play identity verification -- submitted, waiting 1-3 days for approval
+- Cannot create app listing or upload AAB until verification complete
+
+### Ready to go when verified
+- Signed AAB at: `src/bin/Release/net8.0-android/publish/com.dev.awssaac03practice-Signed.aab`
+- Play Store description needs to be written
+- Screenshots need to be taken (Dashboard, Quiz, Results, ModePicker)
+- App icon 512x512 PNG needed for Play Store listing
+
+---
+
 ## [Phase 1] — Question Bank (100 Questions)
 **Date:** 2026-03-26
 **Status:** Complete
