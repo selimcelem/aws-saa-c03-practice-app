@@ -497,27 +497,20 @@ Phase 11 -- Firebase Crashlytics.
 
 ---
 
-## [Phase 11] — Firebase Crashlytics
+## [Phase 11] — Crash Reporting
 **Date:** 2026-03-27
-**Status:** Complete
+**Status:** Complete (local crash log only -- Firebase removed)
 
 ### What was done
-- Integrated Firebase Crashlytics for Android crash reporting
-- Added NuGet packages: `Xamarin.Firebase.Crashlytics`, `Xamarin.GooglePlayServices.Base`
-- Pinned `Xamarin.AndroidX.Lifecycle.Common` to `2.7.0.2` to resolve transitive version conflict
-- Configured `google-services.json` as `GoogleServicesJson` build action in csproj (Android only)
-- Initialized Firebase in `Platforms/Android/MainActivity.cs` via `FirebaseApp.InitializeApp()` and `FirebaseCrashlytics.Instance.SetCrashlyticsCollectionEnabled(true)`
-- Wired Crashlytics into `App.LogCrash()` -- all unhandled exceptions on Android are logged to Crashlytics via `RecordException()` with a descriptive log message
-- Added `google-services.json` to `.gitignore` (already present); created `google-services.example.json` template
+- **Attempted** Firebase Crashlytics integration: added `Xamarin.Firebase.Crashlytics` and `Xamarin.GooglePlayServices.Base` NuGet packages, initialized Firebase in MainActivity, wired into `App.LogCrash()`
+- **Reverted** Firebase Crashlytics: the Xamarin.Firebase packages introduced AndroidX version conflicts that broke SkiaSharp handler registration (`HandlerNotFoundException: CPURenderMode`) and caused `NullPointerException` on `PackageItemInfo.metaData` at app startup. These are known compatibility issues between Xamarin.Firebase bindings and .NET MAUI 8
+- **Kept** existing local crash logging: `App.LogCrash()` writes to `crash.log` on disk via `AppDomain.UnhandledException`, `TaskScheduler.UnobservedTaskException`, and `WinUI.UnhandledException` handlers. This is sufficient for development and early production
 
 ### Why
-Crash reporting is essential for identifying and fixing issues in production. Firebase Crashlytics provides real-time crash reports, stack traces, and affected user counts in the Firebase Console at no cost.
+Firebase Crashlytics Xamarin bindings are not fully compatible with .NET MAUI 8. The NuGet packages pull in older AndroidX transitive dependencies that conflict with MAUI's own AndroidX requirements. The local crash log provides adequate crash reporting for the current user base.
 
 ### How to reproduce on a new machine
-1. Create a Firebase project and register the Android app (`com.selimcelem.awssaac03practice`)
-2. Download `google-services.json` from Firebase Console
-3. Place it at `src/Platforms/Android/google-services.json`
-4. Build: `dotnet build -f net8.0-android`
+No setup needed -- crash logging is built in. Crash log is written to `{AppDataDirectory}/crash.log` (Android) or `D:\Projects\aws-saa-c03-practice-app\crash.log` (Windows dev).
 
 ### What's next
 Play Store submission -- create Google Play Console listing, upload signed APK, set up store listing metadata.
