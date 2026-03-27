@@ -137,7 +137,7 @@
       "B. App server security group: inbound from the ALB security group ID on port 8080"
     ],
     "correct": 3,
-    "explanation": "App server security group: inbound from is correct because referencing the ALB's security group as the source in the app server's inbound rule ensures only traffic originating from.\nApp server security group: inbound from 0.0.0.0/0 is incorrect because allows all internet traffic.\nApp server security group: inbound from is incorrect because allows any resource in the public subnet.\nApp server security group: inbound from is incorrect because this is more precise than CIDR-based rules because it doesn't matter if the ALB's IPs change."
+    "explanation": "APP server security group: inbound from the alb is correct because it best meets the requirements.\nApp server security group: inbound from 0.0.0.0/0 is incorrect because allows all internet traffic.\nApp server security group: inbound from the vpc is incorrect because it does not meet the specific requirements of this scenario.\nApp server security group: inbound from the public is incorrect because it does not meet the specific requirements of this scenario."
   },
   {
     "id": "q011",
@@ -389,7 +389,7 @@
       "B. The delete fails because an explicit Deny always overrides an Allow in IAM policy evaluation"
     ],
     "correct": 3,
-    "explanation": "The delete fails because in AWS IAM policy evaluation, an explicit Deny always overrides any Allow, regardless of how many Allow statements exist. The delete succeeds because the is incorrect because since there is an explicit Deny on s3:DeleteBucket for production-* buckets, the developer cannot delete production-data even though. The delete succeeds because bucket-level is incorrect because the policy evaluation order is: explicit deny -> explicit allow -> implicit deny. The delete fails only is incorrect because this is a fundamental IAM rule."
+    "explanation": "The delete fails because in AWS IAM policy evaluation, an explicit Deny always overrides any Allow, regardless of how many Allow statements exist.\nThe delete succeeds because the is incorrect because since there is an explicit Deny on s3:DeleteBucket for production-* buckets, the developer cannot delete production-data even though.\nThe delete fails only is incorrect because this is a fundamental IAM rule.\nThe delete succeeds because bucket-level is incorrect because the policy evaluation order is: explicit deny -> explicit allow -> implicit deny."
   },
   {
     "id": "q029",
@@ -459,7 +459,7 @@
       "B. Scheduled scaling action to increase desired capacity at 8:45 AM and decrease at 6:15 PM on weekdays"
     ],
     "correct": 3,
-    "explanation": "Scheduled scaling action is correct because scheduled scaling fires proactively at a specific time, adding capacity before load arrives rather than reacting to it.\nTarget Tracking scaling is incorrect because target Tracking reacts to real-time metrics -- instances scale out only after CPU climbs, which may be too.\nStep scaling policy is incorrect because step scaling and Simple scaling are also reactive.\nSimple scaling policy is incorrect because since the load pattern is predictable (weekdays 9 AM), scheduled scaling ensures instances are warm and ready."
+    "explanation": "Scheduled scaling action is correct because scheduled scaling fires proactively at a specific time, adding capacity before load arrives rather than reacting to it.\nTarget Tracking scaling is incorrect because target Tracking reacts to real-time metrics -- instances scale out only after CPU climbs, which may be too.\nSimple scaling policy is incorrect because since the load pattern is predictable (weekdays 9 AM), scheduled scaling ensures instances are warm and ready.\nStep scaling policy is incorrect because step scaling and Simple scaling are also reactive."
   },
   {
     "id": "q034",
@@ -1761,7 +1761,7 @@
       "D. Create a security group for the application tier that allows inbound traffic on the application port from the elastic IP addresses of each individual web server instance listed explicitly"
     ],
     "correct": 1,
-    "explanation": "Create a security group for the is correct because referencing the web tier security group ID as the source allows any instance associated with that.\nCreate a security group for the is incorrect because using subnet CIDR blocks would allow any resource in those subnets, not just web servers.\nCreate a security group for the is incorrect because allowing all VPC traffic is overly permissive and relying on NACLs alone is not a.\nCreate a security group for the is incorrect because listing individual IP addresses does not scale with auto-scaling groups and web servers in private."
+    "explanation": "CREATE a security group for the application tier is correct because it best meets the requirements.\nCreate a security group for the application tier is incorrect because it does not meet the specific requirements of this scenario.\nCreate a security group for the application tier is incorrect because it does not meet the specific requirements of this scenario.\nCreate a security group for the application tier is incorrect because it does not meet the specific requirements of this scenario."
   },
   {
     "id": "q0127",
@@ -1789,7 +1789,7 @@
       "D. Remove the 0.0.0.0/0 rule, add an inbound rule on the RDS security group allowing port 3306 from the private IP addresses of each current EC2 instance running the application component"
     ],
     "correct": 0,
-    "explanation": "Remove the 0.0.0.0/0 rule, add an is correct because referencing the app-sg security group ID restricts database access to only instances with that security group.\nRemove the 0.0.0.0/0 rule, add an is incorrect because keeping the 0.0.0.0/0 rule does not remediate the security finding, and NACLs add complexity.\nKeep the existing is incorrect because using individual IP addresses does not scale with Auto Scaling and requires manual updates when.\nRemove the 0.0.0.0/0 rule, add an is incorrect because allowing the entire VPC CIDR block is still overly permissive, granting access to any resource."
+    "explanation": "REMOVE the 0.0.0.0/0 rule, add an inbound rule is correct because it best meets the requirements.\nRemove the 0.0.0.0/0 rule, add an inbound rule is incorrect because it does not meet the specific requirements of this scenario.\nKeep the is incorrect because using individual IP addresses does not scale with Auto Scaling and requires manual updates when.\nRemove the 0.0.0.0/0 rule, add an inbound rule is incorrect because it does not meet the specific requirements of this scenario."
   },
   {
     "id": "q0129",
@@ -1803,7 +1803,7 @@
       "D. Assign a unique security group to each microservice ECS task, with inbound rules allowing traffic from the entire VPC CIDR range on the specific ports each microservice listens on"
     ],
     "correct": 1,
-    "explanation": "Assign a unique security group to is correct because assigning unique security groups per microservice with rules referencing specific security group IDs provides the most.\nAssign a single shared is incorrect because a single shared security group allowing all internal traffic does not provide granular access control.\nAssign a single security is incorrect because IAM task roles control access to AWS API resources, not network-level communication between containers.\nAssign a unique security group to is incorrect because allowing the entire VPC CIDR range is overly permissive compared to security group ID references."
+    "explanation": "ASSIGN a unique security group to each microservice is correct because it best meets the requirements.\nAssign a single shared is incorrect because a single shared security group allowing all internal traffic does not provide granular access control.\nAssign a single security is incorrect because IAM task roles control access to AWS API resources, not network-level communication between containers.\nAssign a unique security group to each microservice is incorrect because it does not meet the specific requirements of this scenario."
   },
   {
     "id": "q0130",
@@ -1873,7 +1873,7 @@
       "D. Inbound: allow port 443 from 0.0.0.0/0, allow port 8080 from the private subnet CIDR. Outbound: allow port 443 to 0.0.0.0/0, allow port 8080 to the private subnet CIDR for full connectivity"
     ],
     "correct": 0,
-    "explanation": "Inbound: allow port 443 from 0.0.0.0/0, is correct because NACLs are stateless and require explicit rules for return traffic on ephemeral ports.\nInbound: allow port 443 from 0.0.0.0/0, is incorrect because allowing all traffic defeats the purpose of using NACLs as a security layer.\nInbound: allow all is incorrect because NACLs are stateless and do not track connection state, so return traffic must be explicitly.\nis incorrect because the public subnet needs inbound HTTPS and return traffic from the backend, plus outbound rules for backend communication."
+    "explanation": "INBOUND: allow port 443 from 0.0.0.0/0, allow ports is correct because it best meets the requirements.\nInbound: allow port 443 from 0.0.0.0/0 only. is incorrect because it does not meet the specific requirements of this scenario.\nInbound: allow all is incorrect because NACLs are stateless and do not track connection state, so return traffic must be explicitly.\nInbound: allow port 443 from 0.0.0.0/0, allow port 8080 is incorrect because it does not meet the specific requirements of this scenario."
   },
   {
     "id": "q0135",
@@ -2083,7 +2083,7 @@
       "D. Create a single trail for management events only and use S3 server access logging on the financial record buckets as an alternative to CloudTrail data events for tracking object-level access"
     ],
     "correct": 2,
-    "explanation": "Create a single trail with management is correct because advanced event selectors allow configuring data event logging for specific S3 buckets on a single trail.\nCreate two separate is incorrect because two trails are unnecessary when a single trail with advanced event selectors can handle both.\nCreate a single trail with management is incorrect because logging data events for all buckets first and deleting logs later still incurs the full.\nCreate a single trail for is incorrect because S3 server access logging does not provide the same detail as CloudTrail data events and."
+    "explanation": "CREATE a single trail with management events enabled is correct because it best meets the requirements.\nCreate two is incorrect because two trails are unnecessary when a single trail with advanced event selectors can handle both.\nCreate a single trail with management events enabled is incorrect because it does not meet the specific requirements of this scenario.\nCreate a single trail for is incorrect because S3 server access logging does not provide the same detail as CloudTrail data events and."
   },
   {
     "id": "q0150",
@@ -2909,7 +2909,7 @@
       "D. Place the web tier in public subnets behind an Application Load Balancer, application tier in private subnets with NAT gateway access, and database in private subnets"
     ],
     "correct": 3,
-    "explanation": "Place the web tier in public is correct because and is correct.\nPlace all three tiers in public is incorrect because A is wrong because placing all tiers in public subnets exposes them to the internet and relies solely.\nPlace the web tier in public is incorrect because is wrong because isolated private subnets with no routes would prevent the application tier from communicating with.\nPlace all three tiers in private is incorrect because is wrong because NAT gateways only support outbound traffic, so the web tier could not receive inbound."
+    "explanation": "PLACE the web tier in public subnets behind is correct because it best meets the requirements.\nPlace all three tiers in public is incorrect because A is wrong because placing all tiers in public subnets exposes them to the internet and relies solely.\nPlace the web tier in public subnets with is incorrect because it does not meet the specific requirements of this scenario.\nPlace all three tiers in private is incorrect because is wrong because NAT gateways only support outbound traffic, so the web tier could not receive inbound."
   },
   {
     "id": "q0209",
@@ -3021,7 +3021,7 @@
       "D. Configure the Lambda functions with VPC access to the private subnet and create VPC endpoints for each external API the functions need to call for internet access"
     ],
     "correct": 0,
-    "explanation": "Configure the Lambda functions with VPC is correct because A is correct.\nDeploy the Lambda is incorrect because is wrong because Lambda functions not in a VPC cannot access private VPC resources like RDS and.\nPlace the Lambda is incorrect because is wrong because Lambda functions are always placed in private subnets when configured for VPC access; they.\nConfigure the Lambda functions with VPC is incorrect because A NAT gateway in a public subnet with proper routing enables the Lambda functions to reach external APIs."
+    "explanation": "CONFIGURE the lambda functions with vpc access to is correct because it best meets the requirements.\nDeploy the is incorrect because is wrong because Lambda functions not in a VPC cannot access private VPC resources like RDS and.\nPlace the is incorrect because is wrong because Lambda functions are always placed in private subnets when configured for VPC access; they.\nConfigure the lambda functions with vpc access to is incorrect because it does not meet the specific requirements of this scenario."
   },
   {
     "id": "q0217",
@@ -3035,7 +3035,7 @@
       "D. Configure the ALB security group to allow outbound HTTPS on port 443 only and remove all inbound rules from the EC2 security group to prevent direct access"
     ],
     "correct": 1,
-    "explanation": "Configure the EC2 security group to is correct because is correct.\nConfigure the EC2 security group to is incorrect because and is wrong because removing all inbound rules from the EC2 security group would block all traffic including.\nConfigure the EC2 security group to is incorrect because is wrong because ALB IP addresses change as it scales, making manual IP management unreliable and error-prone.\nConfigure the ALB is incorrect because A is wrong because allowing 0.0.0.0/0 permits any source to connect directly to the instances, bypassing the ALB."
+    "explanation": "CONFIGURE the ec2 security group to allow inbound is correct because it best meets the requirements.\nConfigure the ec2 security group to allow inbound is incorrect because it does not meet the specific requirements of this scenario.\nConfigure the ec2 security group to allow inbound is incorrect because it does not meet the specific requirements of this scenario.\nConfigure the alb is incorrect because A is wrong because allowing 0.0.0.0/0 permits any source to connect directly to the instances, bypassing the ALB."
   },
   {
     "id": "q0218",
@@ -3063,7 +3063,7 @@
       "D. Create separate security groups with no inbound rules on either service, and instead configure outbound rules on Service A group allowing traffic to Service B on port 8080"
     ],
     "correct": 1,
-    "explanation": "Create separate security groups for each is correct because A is correct.\nCreate one security is incorrect because by allowing inbound port 8080 on Service from Service A security group, connections initiated by A to.\nCreate separate security groups for each is incorrect because is wrong because security groups do not support deny rules; they only support allow rules.\nCreate separate security groups with is incorrect because and is wrong because outbound rules alone on Service A do not permit the traffic unless Service B."
+    "explanation": "CREATE separate security groups for each service, allow is correct because it best meets the requirements.\nCreate one is incorrect because by allowing inbound port 8080 on Service from Service A security group, connections initiated by A to.\nCreate separate security groups for each service, allow is incorrect because it does not meet the specific requirements of this scenario.\nCreate separate security groups with is incorrect because and is wrong because outbound rules alone on Service A do not permit the traffic unless Service B."
   },
   {
     "id": "q0220",
@@ -3133,7 +3133,7 @@
       "B. Inbound rules allowing ports 80, 443 from 0.0.0.0/0 and port 22 from management CIDR. Outbound rules allowing ephemeral ports 1024-65535 to 0.0.0.0/0"
     ],
     "correct": 3,
-    "explanation": "Inbound rules allowing ports 80, 443 is correct because is correct.\nInbound rules allowing ports 80, 443 is incorrect because A is wrong because outbound rules allowing only ports 80 and 443 would block SSH response traffic and.\nInbound rules allowing ports 80, 443, is incorrect because the outbound rules must allow ephemeral ports (1024-65535) to 0.0.0.0/0 because NACLs are stateless and return traffic from.\nInbound rules allowing all is incorrect because is wrong because allowing all inbound TCP traffic is overly permissive and defeats the purpose of the."
+    "explanation": "INBOUND rules allowing ports 80, 443 from 0.0.0.0/0 is correct because it best meets the requirements.\nInbound rules allowing ports 80, 443 from 0.0.0.0/0 is incorrect because it does not meet the specific requirements of this scenario.\nInbound rules allowing ports 80, 443, is incorrect because the outbound rules must allow ephemeral ports (1024-65535) to 0.0.0.0/0 because NACLs are stateless and return traffic from.\nInbound rules allowing all is incorrect because is wrong because allowing all inbound TCP traffic is overly permissive and defeats the purpose of the."
   },
   {
     "id": "q0225",
@@ -4267,7 +4267,7 @@
       "D. Configure the RDS security group with no inbound rules and rely on the network ACL associated with the database subnet to allow traffic only from the application server IP addresses"
     ],
     "correct": 1,
-    "explanation": "Configure the RDS security group to is correct because is correct.\nConfigure the RDS security group to is incorrect because is wrong because a security group with no inbound rules blocks all traffic, and NACLs are stateless, making.\nConfigure the RDS security group to is incorrect because is wrong because allowing all inbound traffic to the database is extremely permissive and outbound rules on the.\nConfigure the RDS security group with is incorrect because is wrong because using subnet CIDR blocks allows any resource in those subnets to connect, not just the."
+    "explanation": "CONFIGURE the rds security group to allow inbound is correct because it best meets the requirements.\nConfigure the rds security group to allow inbound is incorrect because it does not meet the specific requirements of this scenario.\nConfigure the rds security group to allow all is incorrect because it does not meet the specific requirements of this scenario.\nConfigure the rds security group with is incorrect because is wrong because using subnet CIDR blocks allows any resource in those subnets to connect, not just the."
   },
   {
     "id": "q0306",
@@ -4309,7 +4309,7 @@
       "D. Bastion SG: allow inbound SSH from 203.0.113.0/24. Private instance SG: allow inbound SSH from the bastion security group ID. Both groups allow all outbound traffic by default"
     ],
     "correct": 3,
-    "explanation": "Bastion SG: allow inbound SSH from is correct because is correct.\nBastion SG: allow inbound SSH from the is incorrect because is wrong because allowing the entire VPC CIDR to SSH into the bastion is overly permissive and does.\nBastion SG: allow inbound SSH from is incorrect because default outbound rules allow all traffic.\nis incorrect because is wrong because allowing SSH from 0.0.0.0/0 to the bastion opens it to the entire internet, and security."
+    "explanation": "BASTION sg: allow inbound ssh from 203.0.113.0/24. private is correct because it best meets the requirements.\nBastion sg: allow inbound ssh from the is incorrect because is wrong because allowing the entire VPC CIDR to SSH into the bastion is overly permissive and does.\nBastion sg: allow inbound ssh from 0.0.0.0/0. is incorrect because it does not meet the specific requirements of this scenario.\nBastion sg: allow inbound ssh from 203.0.113.0/24. private is incorrect because it does not meet the specific requirements of this scenario."
   },
   {
     "id": "q0309",
@@ -4729,7 +4729,7 @@
       "D. Configure a Cognito User Pool authorizer on API Gateway for authentication, and add authorization scopes on the API method that correspond to the premium-users group custom OAuth scopes"
     ],
     "correct": 3,
-    "explanation": "Configure a Cognito User Pool authorizer is correct because is correct.\nCreate a Lambda is incorrect because is wrong because a Lambda authorizer adds execution cost and latency for every request, and calling the Cognito.\nConfigure a Cognito User Pool authorizer is incorrect because is wrong because checking group claims in the Lambda integration means unauthorized requests still invoke the Lambda function.\nImplement token validation is incorrect because is wrong because implementing token validation in every Lambda function duplicates security logic across functions and increases the."
+    "explanation": "CONFIGURE a cognito user pool authorizer on api is correct because it best meets the requirements.\nCreate a is incorrect because is wrong because a Lambda authorizer adds execution cost and latency for every request, and calling the Cognito.\nConfigure a cognito user pool authorizer on the is incorrect because it does not meet the specific requirements of this scenario.\nImplement token is incorrect because is wrong because implementing token validation in every Lambda function duplicates security logic across functions and increases the."
   },
   {
     "id": "q0339",
@@ -4883,7 +4883,7 @@
       "D. Configure EventBridge cross-region event forwarding from each region to a central region, create EventBridge rules that import findings into the central region Security Hub using BatchImportFindings"
     ],
     "correct": 2,
-    "explanation": "Enable Security Hub in each region is correct because is correct.\nEnable Security Hub in each region is incorrect because is wrong because building a custom dashboard with Athena requires significant development effort when Security Hub provides native.\nEnable Security Hub only is incorrect because is wrong because Security Hub must be enabled in each region individually; it does not automatically collect findings.\nConfigure EventBridge cross-region is incorrect because is wrong because while EventBridge forwarding could technically aggregate events, it is overly complex compared to the native."
+    "explanation": "ENABLE security hub in each region and designate is correct because it best meets the requirements.\nEnable security hub in each region and configure is incorrect because it does not meet the specific requirements of this scenario.\nEnable security hub only is incorrect because is wrong because Security Hub must be enabled in each region individually; it does not automatically collect findings.\nConfigure eventbridge is incorrect because is wrong because while EventBridge forwarding could technically aggregate events, it is overly complex compared to the native."
   },
   {
     "id": "q0350",
@@ -5191,7 +5191,7 @@
       "D. Deploy EC2 instances in a single AZ using Dedicated Hosts with host recovery enabled so that if the underlying hardware fails the instances are automatically migrated to new hardware in the same AZ"
     ],
     "correct": 2,
-    "explanation": "Deploy EC2 instances across is correct because spreading instances across three AZs behind an ALB with Auto Scaling ensures that if one AZ fails the remaining.\nDeploy EC2 instances in two is incorrect because multi-Region deployment with NLB is overly complex for AZ-level resilience and NLB cannot span Regions.\nDeploy EC2 instances in a single is incorrect because manual intervention introduces delay and does not provide automatic failover.\nDeploy EC2 instances in a single is incorrect because Dedicated Host recovery keeps instances in the same AZ which does not address AZ-level failures."
+    "explanation": "DEPLOY ec2 instances across is correct because spreading instances across three AZs behind an ALB with Auto Scaling ensures that if one AZ fails the remaining.\nDeploy ec2 instances in two is incorrect because multi-Region deployment with NLB is overly complex for AZ-level resilience and NLB cannot span Regions.\nDeploy ec2 instances in a single az with is incorrect because it does not meet the specific requirements of this scenario.\nDeploy ec2 instances in a single az using is incorrect because it does not meet the specific requirements of this scenario."
   },
   {
     "id": "q0372",
@@ -5359,7 +5359,7 @@
       "D. Enable automated backups with a 35-day retention period and use AWS Backup to create a backup plan with a 7-year lifecycle rule that automatically transitions backups to cold storage after 90 days"
     ],
     "correct": 3,
-    "explanation": "Enable automated backups with a 35-day is correct because automated backups with 35-day retention provide point-in-time recovery for operational needs and AWS Backup with a.\nEnable automated backups with a 35-day is incorrect because disabling automated backups removes point-in-time recovery capability and DMS to S3 does not provide the.\nEnable automated backups with a 7-year is incorrect because RDS automated backup retention is limited to a maximum of 35 days not 7 years.\nDisable automated backups is incorrect because while manual snapshots work for long-term retention managing them manually is operationally burdensome and lacks."
+    "explanation": "ENABLE automated backups with a 35-day retention period and is correct because it best meets the requirements.\nEnable automated backups with a 35-day retention period for is incorrect because it does not meet the specific requirements of this scenario.\nEnable automated backups with a 7-year is incorrect because RDS automated backup retention is limited to a maximum of 35 days not 7 years.\nDisable automated is incorrect because while manual snapshots work for long-term retention managing them manually is operationally burdensome and lacks."
   },
   {
     "id": "q0384",
@@ -5681,7 +5681,7 @@
       "D. Create a Route 53 public hosted zone for the domain then create an alias A record pointing to the ALB and add the required MX and TXT records for Amazon SES email verification and delivery"
     ],
     "correct": 3,
-    "explanation": "Create a Route 53 public hosted is correct because a public hosted zone with an alias A record for the ALB and MX plus TXT.\nCreate a Route 53 public hosted is incorrect because ALB IP addresses change dynamically and should not be used in A records and a.\nCreate a Route 53 private is incorrect because a private hosted zone is not resolvable from the internet and CNAME records cannot be.\nCreate a Route 53 public hosted is incorrect because CNAME records cannot be created at the zone apex in DNS standards and Route 53."
+    "explanation": "CREATE a route 53 public hosted zone for is correct because it best meets the requirements.\nCreate a route 53 public hosted zone then is incorrect because it does not meet the specific requirements of this scenario.\nCreate a route 53 private is incorrect because a private hosted zone is not resolvable from the internet and CNAME records cannot be.\nCreate a route 53 public hosted zone then is incorrect because it does not meet the specific requirements of this scenario."
   },
   {
     "id": "q0407",
@@ -5905,7 +5905,7 @@
       "D. Configure S3 Object Lock in compliance mode on all objects in the bucket which prevents data from being moved or replicated outside the original Region for the duration of the lock period"
     ],
     "correct": 2,
-    "explanation": "Create an S3 bucket policy with is correct because the VPC endpoint condition in the bucket policy ensures all API calls come through the agency.\nCreate an S3 bucket policy with is incorrect because while it restricts access to the VPC endpoint it does not prevent an administrator from.\nCreate an S3 bucket in is incorrect because while S3 data stays in-Region by default administrators could configure replication rules or copy objects.\nConfigure S3 Object is incorrect because Object Lock prevents deletion and modification but does not prevent data from being replicated to."
+    "explanation": "CREATE an s3 bucket policy with a condition is correct because it best meets the requirements.\nCreate an s3 bucket policy with a condition is incorrect because it does not meet the specific requirements of this scenario.\nCreate an s3 bucket in is incorrect because while S3 data stays in-Region by default administrators could configure replication rules or copy objects.\nConfigure s3 is incorrect because Object Lock prevents deletion and modification but does not prevent data from being replicated to."
   },
   {
     "id": "q0423",
@@ -6185,7 +6185,7 @@
       "D. Deploy a single DynamoDB table in us-east-1 and use DynamoDB global tables to automatically replicate the table to eu-west-1 and ap-southeast-1 with multi-Region active-active write capability"
     ],
     "correct": 3,
-    "explanation": "Deploy a single DynamoDB table in is correct because DynamoDB global tables provide fully managed multi-Region replication with active-active write capability in all Regions and.\nDeploy separate DynamoDB is incorrect because building a custom replication solution with SQS adds operational complexity and is harder to maintain.\nDeploy DynamoDB tables is incorrect because DAX is an in-Region cache and cannot be deployed cross-Region and routing all writes to.\nDeploy a single DynamoDB table in is incorrect because a custom Streams-based replication with a single primary Region means writes in non-primary Regions must."
+    "explanation": "DEPLOY a single dynamodb table in us-east-1 and use is correct because it best meets the requirements.\nDeploy separate is incorrect because building a custom replication solution with SQS adds operational complexity and is harder to maintain.\nDeploy dynamodb is incorrect because DAX is an in-Region cache and cannot be deployed cross-Region and routing all writes to.\nDeploy a single dynamodb table in us-east-1 and configure is incorrect because it does not meet the specific requirements of this scenario."
   },
   {
     "id": "q0443",
@@ -6395,7 +6395,7 @@
       "D. Replace all 15 ALBs with a single Gateway Load Balancer that inspects traffic and routes it to the appropriate ECS service based on deep packet inspection of the request content and headers"
     ],
     "correct": 1,
-    "explanation": "Replace all 15 ALBs with a is correct because a single ALB with host-based or path-based routing rules can route traffic to 15 different target.\nReplace all 15 ALBs with a is incorrect because removing load balancers for external traffic means losing health-check-based routing and direct Fargate IP routing.\nRemove all load is incorrect because requiring unique ports for each service complicates client configuration and NLB cannot perform HTTP-level routing.\nReplace all 15 ALBs with a is incorrect because Gateway Load Balancer is designed for network security appliances not application traffic routing and deep."
+    "explanation": "REPLACE all 15 albs with a single alb is correct because it best meets the requirements.\nReplace all 15 albs with a single network is incorrect because it does not meet the specific requirements of this scenario.\nRemove all is incorrect because requiring unique ports for each service complicates client configuration and NLB cannot perform HTTP-level routing.\nReplace all 15 albs with a single gateway is incorrect because it does not meet the specific requirements of this scenario."
   },
   {
     "id": "q0458",
@@ -6759,7 +6759,7 @@
       "D. Subscribe two Lambda functions to the SNS topic one for real-time analytics and one that buffers messages in memory and writes a consolidated file to S3 every 60 seconds to reduce the number of S3 objects"
     ],
     "correct": 2,
-    "explanation": "Subscribe the Lambda function directly to is correct because SNS can deliver directly to Lambda for real-time processing and Kinesis Data Firehose natively supports SNS.\nSubscribe the Lambda function directly to is incorrect because using SQS as an intermediary adds complexity and requires custom batching logic in the Lambda.\nRoute all messages is incorrect because adding Kinesis Data Streams as an intermediary between SNS and consumers adds an unnecessary additional.\nSubscribe two Lambda is incorrect because Lambda functions do not maintain state across invocations so buffering in memory is not possible."
+    "explanation": "SUBSCRIBE the lambda function directly to the sns is correct because it best meets the requirements.\nSubscribe the lambda function directly to the sns is incorrect because it does not meet the specific requirements of this scenario.\nRoute all is incorrect because adding Kinesis Data Streams as an intermediary between SNS and consumers adds an unnecessary additional.\nSubscribe two is incorrect because Lambda functions do not maintain state across invocations so buffering in memory is not possible."
   },
   {
     "id": "q0484",
@@ -7795,7 +7795,7 @@
       "D. Implement optimistic locking by adding a version attribute to each item and including a condition on the version in the UpdateItem request so the update only succeeds if no other process has modified the item since it was read"
     ],
     "correct": 2,
-    "explanation": "Use a DynamoDB is correct because DynamoDB transactions provide atomic conditional writes where the condition expression is evaluated atomically with the update, guaranteeing that the.\nUse DynamoDB Streams is incorrect because DynamoDB Streams processing occurs after the write, meaning the inventory count could temporarily be negative.\nRead the current is incorrect because there is a race condition between the read and the write where another process could.\nImplement optimistic locking is incorrect because optimistic locking prevents concurrent modifications but does not inherently check whether the count is above."
+    "explanation": "USE a is correct because it best meets the requirements.\nUse dynamodb is incorrect because DynamoDB transactions provide atomic conditional writes where the condition expression is evaluated atomically with the update, guaranteeing that the.\nRead the is incorrect because there is a race condition between the read and the write where another process could.\nImplement optimistic is incorrect because optimistic locking prevents concurrent modifications but does not inherently check whether the count is above."
   },
   {
     "id": "q0558",
@@ -8033,7 +8033,7 @@
       "D. Set the minimum healthy percent to 100 and the maximum percent to 100, which forces ECS to maintain exactly four tasks at all times and replace each old task with a new one simultaneously in place"
     ],
     "correct": 0,
-    "explanation": "Set the minimum healthy percent to is correct because setting minimum healthy percent to 100 ensures all four existing tasks remain running during the update.\nSet the minimum healthy percent to 50 is incorrect because setting both to 100 creates a deadlock where ECS cannot launch new tasks because the.\nIncrease the desired is incorrect because permanently running eight tasks doubles the cost unnecessarily when the deployment configuration can ensure four.\nSet the minimum healthy percent to is incorrect because a minimum healthy percent of 50 means only two tasks must remain running, dropping below."
+    "explanation": "SET the minimum healthy percent to 100 and is correct because it best meets the requirements.\nSet the minimum healthy percent to 50 is incorrect because setting both to 100 creates a deadlock where ECS cannot launch new tasks because the.\nIncrease the is incorrect because permanently running eight tasks doubles the cost unnecessarily when the deployment configuration can ensure four.\nSet the minimum healthy percent to 100 and is incorrect because it does not meet the specific requirements of this scenario."
   },
   {
     "id": "q0575",
@@ -9489,7 +9489,7 @@
       "D. Synchronize the EBS volume across all instances using rsync on a cron job every minute to ensure that all instances have a consistent copy of the uploaded media files"
     ],
     "correct": 0,
-    "explanation": "Replace the EBS volume with an is correct because amazon EFS provides a fully managed shared file system that can be mounted simultaneously by thousands of EC2 instances.\nReplace the EBS volume with an is incorrect because with EBS Multi-Attach is limited to io2 volumes in a single AZ and requires a cluster-aware file system.\nCreate an EBS is incorrect because with s3fs-fuse has poor POSIX compliance and performance issues for file system workloads.\nSynchronize the EBS is incorrect because with rsync creates consistency gaps between sync intervals and increases in complexity with more instances."
+    "explanation": "REPLACE the ebs volume with an amazon efs is correct because it best meets the requirements.\nReplace the ebs volume with an amazon s3 is incorrect because it does not meet the specific requirements of this scenario.\nCreate an is incorrect because with s3fs-fuse has poor POSIX compliance and performance issues for file system workloads.\nSynchronize the is incorrect because with rsync creates consistency gaps between sync intervals and increases in complexity with more instances."
   },
   {
     "id": "q0679",
@@ -9867,7 +9867,7 @@
       "D. Deploy the OpenSearch domain in VPC access mode and place an Application Load Balancer in front of it with an internet-facing listener to provide controlled public access"
     ],
     "correct": 0,
-    "explanation": "Deploy the OpenSearch domain with VPC is correct because VPC access mode places the OpenSearch endpoint within private subnets accessible only through the VPC, and security groups restrict.\nDeploy the OpenSearch domain with a is incorrect because with an internet-facing ALB defeats the purpose of VPC access mode by exposing the service publicly.\nDeploy the OpenSearch domain with a is incorrect because with SAML on a public endpoint still has a publicly reachable endpoint.\nDeploy the OpenSearch domain in is incorrect because with a public endpoint exposes the cluster to the internet which violates the VPC-only requirement."
+    "explanation": "DEPLOY the opensearch domain with vpc is correct because VPC access mode places the OpenSearch endpoint within private subnets accessible only through the VPC, and security groups restrict.\nDeploy the opensearch domain with a public endpoint is incorrect because it does not meet the specific requirements of this scenario.\nDeploy the opensearch domain with a public endpoint is incorrect because it does not meet the specific requirements of this scenario.\nDeploy the opensearch domain in is incorrect because with a public endpoint exposes the cluster to the internet which violates the VPC-only requirement."
   },
   {
     "id": "q0706",
@@ -11309,7 +11309,7 @@
       "D. Configure the Glue job to use the ResolveChoice transform for all columns to standardize data types and eliminate formatting inconsistencies across source files"
     ],
     "correct": 1,
-    "explanation": "Create a Glue is correct because glue FindMatches ML Transform uses machine learning to identify duplicate and matching records without custom code, handling the deduplication requirement.\nUse Glue Data is incorrect because glue Data Quality rules validate data against rules but do not perform intelligent fuzzy deduplication.\nAdd a Glue is incorrect because glue Crawlers catalog schema metadata and do not modify or deduplicate source data.\nConfigure the Glue is incorrect because resolveChoice handles ambiguous data types in the DynamicFrame but does not deduplicate records or fix formatting issues."
+    "explanation": "CREATE a is correct because it best meets the requirements.\nUse glue is incorrect because glue Crawlers catalog schema metadata and do not modify or deduplicate source data.\nAdd a is incorrect because it does not meet the specific requirements of this scenario.\nConfigure the is incorrect because resolveChoice handles ambiguous data types in the DynamicFrame but does not deduplicate records or fix formatting issues."
   },
   {
     "id": "q0809",
@@ -11855,7 +11855,7 @@
       "D. Migrate all archive files to S3 Glacier Deep Archive and use expedited retrievals whenever a file is needed to meet the time requirement"
     ],
     "correct": 0,
-    "explanation": "Migrate all archive files to S3 is correct because glacier Flexible Retrieval offers very low storage costs and standard retrieval within 3 to 5 hours, meeting the 12-hour requirement.\nMigrate all archive files to S3 One is incorrect because with One Zone-IA costs more than Glacier for rarely accessed data.\nEnable S3 Intelligent-Tiering is incorrect because charges monitoring fees on 500 TB, which adds significant cost.\nMigrate all archive files to S3 is incorrect because uses Deep Archive where standard retrieval takes up to 12 hours and expedited is not available."
+    "explanation": "MIGRATE all archive files to s3 glacier flexible is correct because it best meets the requirements.\nMigrate all archive files to s3 one is incorrect because with One Zone-IA costs more than Glacier for rarely accessed data.\nEnable s3 is incorrect because charges monitoring fees on 500 TB, which adds significant cost.\nMigrate all archive files to s3 glacier deep is incorrect because it does not meet the specific requirements of this scenario."
   },
   {
     "id": "q0848",
@@ -11995,7 +11995,7 @@
       "D. Use an S3 Lifecycle policy to transition photos older than 7 days to S3 Standard-IA where they remain instantly accessible at a lower rate"
     ],
     "correct": 3,
-    "explanation": "Use an S3 Lifecycle policy to is correct because standard-IA provides instant access at a lower storage rate, ideal for older photos that are rarely but unpredictably viewed.\nKeep all photos is incorrect because puts hot first-week photos in IA, incurring unnecessary retrieval charges.\nMove all photos is incorrect because overpays for 200 TB of mostly cold data.\nUse an S3 Lifecycle policy to is incorrect because moves to Glacier where retrieval takes hours, violating the no-delay requirement."
+    "explanation": "USE an s3 lifecycle policy to transition photos is correct because it best meets the requirements.\nKeep all is incorrect because puts hot first-week photos in IA, incurring unnecessary retrieval charges.\nMove all is incorrect because overpays for 200 TB of mostly cold data.\nUse an s3 lifecycle policy to transition photos is incorrect because it does not meet the specific requirements of this scenario."
   },
   {
     "id": "q0858",
@@ -12793,7 +12793,7 @@
       "D. Configure CloudFront to cache personalized responses using the Authorization header as a cache key to improve the hit ratio for returning users"
     ],
     "correct": 1,
-    "explanation": "Keep CloudFront because cloudFront still reduces latency through connection reuse, SSL offloading, and optimized routing even without caching. Remove CloudFront since is incorrect because caching by Authorization header creates security risks and rarely improves hit ratio for personalized content. Replace CloudFront with is incorrect because provides IP anycast but lacks CloudFront's HTTP optimizations. Configure CloudFront to is incorrect because removes these network benefits."
+    "explanation": "Keep CloudFront because cloudFront still reduces latency through connection reuse, SSL offloading, and optimized routing even without caching.\nRemove CloudFront since is incorrect because caching by Authorization header creates security risks and rarely improves hit ratio for personalized content.\nReplace CloudFront with is incorrect because provides IP anycast but lacks CloudFront's HTTP optimizations.\nConfigure CloudFront to is incorrect because removes these network benefits."
   },
   {
     "id": "q0915",
@@ -13171,7 +13171,7 @@
       "D. Purchase an additional one-year EC2 Instance Savings Plan sized to the specific instance types making up the remaining On-Demand spend for savings"
     ],
     "correct": 3,
-    "explanation": "Purchase an additional one-year EC2 is correct because an EC2 Instance Savings Plan for the specific remaining instances provides a deeper discount than another Compute Plan.\nPurchase an additional one-year Compute is incorrect because cannot replace an active Savings Plan mid-term.\nReplace the existing is incorrect because works but gives less discount than an EC2 Instance Plan for known workloads."
+    "explanation": "PURCHASE an additional one-year ec2 is correct because an EC2 Instance Savings Plan for the specific remaining instances provides a deeper discount than another Compute Plan.\nPurchase an additional one-year compute is incorrect because cannot replace an active Savings Plan mid-term.\nDo nothing is incorrect because it does not meet the specific requirements of this scenario.\nReplace the is incorrect because works but gives less discount than an EC2 Instance Plan for known workloads."
   },
   {
     "id": "q0942",
@@ -13535,7 +13535,7 @@
       "D. The Very Low risk rating means the potential cost savings are very low and the effort to change instances would not justify the minimal savings gained"
     ],
     "correct": 2,
-    "explanation": "The Very Low risk rating means there is correct because very Low risk in Compute Optimizer means the recommended change has minimal risk of performance impact.\nThe Very Low risk rating means is incorrect because confuses risk rating with savings amount.\nThe Very Low risk rating means is incorrect because confuses risk with confidence.\nThe Very Low risk rating means is incorrect because reverses the meaning."
+    "explanation": "THE very low risk rating means there is correct because very Low risk in Compute Optimizer means the recommended change has minimal risk of performance impact.\nThe very low risk rating means the recommended is incorrect because it does not meet the specific requirements of this scenario.\nThe very low risk rating means the recommendation is incorrect because it does not meet the specific requirements of this scenario.\nThe very low risk rating means the potential is incorrect because it does not meet the specific requirements of this scenario."
   },
   {
     "id": "q0968",
@@ -13801,7 +13801,7 @@
       "D. S3 One Zone-IA because it provides the lowest cost for infrequently accessed data while maintaining the same instant access as the Standard tier"
     ],
     "correct": 1,
-    "explanation": "S3 Intelligent-Tiering because intelligent-Tiering automatically optimizes costs for unpredictable access patterns with no retrieval fees. S3 Standard-IA because charges retrieval fees on each access. S3 Glacier Instant is incorrect because charges retrieval fees and is for rarely accessed data. S3 One Zone-IA is incorrect because reduces availability and charges retrieval fees."
+    "explanation": "S3 Intelligent-Tiering because intelligent-Tiering automatically optimizes costs for unpredictable access patterns with no retrieval fees.\nS3 Standard-IA because charges retrieval fees on each access.\nS3 Glacier Instant is incorrect because charges retrieval fees and is for rarely accessed data.\nS3 One Zone-IA is incorrect because reduces availability and charges retrieval fees."
   },
   {
     "id": "q0987",
@@ -13815,7 +13815,7 @@
       "D. Move small objects to S3 Standard since the Intelligent-Tiering monitoring fee per object makes it cost-ineffective for objects smaller than 128 KB each"
     ],
     "correct": 3,
-    "explanation": "Move small objects is correct because objects smaller than 128 KB are not cost-effective for Intelligent-Tiering due to the per-object monitoring fee.\nSwitch to S3 is incorrect because changes the data format, which may break applications.\nAggregate the small is incorrect because ignores the cost math for small objects."
+    "explanation": "MOVE small is correct because objects smaller than 128 KB are not cost-effective for Intelligent-Tiering due to the per-object monitoring fee.\nKeep intelligent-tiering is incorrect because it does not meet the specific requirements of this scenario.\nSwitch to is incorrect because changes the data format, which may break applications.\nAggregate the is incorrect because ignores the cost math for small objects."
   },
   {
     "id": "q0988",
@@ -13885,7 +13885,7 @@
       "D. Compare the total Intelligent-Tiering cost including monitoring fees against S3 Standard-IA to see if the automated tiering provides savings over manual IA"
     ],
     "correct": 3,
-    "explanation": "Compare the total Intelligent-Tiering cost including is correct because if most data is in IA tier, comparing against Standard-IA without monitoring fees shows whether tiering adds value.\nCompare the total Intelligent-Tiering cost including is incorrect because compares against Standard, which is not the right baseline.\nDisable monitoring by is incorrect because may be premature without cost analysis.\nThe monitoring fee is incorrect because ignores cases where monitoring fees exceed savings."
+    "explanation": "COMPARE the total intelligent-tiering cost including monitoring fees is correct because it best meets the requirements.\nCompare the total intelligent-tiering cost including monitoring fees is incorrect because it does not meet the specific requirements of this scenario.\nDisable monitoring is incorrect because may be premature without cost analysis.\nThe monitoring is incorrect because ignores cases where monitoring fees exceed savings."
   },
   {
     "id": "q0993",
