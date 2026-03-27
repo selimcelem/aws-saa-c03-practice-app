@@ -149,40 +149,60 @@ public class AuthService
 
     private async Task<string?> WaitForCodeWindowsAsync(CancellationToken ct)
     {
-        using var listener = new HttpListener();
+        var listener = new HttpListener();
         listener.Prefixes.Add("http://localhost:7890/");
         listener.Start();
         try
         {
             var ctxTask = listener.GetContextAsync();
             if (await Task.WhenAny(ctxTask, Task.Delay(TimeSpan.FromMinutes(5), ct)) != ctxTask)
+            {
+                listener.Stop();
                 return null;
+            }
 
             var ctx = ctxTask.Result;
             var code = ctx.Request.QueryString["code"];
 
             // Respond to browser with a styled success page
             var html = Encoding.UTF8.GetBytes(
-                """
-                <!DOCTYPE html>
-                <html><head><meta charset="utf-8"><title>Login Successful</title></head>
-                <body style="background:#0d1117;color:#c9d1d9;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;flex-direction:column">
-                <div style="text-align:center;padding:40px;border:1px solid #30363d;border-radius:16px;background:#161b22;max-width:400px">
-                <div style="font-size:48px;margin-bottom:16px">&#10003;</div>
-                <h1 style="font-size:22px;margin:0 0 8px 0;color:#3fb950">Login Successful!</h1>
-                <p style="font-size:14px;color:#8b949e;margin:0">You can close this tab and return to the app.</p>
-                </div>
-                <script>setTimeout(()=>window.close(),2000)</script>
-                </body></html>
-                """);
+                "<!DOCTYPE html><html><head><meta charset=\"utf-8\"><title>Login Successful</title></head>"
+                + "<body style=\"background:#0d1117;color:#c9d1d9;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;"
+                + "display:flex;align-items:center;justify-content:center;height:100vh;margin:0\">"
+                + "<div style=\"text-align:center;padding:40px;border:1px solid #30363d;border-radius:16px;background:#161b22;max-width:400px\">"
+                + "<div style=\"font-size:48px;margin-bottom:16px\">&#10003;</div>"
+                + "<h1 style=\"font-size:22px;margin:0 0 8px 0;color:#3fb950\">Login Successful!</h1>"
+                + "<p style=\"font-size:14px;color:#8b949e;margin:0\">You can close this tab and return to the app.</p></div>"
+                + "</body></html>");
 
-            ctx.Response.ContentType = "text/html";
+            ctx.Response.StatusCode = 200;
+            ctx.Response.ContentType = "text/html; charset=utf-8";
             ctx.Response.ContentLength64 = html.Length;
-            await ctx.Response.OutputStream.WriteAsync(html, ct);
+            ctx.Response.OutputStream.Write(html, 0, html.Length);
+            ctx.Response.OutputStream.Flush();
             ctx.Response.Close();
+
+            // Keep listener alive briefly so the browser can finish loading
+            // (handles favicon requests, keeps TCP connection open for response delivery)
+            _ = Task.Run(async () =>
+            {
+                try
+                {
+                    await Task.Delay(3000);
+                    listener.Stop();
+                    listener.Close();
+                }
+                catch { }
+            });
+
             return code;
         }
-        finally { listener.Stop(); }
+        catch
+        {
+            listener.Stop();
+            listener.Close();
+            throw;
+        }
     }
 
     private async Task<bool> ExchangeCodeAsync(string code, string verifier, string redirectUri)

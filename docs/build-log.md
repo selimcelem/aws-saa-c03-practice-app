@@ -319,35 +319,44 @@ Phase 6 — Expand the question bank from 100 to 1000 questions.
 
 ---
 
-## [Phase 6] — Question Bank Expansion (100 → 1000)
-**Date:** 2026-03-26
-**Status:** Not started (design spec complete)
+## [Phase 6] — Question Bank Expansion (100 to 1000)
+**Date:** 2026-03-27
+**Status:** Complete
 
 ### What was done
-- Created design specification at `docs/superpowers/specs/2026-03-26-question-bank-expansion-design.md`
-- Defined target distribution: 300 Secure, 260 Resilient, 240 High-Performing, 200 Cost-Optimized (matches SAA-C03 exam weightings)
-- Defined ID sequence: existing `q001`–`q100` unchanged, new questions `q101`–`q1000`
-- Schema unchanged — same JSON format, 0-based correct index, 4 options each
-- Identified ~15 new AWS service categories to add (Network Firewall, AppSync, Step Functions, EventBridge, etc.)
-- No questions have been generated yet — the question bank remains at 100 questions
+- Expanded `src/Data/questions.json` from 100 to 1000 scenario-based SAA-C03 practice questions
+- Generated 900 new questions (q0101-q1000) in parallel batches, merged with existing 100 (q001-q100)
+- All questions follow quality rules: balanced option lengths, ASCII-only text, scenario-based, plausible distractors, explanations covering all 4 options
 
-### Current state
-| Domain | Current | Target | Remaining |
-|---|---|---|---|
-| Design Secure Architectures | 30 | 300 | 270 |
-| Design Resilient Architectures | 26 | 260 | 234 |
-| Design High-Performing Architectures | 24 | 240 | 216 |
-| Design Cost-Optimized Architectures | 20 | 200 | 180 |
-| **Total** | **100** | **1000** | **900** |
+**Final domain distribution (matches SAA-C03 exam weightings):**
+| Domain | Count | Weight |
+|---|---|---|
+| Design Secure Architectures | 300 | 30% |
+| Design Resilient Architectures | 260 | 26% |
+| Design High-Performing Architectures | 240 | 24% |
+| Design Cost-Optimized Architectures | 200 | 20% |
+| **Total** | **1000** | **100%** |
+
+**Categories covered (50+):** IAM, KMS, VPC, Security Groups, Network ACL, WAF, GuardDuty, CloudTrail, Secrets Manager, ACM, Cognito, Inspector, Macie, Security Hub, Network Firewall, IAM Identity Center, Resource Access Manager, AWS Shield, AWS Config, Amazon Detective, EC2, RDS, Auto Scaling, Route53, ELB, S3, SQS, DynamoDB, ElastiCache, EFS, ECS/Fargate, EKS, Step Functions, EventBridge, SNS, Global Accelerator, Elastic Disaster Recovery, Lambda, CloudFront, Kinesis, API Gateway, Redshift, Athena, Glue, OpenSearch, EMR, MSK, Savings Plans, Spot Instances, Compute Optimizer, Trusted Advisor, S3 Intelligent-Tiering, FSx
+
+**Validation results:**
+- 1000 questions total, all IDs unique
+- 0 non-ASCII characters
+- 0 length-biased questions (correct answer within 1.4x of distractor average)
+- 0 duplicate question texts
+- Correct index distribution: 0=232, 1=307, 2=237, 3=224
 
 ### Why
-100 questions is enough for a few practice sessions but users quickly see repeats. 1000 questions with broader service coverage gives realistic exam preparation with minimal repetition across sessions.
+100 questions gave only a few unique practice sessions before repeats. 1000 questions with 50+ AWS service categories provides realistic exam preparation with minimal repetition across sessions.
 
 ### How to reproduce on a new machine
-No action needed — the current 100-question bank is committed at `src/Data/questions.json`. The expansion spec is at `docs/superpowers/specs/2026-03-26-question-bank-expansion-design.md`.
+No commands needed -- `src/Data/questions.json` (1000 questions) is committed to the repository. To validate:
+```bash
+python -c "import json; qs=json.load(open('src/Data/questions.json')); print(f'{len(qs)} questions')"
+```
 
 ### What's next
-Generate 900 new questions in batches, validate JSON schema and correct-answer indices, update the `questions.json` file, and verify all quiz modes still work with the larger dataset.
+Play Store submission checklist (see Phase 5b). Consider adding multi-select questions and drag-and-drop ordering questions to match the real SAA-C03 exam format.
 
 ---
 

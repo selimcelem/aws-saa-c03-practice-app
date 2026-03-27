@@ -103,15 +103,17 @@ public partial class QuizViewModel : BaseViewModel, IDisposable
         CurrentIndex = index;
         CurrentQuestion = q;
 
-        // Shuffle display order of options so the correct answer isn't always in the same position
+        // Shuffle option CONTENT into fixed A/B/C/D label positions.
+        // _shuffleMap[displayPos] = originalIndex — tells us which original option sits at each position.
         _shuffleMap = Enumerable.Range(0, q.Options.Count)
             .OrderBy(_ => Random.Shared.Next()).ToArray();
         _shuffledCorrectIndex = Array.IndexOf(_shuffleMap, q.Correct);
 
-        Option0Text = q.Options[_shuffleMap[0]];
-        Option1Text = q.Options[_shuffleMap[1]];
-        Option2Text = q.Options[_shuffleMap[2]];
-        Option3Text = q.Options[_shuffleMap[3]];
+        string[] prefixes = ["A. ", "B. ", "C. ", "D. "];
+        Option0Text = prefixes[0] + StripPrefix(q.Options[_shuffleMap[0]]);
+        Option1Text = prefixes[1] + StripPrefix(q.Options[_shuffleMap[1]]);
+        Option2Text = prefixes[2] + StripPrefix(q.Options[_shuffleMap[2]]);
+        Option3Text = prefixes[3] + StripPrefix(q.Options[_shuffleMap[3]]);
 
         SelectedOptionIndex = null;
         AnswerRevealed = false;
@@ -245,6 +247,14 @@ public partial class QuizViewModel : BaseViewModel, IDisposable
             case 2: Opt2Colour = colour; break;
             case 3: Opt3Colour = colour; break;
         }
+    }
+
+    private static string StripPrefix(string option)
+    {
+        // Remove leading "A. ", "B. ", "C. ", "D. " if present
+        if (option.Length >= 3 && option[1] == '.' && option[2] == ' ' && option[0] is >= 'A' and <= 'D')
+            return option[3..];
+        return option;
     }
 
     public void Dispose() => _timer?.Stop();
