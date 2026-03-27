@@ -1,54 +1,39 @@
 name: Build & Deploy
-
 on:
   push:
     branches: [master]
   pull_request:
     branches: [master]
-
 jobs:
   build:
     runs-on: windows-latest
-
-    env:
-      DOTNET_ROLL_FORWARD: Major
-
     steps:
       - uses: actions/checkout@v4
-
       - name: Setup .NET 8
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.419'
-
       - name: Install MAUI workloads
         run: dotnet workload install maui-windows
-
       - name: Restore NuGet packages
-        run: dotnet restore src/AwsSaaC03Practice.csproj --ignore-failed-sources
-
+        run: dotnet restore src/AwsSaaC03Practice.csproj -p:TargetFrameworks=net8.0-windows10.0.19041.0
       - name: Build Windows
         run: dotnet build src/AwsSaaC03Practice.csproj -f net8.0-windows10.0.19041.0 --no-restore -c Release
-
       - name: Validate questions.json
         run: |
           python -c "import json; qs=json.load(open('src/Data/questions.json')); assert len(qs)==1000, f'Expected 1000, got {len(qs)}'; print('questions.json: 1000 questions OK')"
-
   deploy-questions:
     needs: build
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/master' && github.event_name == 'push'
-
     steps:
       - uses: actions/checkout@v4
-
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
-
       - name: Sync questions.json to S3
         run: |
           aws s3 cp src/Data/questions.json s3://${{ secrets.S3_BUCKET_NAME }}/questions.json
