@@ -403,6 +403,9 @@ No commands needed -- `src/Data/questions.json` (1000 questions) is committed. T
 python -c "import json; qs=json.load(open('src/Data/questions.json')); print(len(qs))"
 ```
 
+#### 9. External quality pass
+External quality pass fixed option ordering, answer index mismatches, and standardized all 1000 explanations to uniform 4-line format with newlines between each option.
+
 ### What's next
 Play Store submission checklist (see Phase 5b).
 
