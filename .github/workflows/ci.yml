@@ -10,19 +10,22 @@ jobs:
   build:
     runs-on: windows-latest
 
+    env:
+      DOTNET_ROLL_FORWARD: Major
+
     steps:
       - uses: actions/checkout@v4
 
       - name: Setup .NET 8
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: '8.0.419'
 
       - name: Install MAUI workloads
         run: dotnet workload install maui-windows maui-android
 
       - name: Restore NuGet packages
-        run: dotnet restore src/AwsSaaC03Practice.csproj
+        run: dotnet restore src/AwsSaaC03Practice.csproj --ignore-failed-sources
 
       - name: Build Windows
         run: dotnet build src/AwsSaaC03Practice.csproj -f net8.0-windows10.0.19041.0 --no-restore -c Release
