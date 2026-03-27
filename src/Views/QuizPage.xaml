@@ -80,6 +80,8 @@
                         </Border>
                         <Label Text="{Binding ExplanationText}"
                                FontSize="14" LineHeight="1.5"
+                               LineBreakMode="WordWrap"
+                               MaxLines="20"
                                TextColor="{StaticResource TextSecondary}" />
                     </VerticalStackLayout>
                 </Border>
