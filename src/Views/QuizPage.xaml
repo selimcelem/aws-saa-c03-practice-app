@@ -78,10 +78,9 @@
                             <Label Text="{Binding CategoryText}"
                                    TextColor="{StaticResource Accent}" FontSize="12" />
                         </Border>
-                        <Label Text="{Binding ExplanationText}"
+                        <Label Text="{Binding ExplanationText, Converter={StaticResource NewlineConverter}}"
                                FontSize="14" LineHeight="1.5"
                                LineBreakMode="WordWrap"
-                               MaxLines="20"
                                TextColor="{StaticResource TextSecondary}" />
                     </VerticalStackLayout>
                 </Border>

@@ -50,6 +50,16 @@ public class PercentToWidth : IValueConverter
         => throw new NotImplementedException();
 }
 
+/// <summary>Ensures \n renders as line breaks on all platforms.</summary>
+public class NewlineConverter : IValueConverter
+{
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+        => value is string s ? s.Replace("\n", Environment.NewLine) : "";
+
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+        => throw new NotImplementedException();
+}
+
 /// <summary>Maps a 0.0–1.0 fraction to an AbsoluteLayout.LayoutBounds Rect for proportional bar fill.</summary>
 public class FractionToRect : IValueConverter
 {

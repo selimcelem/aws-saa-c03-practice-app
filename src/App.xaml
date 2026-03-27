@@ -12,6 +12,7 @@
             <local:InvertBool x:Key="InvertBool" />
             <local:PercentToWidth x:Key="PercentToWidth" />
             <local:FractionToRect x:Key="FractionToRect" />
+            <local:NewlineConverter x:Key="NewlineConverter" />
 
             <!-- ── Colour palette ── -->
             <Color x:Key="BgPage">#0d1117</Color>
