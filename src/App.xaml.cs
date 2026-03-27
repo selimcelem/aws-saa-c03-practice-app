@@ -60,5 +60,19 @@ public partial class App : Application
         catch { /* last resort — can't write to disk */ }
         Debug.WriteLine(entry);
         Console.WriteLine(entry);
+
+#if ANDROID
+        // Report to Firebase Crashlytics
+        try
+        {
+            if (ex is not null)
+            {
+                Firebase.Crashlytics.FirebaseCrashlytics.Instance.Log($"{source}: {ex.Message}");
+                Firebase.Crashlytics.FirebaseCrashlytics.Instance
+                    .RecordException(Java.Lang.Throwable.FromException(ex));
+            }
+        }
+        catch { /* Crashlytics not initialized yet */ }
+#endif
     }
 }

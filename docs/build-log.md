@@ -493,6 +493,33 @@ dotnet publish -f net8.0-android -c Release
 ```
 
 ### What's next
+Phase 11 -- Firebase Crashlytics.
+
+---
+
+## [Phase 11] — Firebase Crashlytics
+**Date:** 2026-03-27
+**Status:** Complete
+
+### What was done
+- Integrated Firebase Crashlytics for Android crash reporting
+- Added NuGet packages: `Xamarin.Firebase.Crashlytics`, `Xamarin.GooglePlayServices.Base`
+- Pinned `Xamarin.AndroidX.Lifecycle.Common` to `2.7.0.2` to resolve transitive version conflict
+- Configured `google-services.json` as `GoogleServicesJson` build action in csproj (Android only)
+- Initialized Firebase in `Platforms/Android/MainActivity.cs` via `FirebaseApp.InitializeApp()` and `FirebaseCrashlytics.Instance.SetCrashlyticsCollectionEnabled(true)`
+- Wired Crashlytics into `App.LogCrash()` -- all unhandled exceptions on Android are logged to Crashlytics via `RecordException()` with a descriptive log message
+- Added `google-services.json` to `.gitignore` (already present); created `google-services.example.json` template
+
+### Why
+Crash reporting is essential for identifying and fixing issues in production. Firebase Crashlytics provides real-time crash reports, stack traces, and affected user counts in the Firebase Console at no cost.
+
+### How to reproduce on a new machine
+1. Create a Firebase project and register the Android app (`com.selimcelem.awssaac03practice`)
+2. Download `google-services.json` from Firebase Console
+3. Place it at `src/Platforms/Android/google-services.json`
+4. Build: `dotnet build -f net8.0-android`
+
+### What's next
 Play Store submission -- create Google Play Console listing, upload signed APK, set up store listing metadata.
 
 ---

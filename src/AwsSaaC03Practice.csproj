@@ -59,9 +59,10 @@
     <AndroidSigningStorePass>$(ANDROID_KEYSTORE_PASSWORD)</AndroidSigningStorePass>
   </PropertyGroup>
 
-  <!-- Android: certificate pinning config -->
+  <!-- Android: certificate pinning config + Firebase -->
   <ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">
     <AndroidResource Include="Platforms\Android\Resources\xml\network_security_config.xml" />
+    <GoogleServicesJson Include="Platforms\Android\google-services.json" />
   </ItemGroup>
 
   <!-- Android-only packages -->
@@ -72,6 +73,11 @@
     <PackageReference Include="Xamarin.AndroidX.Collection" Version="1.4.0.3" />
     <PackageReference Include="Xamarin.AndroidX.Collection.Jvm" Version="1.4.0.3" />
     <PackageReference Include="Xamarin.AndroidX.Collection.Ktx" Version="1.4.0.3" />
+    <!-- Firebase Crashlytics for crash reporting -->
+    <PackageReference Include="Xamarin.Firebase.Crashlytics" Version="118.3.7.3" />
+    <PackageReference Include="Xamarin.GooglePlayServices.Base" Version="118.2.0.5" />
+    <!-- Pin transitive dependency to resolve version conflict -->
+    <PackageReference Include="Xamarin.AndroidX.Lifecycle.Common" Version="2.7.0.2" />
   </ItemGroup>
 
 </Project>
