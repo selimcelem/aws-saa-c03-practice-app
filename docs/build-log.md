@@ -441,21 +441,22 @@ Phase 9 -- CI/CD pipeline.
 **Status:** Complete
 
 ### What was done
-- Created `.github/workflows/ci.yml` GitHub Actions workflow
-- **Trigger:** every push to `master` and every PR targeting `master`
-- **Build job** (windows-latest): installs .NET 8 + MAUI workloads, restores NuGet, builds Windows target (`net8.0-windows10.0.19041.0`), validates `questions.json` has 1000 questions
-- **Deploy job** (ubuntu-latest): runs only on push to `master` after build succeeds. Syncs `src/Data/questions.json` to S3 using `aws-actions/configure-aws-credentials@v4`
-- AWS credentials stored as GitHub Secrets: `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_REGION`, `S3_BUCKET_NAME`
+- Created `.github/workflows/ci.yml` -- GitHub Actions pipeline
+- Triggers on every push to master and pull requests
+- **Build job:** installs .NET 8.0.419 + maui-windows workload, restores NuGet, builds Windows target in Release mode, validates questions.json has exactly 1000 questions
+- **Deploy job:** runs after successful build on master pushes only -- syncs questions.json to S3 bucket automatically
+- Fixed CI/Android compatibility: pinned `Microsoft.Maui.Controls` to `8.0.100`, used conditional TargetFrameworks so CI only builds Windows target (avoids Android SDK requirement on runner)
+- Added 4 GitHub Secrets: `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_REGION`, `S3_BUCKET_NAME`
 - Added CI/CD setup instructions to `README.md`
 
 ### Why
-Automated builds catch regressions on every commit. Automatic S3 sync ensures the live question bank stays in sync with the repository without manual uploads.
+Every push now validates the build automatically. questions.json in S3 stays in sync with the repo without manual `aws s3 cp` commands.
 
 ### How to reproduce on a new machine
-Set the four GitHub Secrets in repo Settings, then push to `master`. The pipeline runs automatically.
+Add the 4 GitHub Secrets in repo Settings > Secrets and variables > Actions. Pipeline runs automatically on push.
 
 ### What's next
-Release signing keystore, crash reporting integration, Play Store submission.
+Step 4 -- Release signing keystore for Play Store submission.
 
 ---
 
