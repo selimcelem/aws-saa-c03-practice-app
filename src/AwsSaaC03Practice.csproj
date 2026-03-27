@@ -5,8 +5,9 @@
     <ApplicationId>com.dev.awssaac03practice</ApplicationId>
     <ApplicationVersion>1</ApplicationVersion>
     <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
-    <!-- Windows and Android only — no iOS, no Mac -->
-    <TargetFrameworks>net8.0-android;net8.0-windows10.0.19041.0</TargetFrameworks>
+    <!-- Windows and Android locally; Windows only on CI (avoids Android SDK requirement) -->
+    <TargetFrameworks Condition="'$(CI)' != 'true'">net8.0-android;net8.0-windows10.0.19041.0</TargetFrameworks>
+    <TargetFrameworks Condition="'$(CI)' == 'true'">net8.0-windows10.0.19041.0</TargetFrameworks>
     <OutputType>Exe</OutputType>
     <RootNamespace>AwsSaaC03Practice</RootNamespace>
     <UseMaui>true</UseMaui>
