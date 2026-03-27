@@ -41,7 +41,7 @@
 
         <!-- Footer -->
         <Label Grid.Row="2" VerticalOptions="Start"
-               Text="100 exam-style questions · Scenario-based · SAA-C03 aligned"
+               Text="1,000 exam-style questions · Scenario-based · SAA-C03 aligned"
                TextColor="{StaticResource TextSecondary}"
                HorizontalOptions="Center" FontSize="12" HorizontalTextAlignment="Center" />
 
