@@ -151,6 +151,39 @@ To set up: go to your GitHub repo > Settings > Secrets and variables > Actions >
 
 ---
 
+## Release Build (Android)
+
+The Android release build requires a signing keystore. The keystore must be stored **outside the repository** — losing it means you can never update the app on Play Store.
+
+**Keystore location:** `D:\Projects\release.keystore` (never commit this file)
+
+**Environment variables needed:**
+
+| Variable | Value |
+|---|---|
+| `ANDROID_KEYSTORE_PATH` | Full path to `release.keystore` (e.g. `D:\Projects\release.keystore`) |
+| `ANDROID_KEYSTORE_PASSWORD` | The keystore password |
+
+**Set environment variables and build:**
+```bash
+# PowerShell
+$env:ANDROID_KEYSTORE_PATH = "D:\Projects\release.keystore"
+$env:ANDROID_KEYSTORE_PASSWORD = "your-keystore-password"
+
+cd src
+dotnet publish -f net8.0-android -c Release
+```
+
+The signed APK will be in `bin/Release/net8.0-android/publish/`.
+
+**Keystore details:**
+- Alias: `saa-c03-practice`
+- Algorithm: RSA 2048-bit
+- Validity: 10,000 days (~27 years)
+- DN: `CN=Selim Celem, O=Personal, L=Haarlem, ST=Noord-Holland, C=NL`
+
+---
+
 ## License
 
 MIT

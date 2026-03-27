@@ -456,7 +456,44 @@ Every push now validates the build automatically. questions.json in S3 stays in 
 Add the 4 GitHub Secrets in repo Settings > Secrets and variables > Actions. Pipeline runs automatically on push.
 
 ### What's next
-Step 4 -- Release signing keystore for Play Store submission.
+Phase 10 -- Release signing keystore.
+
+---
+
+## [Phase 10] — Release Signing Keystore
+**Date:** 2026-03-27
+**Status:** Complete
+
+### What was done
+- Generated Android release signing keystore using `keytool`:
+  ```
+  keytool -genkey -v -keystore release.keystore -alias saa-c03-practice
+          -keyalg RSA -keysize 2048 -validity 10000
+          -dname "CN=Selim Celem, O=Personal, L=Haarlem, ST=Noord-Holland, C=NL"
+  ```
+- Keystore stored at `D:\Projects\release.keystore` (outside the repository)
+- `*.keystore` already in `.gitignore` -- keystore is never committed
+- Configured `AwsSaaC03Practice.csproj` Android Release PropertyGroup with signing properties:
+  - `AndroidKeyStore=true`
+  - `AndroidSigningKeyStore`, `AndroidSigningKeyAlias`, `AndroidSigningKeyPass`, `AndroidSigningStorePass` read from environment variables `ANDROID_KEYSTORE_PATH` and `ANDROID_KEYSTORE_PASSWORD`
+- Added "Release Build (Android)" section to `README.md` with setup instructions
+
+### Why
+Google Play Store requires all APKs/AABs to be signed with a consistent keystore. Losing the keystore means the app can never be updated on the Play Store. Storing the password in environment variables (not in the csproj) prevents accidental secret exposure.
+
+### How to reproduce on a new machine
+```bash
+# Set environment variables
+$env:ANDROID_KEYSTORE_PATH = "D:\Projects\release.keystore"
+$env:ANDROID_KEYSTORE_PASSWORD = "your-password"
+
+# Build signed release APK
+cd src
+dotnet publish -f net8.0-android -c Release
+```
+
+### What's next
+Play Store submission -- create Google Play Console listing, upload signed APK, set up store listing metadata.
 
 ---
 

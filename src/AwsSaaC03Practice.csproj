@@ -51,6 +51,12 @@
     <AndroidEnableProfiledAot>true</AndroidEnableProfiledAot>
     <PublishTrimmed>true</PublishTrimmed>
     <ProguardConfiguration>Platforms\Android\proguard-rules.pro</ProguardConfiguration>
+    <!-- Release signing — keystore path and password via environment variables -->
+    <AndroidKeyStore>true</AndroidKeyStore>
+    <AndroidSigningKeyStore>$(ANDROID_KEYSTORE_PATH)</AndroidSigningKeyStore>
+    <AndroidSigningKeyAlias>saa-c03-practice</AndroidSigningKeyAlias>
+    <AndroidSigningKeyPass>$(ANDROID_KEYSTORE_PASSWORD)</AndroidSigningKeyPass>
+    <AndroidSigningStorePass>$(ANDROID_KEYSTORE_PASSWORD)</AndroidSigningStorePass>
   </PropertyGroup>
 
   <!-- Android: certificate pinning config -->
