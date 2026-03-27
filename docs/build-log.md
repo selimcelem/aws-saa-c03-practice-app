@@ -410,7 +410,29 @@ External quality pass fixed option ordering, answer index mismatches, and standa
 External audit identified 101 explanation inconsistencies across 1000 questions -- all corrected. Final validation: 0 answer mismatches, 0 duplicates, all 1000 explanations in uniform 4-line format.
 
 ### What's next
-Play Store submission checklist (see Phase 5b).
+Phase 8 -- Support and monetization.
+
+---
+
+## [Phase 8] — Support & Monetization
+**Date:** 2026-03-27
+**Status:** Complete
+
+### What was done
+- Added Ko-fi "Support this project" button to Dashboard page -- opens ko-fi.com/selimcelem in system browser
+- Added "Enjoying the app? Support it" link to Results page below Home button
+- Decided on donation-only monetization model -- no ads, completely free app
+- Privacy policy updated with real contact email (selim.celem@gmail.com)
+- Privacy policy public URL: https://github.com/selimcelem/aws-saa-c03-practice-app/blob/master/PRIVACY_POLICY.md
+
+### Why
+Keeping the app free with optional donations respects users and removes friction. Ko-fi handles payments without requiring business registration.
+
+### How to reproduce on a new machine
+Ko-fi URL is hardcoded in DashboardPage.xaml.cs and ResultsPage.xaml.cs. To change: update the URL string in both code-behind files.
+
+### What's next
+Step 3 -- CI/CD pipeline (GitHub Actions), then Step 4 -- release signing keystore, Step 5 -- crash reporting, Step 6 -- Play Store submission.
 
 ---
 
