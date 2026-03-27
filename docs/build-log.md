@@ -513,7 +513,37 @@ Firebase Crashlytics Xamarin bindings are not fully compatible with .NET MAUI 8.
 No setup needed -- crash logging is built in. Crash log is written to `{AppDataDirectory}/crash.log` (Android) or `D:\Projects\aws-saa-c03-practice-app\crash.log` (Windows dev).
 
 ### What's next
-Play Store submission -- create Google Play Console listing, upload signed APK, set up store listing metadata.
+Phase 12 -- Release build.
+
+---
+
+## [Phase 12] — Release Build
+**Date:** 2026-03-27
+**Status:** Complete
+
+### What was done
+- Built signed release AAB (59MB) and APK (62MB) using Android keystore
+- AAB: `src/bin/Release/net8.0-android/publish/com.dev.awssaac03practice-Signed.aab`
+- APK: `src/bin/Release/net8.0-android/publish/com.dev.awssaac03practice-Signed.apk`
+- Tested release APK on physical Android device via `adb install` -- all features working
+- App version: 1.0 (`ApplicationVersion=1`, `ApplicationDisplayVersion=1.0`)
+- Keystore backed up to Google Drive
+
+### Why
+Release builds use R8 shrinking, AOT compilation, and ProGuard obfuscation. Testing the signed release build on device before Play Store submission catches any release-mode-specific issues.
+
+### How to reproduce on a new machine
+```bash
+# Set environment variables
+$env:ANDROID_KEYSTORE_PATH = "D:\Projects\release.keystore"
+$env:ANDROID_KEYSTORE_PASSWORD = "your-password"
+
+# Build signed release
+dotnet publish -f net8.0-android -c Release -p:AndroidSdkDirectory="D:\Android\android-sdk"
+```
+
+### What's next
+Play Store submission -- create Google Play Console developer account, upload AAB, complete store listing.
 
 ---
 
@@ -607,11 +637,11 @@ Apply complete! Resources: 4 added, 1 changed, 0 destroyed.
 ```
 
 ### Still needed before Play Store submission
-- [ ] Replace `[your-email@example.com]` in `PRIVACY_POLICY.md` with a real contact email
-- [ ] Host the privacy policy at a public URL and add it to the Play Console listing
-- [ ] Generate a release signing keystore and configure it in the csproj
-- [ ] Update `CognitoIdentityPoolId` in `appsettings.json` with the Terraform output value (`eu-west-1:eb8572ad-8d4e-4014-8e8d-09bde1e1ed92`)
-- [ ] Run a full Android release build and test the APK on a physical device
+- [x] Replace `[your-email@example.com]` in `PRIVACY_POLICY.md` with a real contact email -- done (selim.celem@gmail.com)
+- [x] Host the privacy policy at a public URL -- done (https://github.com/selimcelem/aws-saa-c03-practice-app/blob/master/PRIVACY_POLICY.md)
+- [x] Generate a release signing keystore and configure it in the csproj -- done (Phase 10)
+- [x] Update `CognitoIdentityPoolId` in `appsettings.json` -- done
+- [x] Run a full Android release build and test the APK on a physical device -- done (Phase 12, v1.0 release build working)
 - [ ] Review certificate pin expiry (2027-01-01) and set a calendar reminder to update
 - [ ] Consider upgrading to Cognito PLUS tier for Threat Protection if budget allows
 - [ ] Add Windows-side certificate pinning for the AWS SDK HttpClient
