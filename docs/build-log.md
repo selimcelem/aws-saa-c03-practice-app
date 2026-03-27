@@ -360,6 +360,54 @@ Play Store submission checklist (see Phase 5b). Consider adding multi-select que
 
 ---
 
+## [Phase 7] — Question Bank Quality Pass
+**Date:** 2026-03-27
+**Status:** Complete
+
+### What was done
+
+#### 1. Doubled phrase bug fix
+Fixed 332 questions with "is correct because is correct because" and "is incorrect because is incorrect because" duplications introduced during the explanation restructuring process.
+
+#### 2. Truncated word fix
+Fixed 64 questions with single-letter word artifacts (e.g. "t uses" instead of "it uses", "n the" instead of "in the") caused by aggressive text processing during explanation rewrite. Restored full words by context: t to it, n to in, d to and, r to or, f to of.
+
+#### 3. Correct index rebalancing
+Index 1 was over-represented at 307 questions while index 3 had only 224. Swapped options[1] and options[3] on 42 questions (correct answer content moves with the swap). Final distribution: 0=232, 1=265, 2=237, 3=266.
+
+#### 4. Structured explanation format
+Rewrote all 1000 explanations to a consistent per-option format:
+- Line 1: correct option (referenced by content identifier) with reason
+- Lines 2-4: wrong options in array index order, each with specific reason
+- Options referenced by first 3-6 unique words of their text, never by A/B/C/D letters
+- Each line under 30 words, newline-separated for visual clarity
+
+#### 5. Per-session option shuffle
+Changed option shuffle strategy from per-display (shuffled every time a question appeared) to per-session (shuffled once when quiz starts, consistent throughout the session, reshuffled on next session). Implemented via `ShuffledQuestion` record created in `InitialiseAsync()` -- the source `Question` objects are never mutated.
+
+#### 6. Option length bias elimination
+Expanded distractors for 75 questions where the correct answer was 40-340% longer than wrong options. All four options now have similar detail level (0 biased questions remaining).
+
+#### 7. Character encoding fix
+Replaced 52 mojibake sequences in questions.json: 32 garbled em dashes, 9 garbled arrows, 11 garbled multiplication signs -- all replaced with clean ASCII equivalents.
+
+#### 8. OAuth login page fix
+Fixed Windows OAuth flow: HttpListener now starts before browser opens (race condition fix), serves styled "Login Successful" HTML response with deferred listener shutdown so browser fully receives the response.
+
+### Why
+The Phase 6 question expansion introduced duplication bugs and truncation artifacts during explanation restructuring. The per-display shuffle caused explanations to reference options in a different order than displayed. These quality issues made the app confusing for users studying for the SAA-C03 exam.
+
+### How to reproduce on a new machine
+No commands needed -- `src/Data/questions.json` (1000 questions) is committed. To validate:
+```bash
+python -c "import json; qs=json.load(open('src/Data/questions.json')); print(len(qs))"
+```
+
+### What's next
+Play Store submission checklist (see Phase 5b).
+
+---
+
 ## [Phase 5b] — Security Hardening for Play Store
 **Date:** 2026-03-26
 **Status:** Complete

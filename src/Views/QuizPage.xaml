@@ -10,7 +10,7 @@
         <Grid Grid.Row="0" ColumnDefinitions="*,Auto,Auto" Margin="0,0,0,16">
             <VerticalStackLayout>
                 <Label Text="{Binding ProgressText}" Style="{StaticResource SubheadingStyle}" />
-                <Label Text="{Binding CurrentQuestion.Domain}" FontSize="11"
+                <Label Text="{Binding CategoryText}" FontSize="11"
                        TextColor="{StaticResource AccentSubtle}" />
             </VerticalStackLayout>
             <Label Grid.Column="1" Text="{Binding TimerText}"
@@ -29,7 +29,7 @@
 
                 <!-- Question text -->
                 <Border Style="{StaticResource CardStyle}">
-                    <Label Text="{Binding CurrentQuestion.Text}"
+                    <Label Text="{Binding QuestionText}"
                            FontSize="16" LineHeight="1.5"
                            TextColor="{StaticResource TextPrimary}" />
                 </Border>
@@ -75,7 +75,7 @@
                         <Border Style="{StaticResource PillStyle}"
                                 BackgroundColor="{StaticResource AccentSubtle}"
                                 HorizontalOptions="Start">
-                            <Label Text="{Binding CurrentQuestion.Category}"
+                            <Label Text="{Binding CategoryText}"
                                    TextColor="{StaticResource Accent}" FontSize="12" />
                         </Border>
                         <Label Text="{Binding ExplanationText}"

@@ -7,21 +7,21 @@ using AwsSaaC03Practice.Services;
 namespace AwsSaaC03Practice.ViewModels;
 
 [QueryProperty(nameof(ModeParam), "mode")]
-[QueryProperty(nameof(FilterParam), "filter")]   // optional category filter
-[QueryProperty(nameof(IdsParam), "ids")]          // optional comma-separated question IDs
+[QueryProperty(nameof(FilterParam), "filter")]
+[QueryProperty(nameof(IdsParam), "ids")]
 public partial class QuizViewModel : BaseViewModel, IDisposable
 {
+    private record ShuffledQuestion(Question Source, List<string> Options, int CorrectIndex, string Explanation);
+
     private readonly QuestionService _questions;
     private readonly SessionDbService _db;
     private readonly AuthService _auth;
 
-    private List<Question> _deck = new();
+    private List<ShuffledQuestion> _deck = new();
     private List<AnswerRecord> _answers = new();
     private DateTime _questionStart;
     private IDispatcherTimer? _timer;
     private QuizSession? _currentSession;
-    private int[] _shuffleMap = new int[4]; // maps display index → original option index
-    private int _shuffledCorrectIndex;
 
     // ── Navigation params ───────────────────────────────────────────────────
     [ObservableProperty] private string _modeParam = "Random";
@@ -29,15 +29,16 @@ public partial class QuizViewModel : BaseViewModel, IDisposable
     [ObservableProperty] private string _idsParam = "";
 
     // ── Observables ─────────────────────────────────────────────────────────
-    [ObservableProperty] private Question? _currentQuestion;
     [ObservableProperty] private int _currentIndex;
     [ObservableProperty] private int _totalCount;
-    [ObservableProperty] private int? _selectedOptionIndex;     // null = unanswered
+    [ObservableProperty] private int? _selectedOptionIndex;
     [ObservableProperty] private bool _answerRevealed;
     [ObservableProperty] private string _timerText = "";
     [ObservableProperty] private bool _timerVisible;
     [ObservableProperty] private string _progressText = "";
     [ObservableProperty] private string _explanationText = "";
+    [ObservableProperty] private string _questionText = "";
+    [ObservableProperty] private string _categoryText = "";
 
     // Per-option button background colour after answer is revealed
     private static readonly Color _colDefault = Color.FromArgb("#1c2128");
@@ -49,7 +50,6 @@ public partial class QuizViewModel : BaseViewModel, IDisposable
     [ObservableProperty] private Color _opt2Colour = Color.FromArgb("#1c2128");
     [ObservableProperty] private Color _opt3Colour = Color.FromArgb("#1c2128");
 
-    // Shuffled option texts — display order differs from JSON order each time
     [ObservableProperty] private string _option0Text = "";
     [ObservableProperty] private string _option1Text = "";
     [ObservableProperty] private string _option2Text = "";
@@ -70,10 +70,11 @@ public partial class QuizViewModel : BaseViewModel, IDisposable
         var ids = string.IsNullOrEmpty(IdsParam)
             ? null : IdsParam.Split(',').ToList();
 
-        _deck = _questions.GetForMode(_mode, FilterParam, ids);
+        // Get questions and shuffle each one's options once for this session
+        var sourceQuestions = _questions.GetForMode(_mode, FilterParam, ids);
+        _deck = sourceQuestions.Select(ShuffleOnce).ToList();
         TotalCount = _deck.Count;
 
-        // Start session record
         var user = await _auth.GetUserInfoAsync();
         _currentSession = new QuizSession
         {
@@ -83,7 +84,6 @@ public partial class QuizViewModel : BaseViewModel, IDisposable
         };
         await _db.SaveSessionAsync(_currentSession);
 
-        // Timer
         var limit = _mode.TimeLimit();
         if (limit.HasValue)
         {
@@ -98,26 +98,40 @@ public partial class QuizViewModel : BaseViewModel, IDisposable
         ShowQuestion(0);
     }
 
+    /// <summary>
+    /// Shuffle one question's options. Produces a display copy —
+    /// the source Question object is never mutated.
+    /// </summary>
+    private static ShuffledQuestion ShuffleOnce(Question q)
+    {
+        // Build a random permutation: shuffleMap[displayPos] = originalIndex
+        var shuffleMap = Enumerable.Range(0, q.Options.Count)
+            .OrderBy(_ => Random.Shared.Next()).ToArray();
+
+        var shuffledOpts = new List<string>(4);
+        string[] labels = ["A. ", "B. ", "C. ", "D. "];
+        for (int i = 0; i < 4; i++)
+            shuffledOpts.Add(labels[i] + StripPrefix(q.Options[shuffleMap[i]]));
+
+        var shuffledCorrect = Array.IndexOf(shuffleMap, q.Correct);
+
+        // Explanation references options by content, not by letter,
+        // so it reads correctly regardless of shuffle order.
+        return new ShuffledQuestion(q, shuffledOpts, shuffledCorrect, q.Explanation);
+    }
+
     private void ShowQuestion(int index)
     {
-        var q = _deck[index];
+        var sq = _deck[index];
         CurrentIndex = index;
-        CurrentQuestion = q;
 
-        // Shuffle option CONTENT into fixed A/B/C/D label positions.
-        // _shuffleMap[displayPos] = originalIndex — tells us which original option sits at each position.
-        _shuffleMap = Enumerable.Range(0, q.Options.Count)
-            .OrderBy(_ => Random.Shared.Next()).ToArray();
-        _shuffledCorrectIndex = Array.IndexOf(_shuffleMap, q.Correct);
-
-        string[] labels = ["A", "B", "C", "D"];
-        Option0Text = labels[0] + ". " + StripPrefix(q.Options[_shuffleMap[0]]);
-        Option1Text = labels[1] + ". " + StripPrefix(q.Options[_shuffleMap[1]]);
-        Option2Text = labels[2] + ". " + StripPrefix(q.Options[_shuffleMap[2]]);
-        Option3Text = labels[3] + ". " + StripPrefix(q.Options[_shuffleMap[3]]);
-
-        // Explanations describe approaches by name (not by letter), so no remapping needed
-        ExplanationText = q.Explanation;
+        QuestionText = sq.Source.Text;
+        CategoryText = sq.Source.Category;
+        Option0Text = sq.Options[0];
+        Option1Text = sq.Options[1];
+        Option2Text = sq.Options[2];
+        Option3Text = sq.Options[3];
+        ExplanationText = sq.Explanation;
 
         SelectedOptionIndex = null;
         AnswerRevealed = false;
@@ -131,25 +145,21 @@ public partial class QuizViewModel : BaseViewModel, IDisposable
     [RelayCommand]
     private void SelectAnswer(string indexStr)
     {
-        if (AnswerRevealed || CurrentQuestion is null) return;
+        if (AnswerRevealed) return;
+        var sq = _deck[CurrentIndex];
         SelectedOptionIndex = int.Parse(indexStr);
         AnswerRevealed = true;
 
-        // Highlight using shuffled positions
-        SetOptionColour(SelectedOptionIndex.Value, _shuffledCorrectIndex);
-
-        // Map display indices back to original JSON indices for recording
-        var originalSelected = _shuffleMap[SelectedOptionIndex.Value];
-        var originalCorrect  = CurrentQuestion.Correct;
+        SetOptionColour(SelectedOptionIndex.Value, sq.CorrectIndex);
 
         _answers.Add(new AnswerRecord
         {
-            QuestionId     = CurrentQuestion.Id,
-            Domain         = CurrentQuestion.Domain,
-            Category       = CurrentQuestion.Category,
-            SelectedOption = originalSelected,
-            CorrectOption  = originalCorrect,
-            IsCorrect      = originalSelected == originalCorrect,
+            QuestionId     = sq.Source.Id,
+            Domain         = sq.Source.Domain,
+            Category       = sq.Source.Category,
+            SelectedOption = SelectedOptionIndex.Value,
+            CorrectOption  = sq.CorrectIndex,
+            IsCorrect      = SelectedOptionIndex.Value == sq.CorrectIndex,
             SecondsSpent   = (DateTime.Now - _questionStart).TotalSeconds,
         });
     }
@@ -183,8 +193,6 @@ public partial class QuizViewModel : BaseViewModel, IDisposable
 
         try
         {
-            Console.WriteLine($"[Quiz] Finishing session (completed={completed}, answers={_answers.Count})");
-
             _currentSession.FinishedAt = DateTime.Now;
             _currentSession.TotalQuestions = _answers.Count;
             _currentSession.CorrectAnswers = _answers.Count(a => a.IsCorrect);
@@ -193,9 +201,7 @@ public partial class QuizViewModel : BaseViewModel, IDisposable
             await _db.SaveSessionAsync(_currentSession);
 
             var sessionId = _currentSession.Id;
-            Console.WriteLine($"[Quiz] Session saved (id={sessionId}), navigating to results");
             await Shell.Current.GoToAsync($"results?sessionId={sessionId}");
-            Console.WriteLine($"[Quiz] Navigation to results complete");
         }
         catch (Exception ex)
         {
@@ -206,19 +212,14 @@ public partial class QuizViewModel : BaseViewModel, IDisposable
                 await Shell.Current.DisplayAlert("Error", $"Failed to show results: {ex.Message}", "OK");
                 await Shell.Current.GoToAsync("//dashboard");
             }
-            catch (Exception navEx)
-            {
-                Console.WriteLine($"[Quiz] EXCEPTION in error recovery: {navEx}");
-            }
+            catch { }
         }
     }
 
     private void OnTimerTick(object? sender, EventArgs e)
     {
         _remaining -= TimeSpan.FromSeconds(1);
-        var m = (int)_remaining.TotalMinutes;
-        var s = _remaining.Seconds;
-        TimerText = $"{m:D2}:{s:D2}";
+        TimerText = $"{(int)_remaining.TotalMinutes:D2}:{_remaining.Seconds:D2}";
         if (_remaining <= TimeSpan.Zero)
         {
             _timer?.Stop();
@@ -235,9 +236,7 @@ public partial class QuizViewModel : BaseViewModel, IDisposable
     private void SetOptionColour(int selected, int correct)
     {
         ResetOptionColours();
-        // Always highlight the correct answer green
         SetColour(correct, _colGreen);
-        // If the user was wrong, highlight their pick red
         if (selected != correct)
             SetColour(selected, _colRed);
     }
