@@ -11,13 +11,11 @@ namespace AwsSaaC03Practice.ViewModels;
 [QueryProperty(nameof(IdsParam), "ids")]
 public partial class QuizViewModel : BaseViewModel, IDisposable
 {
-    private record ShuffledQuestion(Question Source, List<string> Options, int CorrectIndex, string Explanation);
-
     private readonly QuestionService _questions;
     private readonly SessionDbService _db;
     private readonly AuthService _auth;
 
-    private List<ShuffledQuestion> _deck = new();
+    private List<Question> _deck = new();
     private List<AnswerRecord> _answers = new();
     private DateTime _questionStart;
     private IDispatcherTimer? _timer;
@@ -40,7 +38,6 @@ public partial class QuizViewModel : BaseViewModel, IDisposable
     [ObservableProperty] private string _questionText = "";
     [ObservableProperty] private string _categoryText = "";
 
-    // Per-option button background colour after answer is revealed
     private static readonly Color _colDefault = Color.FromArgb("#1c2128");
     private static readonly Color _colGreen   = Color.FromArgb("#0d2b18");
     private static readonly Color _colRed     = Color.FromArgb("#2d1a1a");
@@ -70,9 +67,7 @@ public partial class QuizViewModel : BaseViewModel, IDisposable
         var ids = string.IsNullOrEmpty(IdsParam)
             ? null : IdsParam.Split(',').ToList();
 
-        // Get questions and shuffle each one's options once for this session
-        var sourceQuestions = _questions.GetForMode(_mode, FilterParam, ids);
-        _deck = sourceQuestions.Select(ShuffleOnce).ToList();
+        _deck = _questions.GetForMode(_mode, FilterParam, ids);
         TotalCount = _deck.Count;
 
         var user = await _auth.GetUserInfoAsync();
@@ -98,40 +93,18 @@ public partial class QuizViewModel : BaseViewModel, IDisposable
         ShowQuestion(0);
     }
 
-    /// <summary>
-    /// Shuffle one question's options. Produces a display copy —
-    /// the source Question object is never mutated.
-    /// </summary>
-    private static ShuffledQuestion ShuffleOnce(Question q)
-    {
-        // Build a random permutation: shuffleMap[displayPos] = originalIndex
-        var shuffleMap = Enumerable.Range(0, q.Options.Count)
-            .OrderBy(_ => Random.Shared.Next()).ToArray();
-
-        var shuffledOpts = new List<string>(4);
-        string[] labels = ["A. ", "B. ", "C. ", "D. "];
-        for (int i = 0; i < 4; i++)
-            shuffledOpts.Add(labels[i] + StripPrefix(q.Options[shuffleMap[i]]));
-
-        var shuffledCorrect = Array.IndexOf(shuffleMap, q.Correct);
-
-        // Explanation references options by content, not by letter,
-        // so it reads correctly regardless of shuffle order.
-        return new ShuffledQuestion(q, shuffledOpts, shuffledCorrect, q.Explanation);
-    }
-
     private void ShowQuestion(int index)
     {
-        var sq = _deck[index];
+        var q = _deck[index];
         CurrentIndex = index;
 
-        QuestionText = sq.Source.Text;
-        CategoryText = sq.Source.Category;
-        Option0Text = sq.Options[0];
-        Option1Text = sq.Options[1];
-        Option2Text = sq.Options[2];
-        Option3Text = sq.Options[3];
-        ExplanationText = sq.Explanation;
+        QuestionText = q.Text;
+        CategoryText = q.Category;
+        Option0Text = q.Options[0];
+        Option1Text = q.Options[1];
+        Option2Text = q.Options[2];
+        Option3Text = q.Options[3];
+        ExplanationText = q.Explanation;
 
         SelectedOptionIndex = null;
         AnswerRevealed = false;
@@ -140,26 +113,24 @@ public partial class QuizViewModel : BaseViewModel, IDisposable
         _questionStart = DateTime.Now;
     }
 
-    // ── Commands ─────────────────────────────────────────────────────────────
-
     [RelayCommand]
     private void SelectAnswer(string indexStr)
     {
         if (AnswerRevealed) return;
-        var sq = _deck[CurrentIndex];
+        var q = _deck[CurrentIndex];
         SelectedOptionIndex = int.Parse(indexStr);
         AnswerRevealed = true;
 
-        SetOptionColour(SelectedOptionIndex.Value, sq.CorrectIndex);
+        SetOptionColour(SelectedOptionIndex.Value, q.Correct);
 
         _answers.Add(new AnswerRecord
         {
-            QuestionId     = sq.Source.Id,
-            Domain         = sq.Source.Domain,
-            Category       = sq.Source.Category,
+            QuestionId     = q.Id,
+            Domain         = q.Domain,
+            Category       = q.Category,
             SelectedOption = SelectedOptionIndex.Value,
-            CorrectOption  = sq.CorrectIndex,
-            IsCorrect      = SelectedOptionIndex.Value == sq.CorrectIndex,
+            CorrectOption  = q.Correct,
+            IsCorrect      = SelectedOptionIndex.Value == q.Correct,
             SecondsSpent   = (DateTime.Now - _questionStart).TotalSeconds,
         });
     }
@@ -168,9 +139,8 @@ public partial class QuizViewModel : BaseViewModel, IDisposable
     private async Task NextAsync()
     {
         if (!AnswerRevealed) return;
-        var nextIndex = CurrentIndex + 1;
-        if (nextIndex < _deck.Count)
-            ShowQuestion(nextIndex);
+        if (CurrentIndex + 1 < _deck.Count)
+            ShowQuestion(CurrentIndex + 1);
         else
             await FinishSessionAsync(completed: true);
     }
@@ -200,8 +170,7 @@ public partial class QuizViewModel : BaseViewModel, IDisposable
             _currentSession.AnswerDataJson = JsonSerializer.Serialize(_answers);
             await _db.SaveSessionAsync(_currentSession);
 
-            var sessionId = _currentSession.Id;
-            await Shell.Current.GoToAsync($"results?sessionId={sessionId}");
+            await Shell.Current.GoToAsync($"results?sessionId={_currentSession.Id}");
         }
         catch (Exception ex)
         {
@@ -250,13 +219,6 @@ public partial class QuizViewModel : BaseViewModel, IDisposable
             case 2: Opt2Colour = colour; break;
             case 3: Opt3Colour = colour; break;
         }
-    }
-
-    private static string StripPrefix(string option)
-    {
-        if (option.Length >= 3 && option[1] == '.' && option[2] == ' ' && option[0] is >= 'A' and <= 'D')
-            return option[3..];
-        return option;
     }
 
     public void Dispose() => _timer?.Stop();
