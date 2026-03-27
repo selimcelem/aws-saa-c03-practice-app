@@ -137,7 +137,7 @@
       "D. App server security group: inbound from the VPC CIDR on port 8080"
     ],
     "correct": 1,
-    "explanation": "Option B is correct because Referencing the ALB's security group as the source in the app server's inbound rule ensures only traffic originating from the ALB can reach port 8080.\nOption A is incorrect because Option A allows all internet traffic.\nOption C is incorrect because Allows any resource in the public subnet.\nOption D is incorrect because This is more precise than CIDR-based rules because it doesn't matter if the ALB's IPs change."
+    "explanation": "Option B is correct because Referencing the ALB's security group as the source in the app server's inbound rule ensures only traffic originating from the ALB can reach port 8080.\nOption A is incorrect because Option A allows all internet traffic.\nOption C is incorrect because Allows any resource in the public subnet.\nOption D is incorrect because It does not satisfy the specific requirements stated in this scenario."
   },
   {
     "id": "q011",
@@ -151,7 +151,7 @@
       "D. Enable VPC Flow Logs to capture all network-level traffic metadata for S3 connections, including source IPs, destination ports, and byte counts"
     ],
     "correct": 1,
-    "explanation": "Option B is correct because CloudTrail records API-level events including PutBucketPolicy and PutBucketAcl, capturing who made the change, from which IP, and when.\nOption A is incorrect because S3 server access logging logs object access, not bucket policy changes.\nOption C is incorrect because AWS Config records configuration snapshots but CloudTrail is the primary audit log for API calls.\nOption D is incorrect because VPC Flow Logs captures network traffic, not API activity."
+    "explanation": "Option B is correct because CloudTrail records API-level events including PutBucketPolicy and PutBucketAcl, capturing who made the change, from which IP, and when.\nOption A is incorrect because S3 server access logging logs object access, not bucket policy changes.\nOption C is incorrect because It does not satisfy the specific requirements stated in this scenario.\nOption D is incorrect because VPC Flow Logs captures network traffic, not API activity."
   },
   {
     "id": "q012",
@@ -165,7 +165,7 @@
       "D. AWS Security Hub with CIS benchmark standards enabled to aggregate security findings from multiple sources and present a unified compliance dashboard"
     ],
     "correct": 1,
-    "explanation": "Option B is correct because Amazon GuardDuty uses threat intelligence, ML, and anomaly detection on VPC Flow Logs, DNS logs, and CloudTrail events to detect threats like cryptocurrency mining (CryptoCurrency finding) and compromised instances.\nOption A is incorrect because Enabling it at the Organizations level auto-enrolls existing and new member accounts with minimal overhead.\nOption C is incorrect because Macie focuses on sensitive data discovery.\nOption D is incorrect because Security Hub aggregates findings but doesn't generate GuardDuty-type detections."
+    "explanation": "Option B is correct because Amazon GuardDuty uses threat intelligence, ML, and anomaly detection on VPC Flow Logs, DNS logs, and CloudTrail events to detect threats like cryptocurrency mining (CryptoCurrency finding) and compromised instances.\nOption A is incorrect because It does not satisfy the specific requirements stated in this scenario.\nOption C is incorrect because Macie focuses on sensitive data discovery.\nOption D is incorrect because It does not satisfy the specific requirements stated in this scenario."
   },
   {
     "id": "q013",
@@ -193,7 +193,7 @@
       "D. Embed the password in the Lambda function's environment variable encrypted with a customer-managed KMS CMK, requiring a redeployment for each password rotation cycle"
     ],
     "correct": 1,
-    "explanation": "Option B is correct because AWS Secrets Manager natively supports automatic secret rotation using a Lambda rotation function.\nOption A is incorrect because SSM Parameter Store doesn't natively rotate database passwords.\nOption C is incorrect because It integrates with RDS, Redshift, and DocumentDB to update the password in the database and secret atomically.\nOption D is incorrect because Lambda environment variables don't support automatic rotation."
+    "explanation": "Option B is correct because AWS Secrets Manager natively supports automatic secret rotation using a Lambda rotation function.\nOption A is incorrect because It does not satisfy the specific requirements stated in this scenario.\nOption C is incorrect because It does not satisfy the specific requirements stated in this scenario.\nOption D is incorrect because Lambda environment variables don't support automatic rotation."
   },
   {
     "id": "q015",
@@ -263,7 +263,7 @@
       "D. Deploy an API Gateway backed by Lambda functions to proxy every AWS SDK call from the mobile client through a server-side intermediary"
     ],
     "correct": 1,
-    "explanation": "Option B is correct because Amazon Cognito Identity Pools (Federated Identities) accept tokens from identity providers like Google, Cognito User Pools, or SAML providers and exchange them for temporary AWS credentials via STS.\nOption A is incorrect because This is the standard pattern for granting mobile users direct AWS resource access.\nOption C is incorrect because Options A and C distribute long-lived keys which is never appropriate for client apps.\nOption D is incorrect because The credentials are scoped to an authenticated or unauthenticated IAM role."
+    "explanation": "Option B is correct because Amazon Cognito Identity Pools (Federated Identities) accept tokens from identity providers like Google, Cognito User Pools, or SAML providers and exchange them for temporary AWS credentials via STS.\nOption A is incorrect because This is the standard pattern for granting mobile users direct AWS resource access.\nOption C is incorrect because Options A and C distribute long-lived keys which is never appropriate for client apps.\nOption D is incorrect because It does not satisfy the specific requirements stated in this scenario."
   },
   {
     "id": "q020",
@@ -403,7 +403,7 @@
       "D. Configure Route 53 Resolver with inbound and outbound endpoints to resolve the SaaS API's public domain name to a private IP within the VPC"
     ],
     "correct": 1,
-    "explanation": "Option B is correct because If the SaaS API is offered as an AWS PrivateLink endpoint service, you can create an Interface VPC Endpoint in your VPC.\nOption A is incorrect because Traffic travels through AWS's private network, never touching the internet or a NAT Gateway.\nOption C is incorrect because Direct Connect provides a private path to on-premises, not to SaaS APIs.\nOption D is incorrect because Route 53 Resolver doesn't change the actual network path."
+    "explanation": "Option B is correct because If the SaaS API is offered as an AWS PrivateLink endpoint service, you can create an Interface VPC Endpoint in your VPC.\nOption A is incorrect because It does not satisfy the specific requirements stated in this scenario.\nOption C is incorrect because Direct Connect provides a private path to on-premises, not to SaaS APIs.\nOption D is incorrect because Route 53 Resolver doesn't change the actual network path."
   },
   {
     "id": "q030",
@@ -529,7 +529,7 @@
       "D. Migrate the relational database from RDS to DynamoDB to leverage its automatic partitioning and horizontal scaling for high-volume read operations"
     ],
     "correct": 1,
-    "explanation": "Option B is correct because RDS Read Replicas use asynchronous replication to offload read traffic from the primary.\nOption A is incorrect because Upgrading instance size doesn't scale as well as read replicas for read-heavy workloads.\nOption C is incorrect because You can create up to 5 replicas per primary (15 for Aurora).\nOption D is incorrect because Migrating to DynamoDB is a major architectural change."
+    "explanation": "Option B is correct because RDS Read Replicas use asynchronous replication to offload read traffic from the primary.\nOption A is incorrect because Upgrading instance size doesn't scale as well as read replicas for read-heavy workloads.\nOption C is incorrect because It does not satisfy the specific requirements stated in this scenario.\nOption D is incorrect because Migrating to DynamoDB is a major architectural change."
   },
   {
     "id": "q039",
@@ -655,7 +655,7 @@
       "D. Use sticky sessions (session affinity) on the Application Load Balancer to pin each user to a specific EC2 instance for the session duration"
     ],
     "correct": 1,
-    "explanation": "Option B is correct because Triggering Lambda via SQS decouples ingestion from processing. SQS absorbs the burst, and Lambda scales concurrently to drain the queue.\nOption A is incorrect because The visibility timeout must exceed Lambda's maximum execution time to prevent duplicate processing.\nOption C is incorrect because Messages that fail maxReceiveCount times go to the DLQ for inspection.\nOption D is incorrect because Direct S3-to-Lambda doesn't provide a DLQ or controlled retry."
+    "explanation": "Option B is correct because Triggering Lambda via SQS decouples ingestion from processing. SQS absorbs the burst, and Lambda scales concurrently to drain the queue.\nOption A is incorrect because It does not satisfy the specific requirements stated in this scenario.\nOption C is incorrect because Messages that fail maxReceiveCount times go to the DLQ for inspection.\nOption D is incorrect because It does not satisfy the specific requirements stated in this scenario."
   },
   {
     "id": "q048",
@@ -669,7 +669,7 @@
       "D. Deploy RDS on a Dedicated Host with enhanced networking in a single AZ, relying on the underlying hardware redundancy for high availability"
     ],
     "correct": 1,
-    "explanation": "Option B is correct because ElastiCache Redis with Multi-AZ and automatic failover maintains a synchronous replica in a different AZ.\nOption A is incorrect because On primary failure, ElastiCache promotes the replica and updates the endpoint automatically.\nOption C is incorrect because Clients using the cluster endpoint reconnect to the new primary transparently.\nOption D is incorrect because Standalone mode has no failover."
+    "explanation": "Option B is correct because ElastiCache Redis with Multi-AZ and automatic failover maintains a synchronous replica in a different AZ.\nOption A is incorrect because It does not satisfy the specific requirements stated in this scenario.\nOption C is incorrect because Clients using the cluster endpoint reconnect to the new primary transparently.\nOption D is incorrect because Standalone mode has no failover."
   },
   {
     "id": "q049",
@@ -711,7 +711,7 @@
       "D. Implement a synchronous API call from the order processing service to a notification microservice running on ECS Fargate behind a load balancer"
     ],
     "correct": 1,
-    "explanation": "Option B is correct because Aurora Global Database replicates data with typical latency of under 1 second to up to 5 secondary regions.\nOption A is incorrect because The primary cluster serves reads and writes; secondaries serve local reads and can be promoted in under 1 minute for DR.\nOption C is incorrect because An Aurora cluster supports up to 15 read replicas.\nOption D is incorrect because Aurora automatically grows storage in 10GB increments."
+    "explanation": "Option B is correct because Aurora Global Database replicates data with typical latency of under 1 second to up to 5 secondary regions.\nOption A is incorrect because The primary cluster serves reads and writes; secondaries serve local reads and can be promoted in under 1 minute for DR.\nOption C is incorrect because It does not satisfy the specific requirements stated in this scenario.\nOption D is incorrect because It does not satisfy the specific requirements stated in this scenario."
   },
   {
     "id": "q052",
@@ -725,7 +725,7 @@
       "D. Store all data in S3 One Zone-Infrequent Access from day one to reduce storage costs by approximately 20% compared to S3 Standard, regardless of access patterns"
     ],
     "correct": 1,
-    "explanation": "Option B is correct because Deploying two instances in separate AZs behind an NLB provides AZ-level HA.\nOption A is incorrect because If one AZ fails, the NLB routes traffic to the healthy instance.\nOption C is incorrect because EC2 Auto Recovery restarts the instance but still results in minutes of downtime and doesn't protect against AZ failure.\nOption D is incorrect because EFS provides a shared, multi-AZ file system so both instances access the same stateful data."
+    "explanation": "Option B is correct because It best satisfies the requirements stated in this scenario.\nOption A is incorrect because It does not satisfy the specific requirements stated in this scenario.\nOption C is incorrect because It does not satisfy the specific requirements stated in this scenario.\nOption D is incorrect because It does not satisfy the specific requirements stated in this scenario."
   },
   {
     "id": "q053",
@@ -753,7 +753,7 @@
       "D. Use Amazon Kinesis Data Streams to ingest video processing events, with Lambda consumers reading from each shard and checkpointing their progress"
     ],
     "correct": 1,
-    "explanation": "Option B is correct because Connection draining (deregistration delay) allows in-flight requests to a deregistering target to complete gracefully.\nOption A is incorrect because The ALB stops sending new requests to the target immediately but maintains existing connections until they complete or the deregistration.\nOption C is incorrect because After the delay, open connections are closed.\nOption D is incorrect because The ALB does not queue requests or reroute mid-flight."
+    "explanation": "Option B is correct because Connection draining (deregistration delay) allows in-flight requests to a deregistering target to complete gracefully.\nOption A is incorrect because It does not satisfy the specific requirements stated in this scenario.\nOption C is incorrect because After the delay, open connections are closed.\nOption D is incorrect because It does not satisfy the specific requirements stated in this scenario."
   },
   {
     "id": "q055",
@@ -851,7 +851,7 @@
       "D. Use Amazon SQS FIFO queues with message group IDs to maintain strict ordering of order events, with Lambda consumers processing each message sequentially"
     ],
     "correct": 1,
-    "explanation": "Option B is correct because OLTP and analytical (OLAP) workloads have fundamentally different characteristics and should be separated.\nOption A is incorrect because Amazon Redshift is a columnar data warehouse optimized for analytical queries against large datasets and executes such queries in seconds.\nOption C is incorrect because Data can flow from RDS via AWS DMS or ETL pipelines.\nOption D is incorrect because Multi-AZ standby is for failover, not read queries."
+    "explanation": "Option B is correct because OLTP and analytical (OLAP) workloads have fundamentally different characteristics and should be separated.\nOption A is incorrect because It does not satisfy the specific requirements stated in this scenario.\nOption C is incorrect because It does not satisfy the specific requirements stated in this scenario.\nOption D is incorrect because Multi-AZ standby is for failover, not read queries."
   },
   {
     "id": "q062",
@@ -893,7 +893,7 @@
       "D. Amazon RDS PostgreSQL with connection pooling via RDS Proxy to handle thousands of concurrent database connections from the serverless API functions"
     ],
     "correct": 1,
-    "explanation": "Option B is correct because Cluster placement groups physically co-locate EC2 instances on high-bisection-bandwidth networking within a single AZ, providing the lowest latency and highest network throughput available (up to 100 Gbps for.\nOption A is incorrect because Elastic IPs don't affect throughput within a VPC -- instances already communicate via private IPs.\nOption C is incorrect because Enhanced networking (ENA) provides SR-IOV for additional performance.\nOption D is incorrect because NAT Gateways are for internet egress."
+    "explanation": "Option B is correct because Cluster placement groups physically co-locate EC2 instances on high-bisection-bandwidth networking within a single AZ, providing the lowest latency and highest network throughput available (up to 100 Gbps for.\nOption A is incorrect because It does not satisfy the specific requirements stated in this scenario.\nOption C is incorrect because Enhanced networking (ENA) provides SR-IOV for additional performance.\nOption D is incorrect because It does not satisfy the specific requirements stated in this scenario."
   },
   {
     "id": "q065",
@@ -907,7 +907,7 @@
       "D. Migrate the API to EC2 instances for cheaper compute"
     ],
     "correct": 0,
-    "explanation": "Option A is correct because API Gateway stage-level caching stores responses in a managed cache and returns them for subsequent identical requests within the TTL without invoking Lambda.\nOption B is incorrect because CloudFront is also valid and more feature-rich for CDN use cases, but API Gateway's built-in cache is simpler for API use.\nOption C is incorrect because ElastiCache in Lambda reduces DB calls but still invokes Lambda.\nOption D is incorrect because This directly reduces Lambda invocations (cost) and returns cached responses in single-digit milliseconds (latency)."
+    "explanation": "Option A is correct because API Gateway stage-level caching stores responses in a managed cache and returns them for subsequent identical requests within the TTL without invoking Lambda.\nOption B is incorrect because CloudFront is also valid and more feature-rich for CDN use cases, but API Gateway's built-in cache is simpler for API use.\nOption C is incorrect because ElastiCache in Lambda reduces DB calls but still invokes Lambda.\nOption D is incorrect because It does not satisfy the specific requirements stated in this scenario."
   },
   {
     "id": "q066",
@@ -921,7 +921,7 @@
       "D. Migrate the workload from DynamoDB to Amazon Aurora Serverless v2 with read replicas to leverage relational database caching and connection management"
     ],
     "correct": 1,
-    "explanation": "Option B is correct because The p3 family provides NVIDIA V100 Tensor Core GPUs purpose-built for ML training.\nOption A is incorrect because P3.16xlarge provides 8 V100 GPUs with NVLink.\nOption C is incorrect because Instance store NVMe SSDs provide extremely high IOPS (millions) and throughput with sub-millisecond latency, ideal for high-speed data ingestion.\nOption D is incorrect because EBS volumes (A, C, D) have performance limits and add network overhead."
+    "explanation": "Option B is correct because The p3 family provides NVIDIA V100 Tensor Core GPUs purpose-built for ML training.\nOption A is incorrect because P3.16xlarge provides 8 V100 GPUs with NVLink.\nOption C is incorrect because Instance store NVMe SSDs provide extremely high IOPS (millions) and throughput with sub-millisecond latency, ideal for high-speed data ingestion.\nOption D is incorrect because It does not satisfy the specific requirements stated in this scenario."
   },
   {
     "id": "q067",
@@ -935,7 +935,7 @@
       "D. Failover routing with us-east-1 as primary"
     ],
     "correct": 1,
-    "explanation": "Option B is correct because Route 53 Latency routing measures actual AWS latency from the user's DNS resolver to each region and directs the user to the lowest-latency region.\nOption A is incorrect because Geolocation routing routes by geography (country/continent) regardless of actual latency -- a user in Spain might have lower latency to.\nOption C is incorrect because Weighted routing splits traffic by weight, not latency.\nOption D is incorrect because Failover routing is for DR, not performance."
+    "explanation": "Option B is correct because It best satisfies the requirements stated in this scenario.\nOption A is incorrect because Geolocation routing routes by geography (country/continent) regardless of actual latency -- a user in Spain might have lower latency to.\nOption C is incorrect because Weighted routing splits traffic by weight, not latency.\nOption D is incorrect because Failover routing is for DR, not performance."
   },
   {
     "id": "q068",
@@ -949,7 +949,7 @@
       "D. EFS in Provisioned Throughput mode to handle peak loads"
     ],
     "correct": 1,
-    "explanation": "Option B is correct because EFS provides a shared POSIX file system mountable across multiple EC2 instances simultaneously, ideal for Auto Scaling groups that scale in and out.\nOption A is incorrect because EFS Intelligent-Tiering automatically moves files not accessed for 30 days to the cheaper Infrequent Access tier, reducing costs for nightly idle files.\nOption C is incorrect because Multi-Attach EBS is limited to Nitro instances, a single AZ, and io1/io2 volume types -- it has strict constraints.\nOption D is incorrect because Provisioned Throughput is for consistent high-throughput requirements, not cost optimization."
+    "explanation": "Option B is correct because EFS provides a shared POSIX file system mountable across multiple EC2 instances simultaneously, ideal for Auto Scaling groups that scale in and out.\nOption A is incorrect because It does not satisfy the specific requirements stated in this scenario.\nOption C is incorrect because Multi-Attach EBS is limited to Nitro instances, a single AZ, and io1/io2 volume types -- it has strict constraints.\nOption D is incorrect because Provisioned Throughput is for consistent high-throughput requirements, not cost optimization."
   },
   {
     "id": "q069",
@@ -977,7 +977,7 @@
       "D. Deploy a fleet of EC2 instances with large EBS volumes attached, copy all NFS data to EBS, and share volumes across instances using EBS Multi-Attach"
     ],
     "correct": 1,
-    "explanation": "Option B is correct because Kinesis Data Streams with Enhanced Fan-Out provides each registered consumer with a dedicated 2 MB/s-per-shard throughput pipe.\nOption A is incorrect because All 3 consumers receive every record independently in real time (sub-second delivery).\nOption C is incorrect because Each shard handles 1,000 PUT records/s or 1 MB/s.\nOption D is incorrect because 50,000 events/s at ~200 bytes = ~10 MB/s -> ~10 shards needed."
+    "explanation": "Option B is correct because Kinesis Data Streams with Enhanced Fan-Out provides each registered consumer with a dedicated 2 MB/s-per-shard throughput pipe.\nOption A is incorrect because All 3 consumers receive every record independently in real time (sub-second delivery).\nOption C is incorrect because It does not satisfy the specific requirements stated in this scenario.\nOption D is incorrect because It does not satisfy the specific requirements stated in this scenario."
   },
   {
     "id": "q071",
@@ -991,7 +991,7 @@
       "D. Enable DynamoDB Streams on the table and write items to a buffer table first, then asynchronously process them into the main table via Lambda triggers"
     ],
     "correct": 1,
-    "explanation": "Option B is correct because Lambda consumes from Kinesis with one concurrent invocation per shard. If the stream is at maximum capacity and processing is falling behind, adding shards (resharding) allows more parallel.\nOption A is incorrect because Increasing batch size helps if Lambda is slow on each invocation but shards are already saturated.\nOption C is incorrect because Provisioned Concurrency reduces cold starts, not throughput.\nOption D is incorrect because The iterator age should decrease as throughput catches up."
+    "explanation": "Option B is correct because Lambda consumes from Kinesis with one concurrent invocation per shard. If the stream is at maximum capacity and processing is falling behind, adding shards (resharding) allows more parallel.\nOption A is incorrect because It does not satisfy the specific requirements stated in this scenario.\nOption C is incorrect because Provisioned Concurrency reduces cold starts, not throughput.\nOption D is incorrect because The iterator age should decrease as throughput catches up."
   },
   {
     "id": "q072",
@@ -1005,7 +1005,7 @@
       "D. Increase the table's provisioned throughput capacity significantly beyond current usage to ensure individual partitions have enough burst capacity"
     ],
     "correct": 1,
-    "explanation": "Option B is correct because API Gateway + Lambda is a fully serverless architecture. Lambda scales automatically from zero to thousands of concurrent executions in seconds.\nOption A is incorrect because API Gateway is fully managed.\nOption C is incorrect because There are no idle infrastructure costs -- you pay only per request.\nOption D is incorrect because During periods of zero traffic, cost is near zero."
+    "explanation": "Option B is correct because API Gateway + Lambda is a fully serverless architecture. Lambda scales automatically from zero to thousands of concurrent executions in seconds.\nOption A is incorrect because It does not satisfy the specific requirements stated in this scenario.\nOption C is incorrect because There are no idle infrastructure costs -- you pay only per request.\nOption D is incorrect because During periods of zero traffic, cost is near zero."
   },
   {
     "id": "q073",
@@ -1019,7 +1019,7 @@
       "D. Store the media files in Amazon FSx for Lustre, a high-performance parallel file system designed for compute-intensive workloads requiring sub-millisecond latency"
     ],
     "correct": 1,
-    "explanation": "Option B is correct because AWS Batch manages the compute environment, launching Spot Instances when jobs are queued and terminating them when idle.\nOption A is incorrect because Spot Instances offer up to 90% discount over On-Demand.\nOption C is incorrect because Since jobs are retryable (they restart from S3 on interruption), Spot interruptions are acceptable.\nOption D is incorrect because On-Demand 24/7 wastes money during idle periods."
+    "explanation": "Option B is correct because AWS Batch manages the compute environment, launching Spot Instances when jobs are queued and terminating them when idle.\nOption A is incorrect because Spot Instances offer up to 90% discount over On-Demand.\nOption C is incorrect because It does not satisfy the specific requirements stated in this scenario.\nOption D is incorrect because On-Demand 24/7 wastes money during idle periods."
   },
   {
     "id": "q074",
@@ -1047,7 +1047,7 @@
       "D. Deploy the application on Amazon Lightsail instances with a Lightsail load balancer, leveraging the simplified compute platform for low-traffic applications"
     ],
     "correct": 1,
-    "explanation": "Option B is correct because EFS Bursting Throughput mode provides throughput based on the amount of data stored, with burst credits for sustained high-throughput periods.\nOption A is incorrect because At 20 GB/s, a standard EFS file system would need hundreds of TBs of data to sustain this throughput via bursting.\nOption C is incorrect because Provisioned Throughput decouples throughput from storage size, allowing you to provision the exact throughput needed (up to 3 GB/s per.\nOption D is incorrect because Elastic Throughput mode is now available and may be better."
+    "explanation": "Option B is correct because EFS Bursting Throughput mode provides throughput based on the amount of data stored, with burst credits for sustained high-throughput periods.\nOption A is incorrect because It does not satisfy the specific requirements stated in this scenario.\nOption C is incorrect because Provisioned Throughput decouples throughput from storage size, allowing you to provision the exact throughput needed (up to 3 GB/s per.\nOption D is incorrect because Elastic Throughput mode is now available and may be better."
   },
   {
     "id": "q076",
@@ -1173,7 +1173,7 @@
       "D. Store data in Amazon S3 One Zone-Infrequent Access to reduce costs by approximately 20% compared to Standard, accepting reduced availability within a single AZ"
     ],
     "correct": 1,
-    "explanation": "Option B is correct because RDS instances incur hourly charges even when idle. Business hours = 10 hours x 5 days = 50 hours/week.\nOption A is incorrect because Total week = 168 hours.\nOption C is incorrect because RDS supports stopping instances for up to 7 days (it auto-starts after 7 days).\nOption D is incorrect because Stopping the database for 118 hours per week (70% of the time) reduces cost by ~70%."
+    "explanation": "Option B is correct because RDS instances incur hourly charges even when idle. Business hours = 10 hours x 5 days = 50 hours/week.\nOption A is incorrect because Total week = 168 hours.\nOption C is incorrect because It does not satisfy the specific requirements stated in this scenario.\nOption D is incorrect because Stopping the database for 118 hours per week (70% of the time) reduces cost by ~70%."
   },
   {
     "id": "q085",
@@ -1215,7 +1215,7 @@
       "D. Move all workloads to AWS Lambda serverless functions to eliminate idle compute costs entirely, paying only for the milliseconds of actual execution time"
     ],
     "correct": 2,
-    "explanation": "Option C is correct because AWS Compute Optimizer uses ML to analyze resource utilization metrics (CPU, memory, network, disk) from the past 14 days (or up to 93 days with enhanced infrastructure metrics).\nOption A is incorrect because CloudTrail is an audit log, not a utilization analyzer.\nOption B is incorrect because While Trusted Advisor and Cost Explorer provide simpler utilization checks, Compute Optimizer gives detailed recommendations with predicted performance impact.\nOption D is incorrect because It covers EC2 instances, EBS volumes, Lambda functions, and ECS tasks on Fargate."
+    "explanation": "Option C is correct because AWS Compute Optimizer uses ML to analyze resource utilization metrics (CPU, memory, network, disk) from the past 14 days (or up to 93 days with enhanced infrastructure metrics).\nOption A is incorrect because It does not satisfy the specific requirements stated in this scenario.\nOption B is incorrect because While Trusted Advisor and Cost Explorer provide simpler utilization checks, Compute Optimizer gives detailed recommendations with predicted performance impact.\nOption D is incorrect because It covers EC2 instances, EBS volumes, Lambda functions, and ECS tasks on Fargate."
   },
   {
     "id": "q088",
@@ -1341,7 +1341,7 @@
       "D. Create a shared Amazon FSx for Windows File Server with Active Directory integration, using Windows ACLs and DFS namespaces to manage per-team folder access"
     ],
     "correct": 1,
-    "explanation": "Option B is correct because S3 Select allows you to use SQL expressions to retrieve only specific rows and columns from S3 objects (CSV, JSON, Parquet) without downloading the entire object.\nOption A is incorrect because Amazon Athena extends this further.\nOption C is incorrect because This reduces data transfer (you pay only for data scanned and returned) and accelerates queries.\nOption D is incorrect because S3 Batch Operations processes large-scale batch operations on objects, not selective column retrieval."
+    "explanation": "Option B is correct because S3 Select allows you to use SQL expressions to retrieve only specific rows and columns from S3 objects (CSV, JSON, Parquet) without downloading the entire object.\nOption A is incorrect because It does not satisfy the specific requirements stated in this scenario.\nOption C is incorrect because This reduces data transfer (you pay only for data scanned and returned) and accelerates queries.\nOption D is incorrect because S3 Batch Operations processes large-scale batch operations on objects, not selective column retrieval."
   },
   {
     "id": "q097",
@@ -1369,7 +1369,7 @@
       "D. Deploy AWS Service Catalog portfolios for each team containing pre-approved CloudFormation templates that provision infrastructure within defined guardrails"
     ],
     "correct": 1,
-    "explanation": "Option B is correct because VPC Gateway Endpoints for S3 and DynamoDB are free and eliminate NAT Gateway charges for that traffic.\nOption A is incorrect because Interface Endpoints for other AWS services (e.g., CloudWatch, STS) cost ~$0.01/hour but remove NAT Gateway data processing fees ($0.045/GB).\nOption C is incorrect because If the majority of NAT Gateway cost comes from S3/DynamoDB traffic, Gateway Endpoints alone can dramatically reduce the $150/month bill.\nOption D is incorrect because NAT Instances are cheaper hourly but require management and have lower throughput."
+    "explanation": "Option B is correct because VPC Gateway Endpoints for S3 and DynamoDB are free and eliminate NAT Gateway charges for that traffic.\nOption A is incorrect because It does not satisfy the specific requirements stated in this scenario.\nOption C is incorrect because It does not satisfy the specific requirements stated in this scenario.\nOption D is incorrect because NAT Instances are cheaper hourly but require management and have lower throughput."
   },
   {
     "id": "q099",
@@ -1551,7 +1551,7 @@
       "D. Use SSE-C encryption by providing your own encryption key with each S3 PutObject request, allowing you to control the key material while S3 handles the encryption process"
     ],
     "correct": 1,
-    "explanation": "Option B is correct because SSE-KMS with customer-managed keys provides full control over key policies, configurable automatic rotation, and CloudTrail logging of all key usage events.\nOption A is incorrect because SSE-S3 uses AWS-managed keys that customers cannot control or audit individually through CloudTrail.\nOption C is incorrect because Client-side encryption requires the customer to build and maintain key management infrastructure without CloudTrail integration.\nOption D is incorrect because SSE-C does not log key usage in CloudTrail and requires the customer to manage key storage and rotation externally."
+    "explanation": "Option B is correct because SSE-KMS with customer-managed keys provides full control over key policies, configurable automatic rotation, and CloudTrail logging of all key usage events.\nOption A is incorrect because SSE-S3 uses AWS-managed keys that customers cannot control or audit individually through CloudTrail.\nOption C is incorrect because It does not satisfy the specific requirements stated in this scenario.\nOption D is incorrect because It does not satisfy the specific requirements stated in this scenario."
   },
   {
     "id": "q0112",
@@ -1621,7 +1621,7 @@
       "D. Enable Redshift cluster encryption using an AWS CloudHSM-backed key and configure a scheduled Lambda function to trigger key rotation on the CloudHSM cluster every 365 days"
     ],
     "correct": 1,
-    "explanation": "Option B is correct because Enabling automatic rotation on a customer-managed KMS key rotates the backing key material annually and transparently without impacting Redshift operations or requiring downtime.\nOption A is incorrect because Redshift does not use SSE-S3 keys for cluster encryption, and Redshift encryption is managed separately from S3.\nOption C is incorrect because Manually rotating keys by restoring clusters introduces downtime and operational overhead.\nOption D is incorrect because CloudHSM key rotation requires custom implementation and does not integrate as seamlessly as KMS automatic rotation."
+    "explanation": "Option B is correct because Enabling automatic rotation on a customer-managed KMS key rotates the backing key material annually and transparently without impacting Redshift operations or requiring downtime.\nOption A is incorrect because Redshift does not use SSE-S3 keys for cluster encryption, and Redshift encryption is managed separately from S3.\nOption C is incorrect because Manually rotating keys by restoring clusters introduces downtime and operational overhead.\nOption D is incorrect because It does not satisfy the specific requirements stated in this scenario."
   },
   {
     "id": "q0117",
@@ -1775,7 +1775,7 @@
       "D. Configure AWS Systems Manager Session Manager for shell access and remove all port 22 inbound rules from both the ALB and EC2 security groups to eliminate SSH access entirely from the network"
     ],
     "correct": 1,
-    "explanation": "Option B is correct because Modifying the EC2 instance security group to restrict SSH to the corporate IP range directly addresses the issue while preserving application traffic rules.\nOption A is incorrect because ALBs do not handle SSH traffic, as SSH connections go directly to EC2 instances and not through the load balancer.\nOption C is incorrect because NACLs are stateless and adding deny rules requires careful management of return traffic, making security groups the better approach.\nOption D is incorrect because While Session Manager is a good practice, the question asks specifically to restrict SSH to the corporate network rather than eliminate it."
+    "explanation": "Option B is correct because Modifying the EC2 instance security group to restrict SSH to the corporate IP range directly addresses the issue while preserving application traffic rules.\nOption A is incorrect because ALBs do not handle SSH traffic, as SSH connections go directly to EC2 instances and not through the load balancer.\nOption C is incorrect because It does not satisfy the specific requirements stated in this scenario.\nOption D is incorrect because While Session Manager is a good practice, the question asks specifically to restrict SSH to the corporate network rather than eliminate it."
   },
   {
     "id": "q0128",
@@ -1789,7 +1789,7 @@
       "D. Remove the 0.0.0.0/0 rule, add an inbound rule on the RDS security group allowing port 3306 from the private IP addresses of each current EC2 instance running the application component"
     ],
     "correct": 0,
-    "explanation": "Option A is correct because Referencing the app-sg security group ID restricts database access to only instances with that security group, which scales automatically with the application.\nOption B is incorrect because Allowing the entire VPC CIDR block is still overly permissive, granting access to any resource in the VPC.\nOption C is incorrect because Keeping the 0.0.0.0/0 rule does not remediate the security finding, and NACLs add complexity.\nOption D is incorrect because Using individual IP addresses does not scale with Auto Scaling and requires manual updates when instances change."
+    "explanation": "Option A is correct because Referencing the app-sg security group ID restricts database access to only instances with that security group, which scales automatically with the application.\nOption B is incorrect because Allowing the entire VPC CIDR block is still overly permissive, granting access to any resource in the VPC.\nOption C is incorrect because Keeping the 0.0.0.0/0 rule does not remediate the security finding, and NACLs add complexity.\nOption D is incorrect because It does not satisfy the specific requirements stated in this scenario."
   },
   {
     "id": "q0129",
@@ -1901,7 +1901,7 @@
       "D. Create an AWS WAF web ACL with a rate-based rule set to 1000 requests per 5 minutes, add an IP set rule with Allow action for partner IPs with higher priority, and associate it with CloudFront"
     ],
     "correct": 3,
-    "explanation": "Option D is correct because AWS WAF rate-based rules can limit requests per IP address, and IP set rules with higher priority can whitelist partner IPs to bypass the rate limit.\nOption A is incorrect because CloudFront origin request policies do not support rate limiting per IP address, and trusted signers are for private content, not rate limit exemptions.\nOption B is incorrect because CloudFront signed URLs do not include rate limiting parameters.\nOption C is incorrect because While technically possible, this approach adds complexity, latency, and cost compared to native WAF rate-based rules."
+    "explanation": "Option D is correct because AWS WAF rate-based rules can limit requests per IP address, and IP set rules with higher priority can whitelist partner IPs to bypass the rate limit.\nOption A is incorrect because CloudFront origin request policies do not support rate limiting per IP address, and trusted signers are for private content, not rate limit exemptions.\nOption B is incorrect because CloudFront signed URLs do not include rate limiting parameters.\nOption C is incorrect because It does not satisfy the specific requirements stated in this scenario."
   },
   {
     "id": "q0137",
@@ -2013,7 +2013,7 @@
       "D. Enable AWS Compute Optimizer on all EC2 instances to detect abnormal compute patterns associated with mining, and configure weekly reports sent to the incident response team email address"
     ],
     "correct": 1,
-    "explanation": "Option B is correct because GuardDuty natively detects cryptocurrency mining activity on EC2 instances and generates CryptoCurrency findings, which EventBridge can route to SNS for immediate notification.\nOption A is incorrect because EKS Runtime Monitoring is specific to EKS workloads and not needed for general EC2 cryptocurrency detection.\nOption C is incorrect because High CPU usage alone does not confirm cryptocurrency mining and produces many false positives from legitimate workloads.\nOption D is incorrect because Compute Optimizer provides cost and performance recommendations, not security threat detection."
+    "explanation": "Option B is correct because GuardDuty natively detects cryptocurrency mining activity on EC2 instances and generates CryptoCurrency findings, which EventBridge can route to SNS for immediate notification.\nOption A is incorrect because It does not satisfy the specific requirements stated in this scenario.\nOption C is incorrect because High CPU usage alone does not confirm cryptocurrency mining and produces many false positives from legitimate workloads.\nOption D is incorrect because Compute Optimizer provides cost and performance recommendations, not security threat detection."
   },
   {
     "id": "q0145",
@@ -2041,7 +2041,7 @@
       "D. Create an IAM policy in each member account that denies cloudtrail:StopLogging for all IAM users and roles, and attach it to every IAM entity in the account to prevent trail modification"
     ],
     "correct": 0,
-    "explanation": "Option A is correct because SCPs provide organization-wide preventive controls that cannot be overridden by account-level IAM policies, and the condition can exclude the security team role.\nOption B is incorrect because Log file integrity validation detects log tampering, not trail configuration changes, and detection is not prevention.\nOption C is incorrect because Config rules with remediation are detective and reactive, meaning there is a window where logging is disabled before remediation triggers.\nOption D is incorrect because IAM policies in member accounts can be modified by account administrators, so they do not provide a reliable preventive control."
+    "explanation": "Option A is correct because It best satisfies the requirements stated in this scenario.\nOption B is incorrect because Log file integrity validation detects log tampering, not trail configuration changes, and detection is not prevention.\nOption C is incorrect because Config rules with remediation are detective and reactive, meaning there is a window where logging is disabled before remediation triggers.\nOption D is incorrect because IAM policies in member accounts can be modified by account administrators, so they do not provide a reliable preventive control."
   },
   {
     "id": "q0147",
@@ -2167,7 +2167,7 @@
       "D. Use AWS Private Certificate Authority to issue a public certificate for the domain, configure automatic renewal through the private CA, and attach the certificate to the ALB listener endpoint"
     ],
     "correct": 1,
-    "explanation": "Option B is correct because ACM public certificates with DNS validation in Route 53 renew automatically before expiration and integrate seamlessly with ALB HTTPS listeners.\nOption A is incorrect because Imported certificates in ACM do not renew automatically and require manual replacement before expiration.\nOption C is incorrect because Self-signed certificates are not trusted by browsers and IAM server certificates do not support automatic renewal.\nOption D is incorrect because AWS Private CA issues private certificates, not publicly trusted certificates, so browsers would not trust them."
+    "explanation": "Option B is correct because ACM public certificates with DNS validation in Route 53 renew automatically before expiration and integrate seamlessly with ALB HTTPS listeners.\nOption A is incorrect because It does not satisfy the specific requirements stated in this scenario.\nOption C is incorrect because Self-signed certificates are not trusted by browsers and IAM server certificates do not support automatic renewal.\nOption D is incorrect because AWS Private CA issues private certificates, not publicly trusted certificates, so browsers would not trust them."
   },
   {
     "id": "q0156",
@@ -2307,7 +2307,7 @@
       "D. Configure Inspector to run network reachability assessments separately and cross-reference the results manually with vulnerability findings to determine which exposed instances have the most CVEs"
     ],
     "correct": 0,
-    "explanation": "Option A is correct because Inspector provides an adjusted severity score that considers both the CVSS base score and contextual factors like network reachability, helping prioritize truly exploitable vulnerabilities.\nOption B is incorrect because Finding count alone does not indicate risk level, as many low-severity findings may be less critical than a single network-exposed high-severity finding.\nOption C is incorrect because Security Hub compliance scores are based on security standards, not individual instance vulnerability risk assessment.\nOption D is incorrect because Inspector already combines network reachability with vulnerability data in its scoring, making manual cross-referencing unnecessary."
+    "explanation": "Option A is correct because Inspector provides an adjusted severity score that considers both the CVSS base score and contextual factors like network reachability, helping prioritize truly exploitable vulnerabilities.\nOption B is incorrect because Finding count alone does not indicate risk level, as many low-severity findings may be less critical than a single network-exposed high-severity finding.\nOption C is incorrect because It does not satisfy the specific requirements stated in this scenario.\nOption D is incorrect because Inspector already combines network reachability with vulnerability data in its scoring, making manual cross-referencing unnecessary."
   },
   {
     "id": "q0166",
@@ -2811,7 +2811,7 @@
       "D. Configure SSE-C encryption providing customer-supplied keys with each API request, and build a custom key rotation system using Lambda scheduled invocations"
     ],
     "correct": 2,
-    "explanation": "Option C is correct because SSE-KMS with a customer managed key gives the company full control over the encryption key. AWS KMS supports automatic annual rotation and CloudTrail integration provides key usage auditing.\nOption A is incorrect because SSE-S3 uses Amazon-managed keys, so the company does not have control over key management or direct auditing of key usage.\nOption B is incorrect because Storing keys in a Git repository is a severe security risk and client-side encryption does not provide integrated audit logging.\nOption D is incorrect because SSE-C requires the company to manage key material and rotation entirely, adding complexity without the audit benefits of KMS."
+    "explanation": "Option C is correct because SSE-KMS with a customer managed key gives the company full control over the encryption key. AWS KMS supports automatic annual rotation and CloudTrail integration provides key usage auditing.\nOption A is incorrect because SSE-S3 uses Amazon-managed keys, so the company does not have control over key management or direct auditing of key usage.\nOption B is incorrect because Storing keys in a Git repository is a severe security risk and client-side encryption does not provide integrated audit logging.\nOption D is incorrect because It does not satisfy the specific requirements stated in this scenario."
   },
   {
     "id": "q0202",
@@ -2951,7 +2951,7 @@
       "D. Configure an interface VPC endpoint for S3 powered by PrivateLink and update DNS settings to resolve S3 endpoints to the private interface endpoint IP addresses"
     ],
     "correct": 1,
-    "explanation": "Option B is correct because Gateway VPC endpoints for S3 are free to create and use. They provide private connectivity from VPC to S3 without traversing the internet, making them the most cost-effective option for high-volume data transfer.\nOption A is incorrect because Direct Connect is expensive to set up and maintain, making it less cost-effective for this specific use case.\nOption C is incorrect because NAT gateway incurs data processing charges that would be significant for large data volumes.\nOption D is incorrect because Interface VPC endpoints charge an hourly fee and data processing charges, making them more expensive than gateway endpoints for S3."
+    "explanation": "Option B is correct because Gateway VPC endpoints for S3 are free to create and use. They provide private connectivity from VPC to S3 without traversing the internet, making them the most cost-effective option for high-volume data transfer.\nOption A is incorrect because Direct Connect is expensive to set up and maintain, making it less cost-effective for this specific use case.\nOption C is incorrect because It does not satisfy the specific requirements stated in this scenario.\nOption D is incorrect because Interface VPC endpoints charge an hourly fee and data processing charges, making them more expensive than gateway endpoints for S3."
   },
   {
     "id": "q0212",
@@ -2993,7 +2993,7 @@
       "D. Configure a NAT gateway specifically for DNS traffic on port 53 and add a route in the private subnet to forward only DNS queries through the NAT gateway endpoint"
     ],
     "correct": 2,
-    "explanation": "Option C is correct because The Amazon-provided DNS server (at the VPC CIDR +2 address) can resolve public DNS names for instances in private subnets without requiring internet access. Enabling DNS hostnames and DNS resolution ensures this functionality works.\nOption A is incorrect because Deploying a custom DNS server in a public subnet adds unnecessary infrastructure and management overhead when the VPC DNS resolver handles this natively.\nOption B is incorrect because Manually maintaining DNS records for external domains is error-prone and does not scale as external service IPs change.\nOption D is incorrect because DNS resolution through the VPC DNS server does not require a NAT gateway for DNS queries to resolve public names."
+    "explanation": "Option C is correct because The Amazon-provided DNS server (at the VPC CIDR +2 address) can resolve public DNS names for instances in private subnets without requiring internet access. Enabling DNS hostnames and DNS resolution ensures this functionality works.\nOption A is incorrect because It does not satisfy the specific requirements stated in this scenario.\nOption B is incorrect because Manually maintaining DNS records for external domains is error-prone and does not scale as external service IPs change.\nOption D is incorrect because DNS resolution through the VPC DNS server does not require a NAT gateway for DNS queries to resolve public names."
   },
   {
     "id": "q0215",
@@ -3049,7 +3049,7 @@
       "D. The RDS security group does not have an inbound rule allowing traffic on port 3306 from the EC2 instances security group, so add a rule referencing the EC2 group"
     ],
     "correct": 3,
-    "explanation": "Option D is correct because The most common cause of connectivity issues between EC2 and RDS within the same VPC is missing security group rules. The RDS security group needs an inbound rule on port 3306 allowing traffic from the EC2 security group.\nOption A is incorrect because The publicly accessible setting controls DNS resolution to a public IP and is not needed for intra-VPC connectivity.\nOption B is incorrect because Subnets within the same VPC automatically have local routes to each other through the VPC local route, so no additional routes are needed.\nOption C is incorrect because Resources within the same VPC communicate over private IP addresses and do not need public IPs."
+    "explanation": "Option D is correct because The most common cause of connectivity issues between EC2 and RDS within the same VPC is missing security group rules. The RDS security group needs an inbound rule on port 3306 allowing traffic from the EC2 security group.\nOption A is incorrect because It does not satisfy the specific requirements stated in this scenario.\nOption B is incorrect because Subnets within the same VPC automatically have local routes to each other through the VPC local route, so no additional routes are needed.\nOption C is incorrect because It does not satisfy the specific requirements stated in this scenario."
   },
   {
     "id": "q0219",
@@ -3427,7 +3427,7 @@
       "D. Use AWS Private CA to issue a certificate for the public domain, attach it to the ALB, and configure automatic renewal through the Private CA certificate lifecycle management"
     ],
     "correct": 1,
-    "explanation": "Option B is correct because ACM public certificates are free, support automatic renewal when validated through DNS, and integrate natively with ALB. DNS validation allows ACM to automatically renew the certificate without manual intervention.\nOption A is incorrect because Imported certificates in ACM do not auto-renew and require manual renewal and reimporting.\nOption C is incorrect because Self-signed certificates are not trusted by browsers and the custom renewal approach adds unnecessary complexity.\nOption D is incorrect because AWS Private CA is designed for private certificates and is more expensive than ACM public certificates for public-facing websites."
+    "explanation": "Option B is correct because ACM public certificates are free, support automatic renewal when validated through DNS, and integrate natively with ALB. DNS validation allows ACM to automatically renew the certificate without manual intervention.\nOption A is incorrect because Imported certificates in ACM do not auto-renew and require manual renewal and reimporting.\nOption C is incorrect because Self-signed certificates are not trusted by browsers and the custom renewal approach adds unnecessary complexity.\nOption D is incorrect because It does not satisfy the specific requirements stated in this scenario."
   },
   {
     "id": "q0246",
@@ -3469,7 +3469,7 @@
       "D. Use Amazon Cognito User Pools for user registration and authentication with social identity provider federation, and Cognito Identity Pools to provide temporary AWS credentials"
     ],
     "correct": 3,
-    "explanation": "Option D is correct because Cognito User Pools provide built-in user registration, authentication, and federation with social identity providers like Google and Facebook. Cognito Identity Pools exchange authenticated tokens for temporary AWS credentials, enabling secure resource access.\nOption A is incorrect because Creating IAM users for application users does not scale and long-term access keys are a security risk.\nOption B is incorrect because Hardcoded IAM access keys in DynamoDB are a security vulnerability and do not provide temporary scoped credentials.\nOption C is incorrect because Building a custom OIDC server adds significant development and maintenance burden when Cognito provides this functionality."
+    "explanation": "Option D is correct because Cognito User Pools provide built-in user registration, authentication, and federation with social identity providers like Google and Facebook. Cognito Identity Pools exchange authenticated tokens for temporary AWS credentials, enabling secure resource access.\nOption A is incorrect because Creating IAM users for application users does not scale and long-term access keys are a security risk.\nOption B is incorrect because Hardcoded IAM access keys in DynamoDB are a security vulnerability and do not provide temporary scoped credentials.\nOption C is incorrect because It does not satisfy the specific requirements stated in this scenario."
   },
   {
     "id": "q0249",
@@ -3525,7 +3525,7 @@
       "D. Enable Amazon Inspector for ECR image scanning, which automatically scans container images when they are pushed to ECR and provides detailed vulnerability findings in Inspector"
     ],
     "correct": 3,
-    "explanation": "Option D is correct because Amazon Inspector provides enhanced scanning for ECR images. When enabled, it automatically scans images on push to ECR and provides detailed vulnerability findings with severity ratings and remediation guidance.\nOption A is incorrect because Deploying and maintaining a third-party scanner requires significant setup and ongoing management compared to the Inspector integration.\nOption B is incorrect because Basic ECR scanning provides less comprehensive results than Inspector enhanced scanning and requires custom integration work.\nOption C is incorrect because A CI/CD pipeline approach requires custom build projects and does not provide continuous scanning of images already in the repository."
+    "explanation": "Option D is correct because Amazon Inspector provides enhanced scanning for ECR images. When enabled, it automatically scans images on push to ECR and provides detailed vulnerability findings with severity ratings and remediation guidance.\nOption A is incorrect because It does not satisfy the specific requirements stated in this scenario.\nOption B is incorrect because It does not satisfy the specific requirements stated in this scenario.\nOption C is incorrect because A CI/CD pipeline approach requires custom build projects and does not provide continuous scanning of images already in the repository."
   },
   {
     "id": "q0253",
@@ -3553,7 +3553,7 @@
       "D. Use Amazon Textract to extract text from all S3 objects and pipe the results through a custom regex pattern matcher that identifies PII and PHI patterns in the extracted text"
     ],
     "correct": 0,
-    "explanation": "Option A is correct because Amazon Macie is purpose-built for discovering and classifying sensitive data in S3. Its managed data identifiers can detect PII, PHI, and financial data at scale with minimal configuration.\nOption B is incorrect because Building a custom solution with Lambda and Comprehend requires significant development effort and does not provide the comprehensive data classification that Macie offers.\nOption C is incorrect because GuardDuty S3 protection monitors for threats to S3 data, not for sensitive data classification.\nOption D is incorrect because Textract is for document parsing, not sensitive data discovery, and a custom regex approach lacks the breadth and accuracy of Macie managed identifiers."
+    "explanation": "Option A is correct because Amazon Macie is purpose-built for discovering and classifying sensitive data in S3. Its managed data identifiers can detect PII, PHI, and financial data at scale with minimal configuration.\nOption B is incorrect because Building a custom solution with Lambda and Comprehend requires significant development effort and does not provide the comprehensive data classification that Macie offers.\nOption C is incorrect because GuardDuty S3 protection monitors for threats to S3 data, not for sensitive data classification.\nOption D is incorrect because It does not satisfy the specific requirements stated in this scenario."
   },
   {
     "id": "q0255",
@@ -3623,7 +3623,7 @@
       "D. Use Amazon EventBridge to collect events from all security services and route them to a Kinesis Data Stream feeding an OpenSearch cluster for centralized search and analysis"
     ],
     "correct": 2,
-    "explanation": "Option C is correct because Security Hub is designed to aggregate findings from multiple AWS security services into a single dashboard. It natively integrates with GuardDuty, Inspector, Macie, and Firewall Manager, providing a unified view of security findings and compliance status.\nOption A is incorrect because Building a custom application requires significant development and maintenance effort when Security Hub provides this functionality natively.\nOption B is incorrect because CloudWatch is not designed for security finding aggregation and lacks the security-specific features of Security Hub.\nOption D is incorrect because While this architecture could work, it requires significant infrastructure and does not provide the built-in security standards and compliance tracking that Security Hub offers."
+    "explanation": "Option C is correct because Security Hub is designed to aggregate findings from multiple AWS security services into a single dashboard. It natively integrates with GuardDuty, Inspector, Macie, and Firewall Manager, providing a unified view of security findings and compliance status.\nOption A is incorrect because Building a custom application requires significant development and maintenance effort when Security Hub provides this functionality natively.\nOption B is incorrect because CloudWatch is not designed for security finding aggregation and lacks the security-specific features of Security Hub.\nOption D is incorrect because It does not satisfy the specific requirements stated in this scenario."
   },
   {
     "id": "q0260",
@@ -3637,7 +3637,7 @@
       "D. Create an EventBridge rule matching Security Hub findings with high severity, triggering a Lambda function that formats the finding and posts it to the ticketing system REST API"
     ],
     "correct": 3,
-    "explanation": "Option D is correct because Security Hub publishes findings to EventBridge, allowing event-driven integration. An EventBridge rule can filter for high-severity findings and trigger a Lambda function that calls the ticketing system REST API to create tickets automatically.\nOption A is incorrect because Security Hub does not have a built-in webhook integration feature for direct HTTP endpoint delivery.\nOption B is incorrect because Polling introduces latency and is less efficient than the event-driven EventBridge approach.\nOption C is incorrect because S3 export introduces delay and adds unnecessary intermediate storage steps compared to the real-time EventBridge approach."
+    "explanation": "Option D is correct because Security Hub publishes findings to EventBridge, allowing event-driven integration. An EventBridge rule can filter for high-severity findings and trigger a Lambda function that calls the ticketing system REST API to create tickets automatically.\nOption A is incorrect because Security Hub does not have a built-in webhook integration feature for direct HTTP endpoint delivery.\nOption B is incorrect because It does not satisfy the specific requirements stated in this scenario.\nOption C is incorrect because S3 export introduces delay and adds unnecessary intermediate storage steps compared to the real-time EventBridge approach."
   },
   {
     "id": "q0261",
@@ -3721,7 +3721,7 @@
       "D. Configure AWS IAM Identity Center with Active Directory as the identity source and create permission sets that map AD groups to appropriate IAM roles across all accounts"
     ],
     "correct": 3,
-    "explanation": "Option D is correct because IAM Identity Center (formerly AWS SSO) integrates with Active Directory as an identity source and provides centralized management of access across all AWS accounts in an organization through permission sets.\nOption A is incorrect because Creating separate IAM users in each account does not scale and does not use corporate AD credentials.\nOption B is incorrect because Building a custom SSO portal requires significant development and maintenance when IAM Identity Center provides this functionality natively.\nOption C is incorrect because Configuring SAML federation individually in each account is operationally burdensome compared to the centralized management of IAM Identity Center."
+    "explanation": "Option D is correct because IAM Identity Center (formerly AWS SSO) integrates with Active Directory as an identity source and provides centralized management of access across all AWS accounts in an organization through permission sets.\nOption A is incorrect because Creating separate IAM users in each account does not scale and does not use corporate AD credentials.\nOption B is incorrect because It does not satisfy the specific requirements stated in this scenario.\nOption C is incorrect because Configuring SAML federation individually in each account is operationally burdensome compared to the centralized management of IAM Identity Center."
   },
   {
     "id": "q0267",
@@ -4113,7 +4113,7 @@
       "D. Use SQS FIFO queues which provide encryption by default without requiring any additional KMS configuration, and configure the Lambda function with a VPC attachment for network security"
     ],
     "correct": 0,
-    "explanation": "Option A is correct because SQS SSE with a KMS key encrypts messages at rest, the Lambda execution role needs kms:Decrypt to read messages, and SQS endpoints use HTTPS for in-transit encryption. This minimizes operational overhead.\nOption B is incorrect because Client-side encryption with keys in environment variables is less secure and adds development overhead compared to native SQS SSE integration.\nOption C is incorrect because TLS inspection via NAT gateway is not a standard AWS pattern and not enabling SSE leaves messages unencrypted at rest.\nOption D is incorrect because FIFO queues do not provide encryption by default; SSE must be explicitly configured, and VPC attachment alone does not address encryption requirements."
+    "explanation": "Option A is correct because SQS SSE with a KMS key encrypts messages at rest, the Lambda execution role needs kms:Decrypt to read messages, and SQS endpoints use HTTPS for in-transit encryption. This minimizes operational overhead.\nOption B is incorrect because It does not satisfy the specific requirements stated in this scenario.\nOption C is incorrect because TLS inspection via NAT gateway is not a standard AWS pattern and not enabling SSE leaves messages unencrypted at rest.\nOption D is incorrect because FIFO queues do not provide encryption by default; SSE must be explicitly configured, and VPC attachment alone does not address encryption requirements."
   },
   {
     "id": "q0295",
@@ -4169,7 +4169,7 @@
       "D. Deploy a NAT gateway in a public subnet and add a route in the private subnet route table directing outbound internet traffic through the NAT gateway for software patch access"
     ],
     "correct": 2,
-    "explanation": "Option C is correct because A NAT gateway in a public subnet allows instances in private subnets to initiate outbound internet connections for patches while preventing inbound connections from the internet.\nOption A is incorrect because Elastic IP addresses on instances in a private subnet without an internet gateway route do not enable internet access.\nOption B is incorrect because VPC peering does not support transitive routing through an internet gateway in a peered VPC.\nOption D is incorrect because Adding an internet gateway route to a private subnet would make it a public subnet, and instances without public IPs still cannot reach the internet this way."
+    "explanation": "Option C is correct because It best satisfies the requirements stated in this scenario.\nOption A is incorrect because Elastic IP addresses on instances in a private subnet without an internet gateway route do not enable internet access.\nOption B is incorrect because VPC peering does not support transitive routing through an internet gateway in a peered VPC.\nOption D is incorrect because Adding an internet gateway route to a private subnet would make it a public subnet, and instances without public IPs still cannot reach the internet this way."
   },
   {
     "id": "q0299",
@@ -4183,7 +4183,7 @@
       "D. Establish an AWS Site-to-Site VPN connection from the VPC to the S3 service endpoint and configure routing through the VPN tunnel for all S3 traffic from the private subnet instances"
     ],
     "correct": 0,
-    "explanation": "Option A is correct because An S3 gateway VPC endpoint keeps traffic within the AWS network, and endpoint policies can restrict access to specific S3 buckets at the network level. This is free and efficient.\nOption B is incorrect because A NAT gateway routes traffic over the public internet, does not keep traffic private within AWS, and incurs data processing charges.\nOption C is incorrect because While an interface endpoint works, not attaching an endpoint policy misses the requirement to restrict buckets at the network path level, and IAM alone does not constitute a network-level restriction.\nOption D is incorrect because You cannot establish a VPN connection to the S3 service endpoint; VPN is for connecting on-premises networks to VPCs."
+    "explanation": "Option A is correct because An S3 gateway VPC endpoint keeps traffic within the AWS network, and endpoint policies can restrict access to specific S3 buckets at the network level. This is free and efficient.\nOption B is incorrect because A NAT gateway routes traffic over the public internet, does not keep traffic private within AWS, and incurs data processing charges.\nOption C is incorrect because It does not satisfy the specific requirements stated in this scenario.\nOption D is incorrect because You cannot establish a VPN connection to the S3 service endpoint; VPN is for connecting on-premises networks to VPCs."
   },
   {
     "id": "q0300",
@@ -4295,7 +4295,7 @@
       "D. The internet gateway has reached its maximum throughput capacity and is dropping packets, requiring the solutions architect to provision an additional internet gateway for the VPC"
     ],
     "correct": 1,
-    "explanation": "Option B is correct because While security groups are stateful and automatically allow response traffic, NACLs are stateless and require explicit rules for both directions. If the NACL blocks outbound ephemeral ports, responses cannot reach clients.\nOption A is incorrect because Security groups are stateful, meaning response traffic for an allowed inbound connection is automatically permitted regardless of outbound rules.\nOption C is incorrect because The question states the instance is in a public subnet with an internet gateway and correct route table, and the issue is about responding to incoming requests that are reaching the instance.\nOption D is incorrect because Internet gateways are highly available and scale automatically without throughput limits that would cause packet drops."
+    "explanation": "Option B is correct because It best satisfies the requirements stated in this scenario.\nOption A is incorrect because Security groups are stateful, meaning response traffic for an allowed inbound connection is automatically permitted regardless of outbound rules.\nOption C is incorrect because The question states the instance is in a public subnet with an internet gateway and correct route table, and the issue is about responding to incoming requests that are reaching the instance.\nOption D is incorrect because Internet gateways are highly available and scale automatically without throughput limits that would cause packet drops."
   },
   {
     "id": "q0308",
@@ -4309,7 +4309,7 @@
       "D. Bastion SG: allow inbound SSH from 203.0.113.0/24. Private instance SG: allow inbound SSH from the bastion security group ID. Both groups allow all outbound traffic by default"
     ],
     "correct": 0,
-    "explanation": "Option A is correct because The bastion security group restricts SSH to the corporate IP range, and private instances reference the bastion security group ID for dynamic, reliable access control. Default outbound rules allow all traffic.\nOption B is incorrect because Allowing SSH from 0.0.0.0/0 to the bastion opens it to the entire internet, and security groups cannot have explicit deny rules.\nOption C is incorrect because Referencing a specific private IP is fragile if the bastion is replaced, and restricting outbound to port 22 only would break return traffic and other necessary communications.\nOption D is incorrect because Allowing the entire VPC CIDR to SSH into the bastion is overly permissive and does not restrict access to the corporate office."
+    "explanation": "Option A is correct because It best satisfies the requirements stated in this scenario.\nOption B is incorrect because Allowing SSH from 0.0.0.0/0 to the bastion opens it to the entire internet, and security groups cannot have explicit deny rules.\nOption C is incorrect because Referencing a specific private IP is fragile if the bastion is replaced, and restricting outbound to port 22 only would break return traffic and other necessary communications.\nOption D is incorrect because It does not satisfy the specific requirements stated in this scenario."
   },
   {
     "id": "q0309",
@@ -4337,7 +4337,7 @@
       "D. Enable VPC Flow Logs filtering for 198.51.100.0/24 and configure a CloudWatch alarm to notify administrators when traffic from this range is detected so they can manually block the source"
     ],
     "correct": 1,
-    "explanation": "Option B is correct because Network ACLs support explicit deny rules and are evaluated by rule number. A low-numbered deny rule for the malicious range blocks that traffic while higher-numbered allow rules permit legitimate traffic.\nOption A is incorrect because Security groups do not support deny rules; they only have allow rules, so you cannot explicitly block a specific IP range.\nOption C is incorrect because Route tables direct traffic based on destination, not source, so you cannot block incoming traffic from a source IP range using route table entries.\nOption D is incorrect because Flow Logs are a monitoring tool that records traffic metadata and cannot block traffic, and manual intervention is reactive rather than preventive."
+    "explanation": "Option B is correct because Network ACLs support explicit deny rules and are evaluated by rule number. A low-numbered deny rule for the malicious range blocks that traffic while higher-numbered allow rules permit legitimate traffic.\nOption A is incorrect because Security groups do not support deny rules; they only have allow rules, so you cannot explicitly block a specific IP range.\nOption C is incorrect because Route tables direct traffic based on destination, not source, so you cannot block incoming traffic from a source IP range using route table entries.\nOption D is incorrect because It does not satisfy the specific requirements stated in this scenario."
   },
   {
     "id": "q0311",
@@ -4659,7 +4659,7 @@
       "D. Request a certificate from ACM Private CA, validate it using email validation, associate it with the ALB, and set up CloudWatch Events to notify the team 30 days before certificate expiration"
     ],
     "correct": 1,
-    "explanation": "Option B is correct because ACM public certificates with DNS validation renew automatically when the CNAME validation record exists in Route 53. The certificate is directly associated with the ALB for HTTPS termination.\nOption A is incorrect because Third-party certificates imported into ACM do not renew automatically, requiring custom Lambda logic for reimportation which adds operational complexity.\nOption C is incorrect because Self-signed certificates are not trusted by browsers and would cause security warnings for users visiting the website.\nOption D is incorrect because ACM Private CA certificates are for internal use and not trusted by public browsers, and email validation is not available for Private CA certificates."
+    "explanation": "Option B is correct because ACM public certificates with DNS validation renew automatically when the CNAME validation record exists in Route 53. The certificate is directly associated with the ALB for HTTPS termination.\nOption A is incorrect because Third-party certificates imported into ACM do not renew automatically, requiring custom Lambda logic for reimportation which adds operational complexity.\nOption C is incorrect because It does not satisfy the specific requirements stated in this scenario.\nOption D is incorrect because ACM Private CA certificates are for internal use and not trusted by public browsers, and email validation is not available for Private CA certificates."
   },
   {
     "id": "q0334",
@@ -4813,7 +4813,7 @@
       "D. Modify the Macie managed data identifier configuration to add the custom regex pattern to an existing identifier category so it scans for the pattern alongside the standard PII identifiers"
     ],
     "correct": 1,
-    "explanation": "Option B is correct because Macie supports custom data identifiers that use regular expressions to detect business-specific data patterns. The custom identifier is included in discovery jobs to scan for the project code pattern.\nOption A is incorrect because Relying on AWS to add a business-specific pattern to managed identifiers is impractical and not how custom detection needs are addressed.\nOption C is incorrect because Macie does not have a CreateFinding API for ingesting external findings, and processing objects through Lambda bypasses Macie capabilities.\nOption D is incorrect because Managed data identifiers cannot be modified by customers; they are maintained by AWS and custom patterns must be created as custom data identifiers."
+    "explanation": "Option B is correct because It best satisfies the requirements stated in this scenario.\nOption A is incorrect because Relying on AWS to add a business-specific pattern to managed identifiers is impractical and not how custom detection needs are addressed.\nOption C is incorrect because Macie does not have a CreateFinding API for ingesting external findings, and processing objects through Lambda bypasses Macie capabilities.\nOption D is incorrect because Managed data identifiers cannot be modified by customers; they are maintained by AWS and custom patterns must be created as custom data identifiers."
   },
   {
     "id": "q0345",
@@ -4827,7 +4827,7 @@
       "D. Use AWS Systems Manager Explorer as the central dashboard for security findings, configure OpsItems from each security service, and use Systems Manager Compliance to track security standard adherence"
     ],
     "correct": 0,
-    "explanation": "Option A is correct because AWS Security Hub provides a centralized security dashboard that aggregates findings from GuardDuty, Inspector, Macie, and other services. It includes built-in security standards like CIS and PCI DSS for compliance checks.\nOption B is incorrect because Building a custom QuickSight dashboard requires significant development effort and does not provide built-in security standard compliance checks.\nOption C is incorrect because Deploying and managing OpenSearch with custom integrations is operationally complex and does not include native security compliance standards evaluation.\nOption D is incorrect because Systems Manager Explorer is designed for operational management, not security findings aggregation, and does not evaluate security compliance standards."
+    "explanation": "Option A is correct because AWS Security Hub provides a centralized security dashboard that aggregates findings from GuardDuty, Inspector, Macie, and other services. It includes built-in security standards like CIS and PCI DSS for compliance checks.\nOption B is incorrect because Building a custom QuickSight dashboard requires significant development effort and does not provide built-in security standard compliance checks.\nOption C is incorrect because It does not satisfy the specific requirements stated in this scenario.\nOption D is incorrect because Systems Manager Explorer is designed for operational management, not security findings aggregation, and does not evaluate security compliance standards."
   },
   {
     "id": "q0346",
@@ -4953,7 +4953,7 @@
       "D. Send a company-wide email instructing all users to register MFA devices in IAM Identity Center, and schedule a follow-up audit in 30 days to identify and manually disable non-compliant accounts"
     ],
     "correct": 1,
-    "explanation": "Option B is correct because IAM Identity Center has built-in MFA settings that can require MFA at every sign-in and prompt users to register MFA devices if they have not already, enforcing full coverage without disrupting access.\nOption A is incorrect because SCPs restrict IAM actions within accounts but do not control the IAM Identity Center authentication process, which occurs before account-level permissions are evaluated.\nOption C is incorrect because Disabling accounts is disruptive to business operations and a daily Lambda check leaves a window where users without MFA can access accounts.\nOption D is incorrect because Relying on email instructions and manual audits does not enforce MFA compliance and leaves accounts accessible without MFA for at least 30 days."
+    "explanation": "Option B is correct because IAM Identity Center has built-in MFA settings that can require MFA at every sign-in and prompt users to register MFA devices if they have not already, enforcing full coverage without disrupting access.\nOption A is incorrect because It does not satisfy the specific requirements stated in this scenario.\nOption C is incorrect because Disabling accounts is disruptive to business operations and a daily Lambda check leaves a window where users without MFA can access accounts.\nOption D is incorrect because Relying on email instructions and manual audits does not enforce MFA compliance and leaves accounts accessible without MFA for at least 30 days."
   },
   {
     "id": "q0355",
@@ -5191,7 +5191,7 @@
       "D. Deploy EC2 instances in a single AZ using Dedicated Hosts with host recovery enabled so that if the underlying hardware fails the instances are automatically migrated to new hardware in the same AZ"
     ],
     "correct": 2,
-    "explanation": "Option C is correct because Spreading instances across three AZs behind an ALB with Auto Scaling ensures that if one AZ fails the remaining AZs handle the load automatically.\nOption A is incorrect because Multi-Region deployment with NLB is overly complex for AZ-level resilience and NLB cannot span Regions.\nOption B is incorrect because Manual intervention introduces delay and does not provide automatic failover.\nOption D is incorrect because Dedicated Host recovery keeps instances in the same AZ which does not address AZ-level failures."
+    "explanation": "Option C is correct because Spreading instances across three AZs behind an ALB with Auto Scaling ensures that if one AZ fails the remaining AZs handle the load automatically.\nOption A is incorrect because It does not satisfy the specific requirements stated in this scenario.\nOption B is incorrect because Manual intervention introduces delay and does not provide automatic failover.\nOption D is incorrect because Dedicated Host recovery keeps instances in the same AZ which does not address AZ-level failures."
   },
   {
     "id": "q0372",
@@ -5891,7 +5891,7 @@
       "D. Use S3 server-side encryption with customer-provided keys (SSE-C) where the company generates unique keys for each upload and sends the key with each PUT request for server-side encryption"
     ],
     "correct": 1,
-    "explanation": "Option B is correct because SSE-KMS with a customer managed key gives the security team full control over the encryption key including rotation policy and CloudTrail automatically logs all key usage providing a complete audit trail.\nOption A is incorrect because SSE-S3 keys are fully managed by AWS giving the security team no control over key rotation or individual key management.\nOption C is incorrect because Client-side encryption requires the application to manage the encryption process and Secrets Manager adds complexity while losing the S3-native encryption integration.\nOption D is incorrect because SSE-C requires the company to manage and transmit keys with every request and AWS does not store the keys making audit trails and key rotation the company sole responsibility without KMS integration."
+    "explanation": "Option B is correct because SSE-KMS with a customer managed key gives the security team full control over the encryption key including rotation policy and CloudTrail automatically logs all key usage providing a complete audit trail.\nOption A is incorrect because SSE-S3 keys are fully managed by AWS giving the security team no control over key rotation or individual key management.\nOption C is incorrect because Client-side encryption requires the application to manage the encryption process and Secrets Manager adds complexity while losing the S3-native encryption integration.\nOption D is incorrect because It does not satisfy the specific requirements stated in this scenario."
   },
   {
     "id": "q0422",
@@ -5919,7 +5919,7 @@
       "D. Use S3 multipart upload to split the 500 GB dataset into parts and upload them in parallel across multiple threads to maximize utilization of the 1 Gbps Direct Connect bandwidth"
     ],
     "correct": 3,
-    "explanation": "Option D is correct because Multipart upload with parallel threads maximizes the utilization of the existing 1 Gbps bandwidth by uploading multiple parts simultaneously which is the most effective optimization without infrastructure changes.\nOption A is incorrect because Transfer Acceleration is most beneficial for internet-based transfers and may not improve speeds over Direct Connect which already uses dedicated network paths.\nOption B is incorrect because Upgrading Direct Connect bandwidth is a significant infrastructure change that takes weeks to provision and is not a S3 upload optimization.\nOption C is incorrect because Machine learning training data is often already in binary formats that do not compress significantly and the compression and decompression add processing time."
+    "explanation": "Option D is correct because Multipart upload with parallel threads maximizes the utilization of the existing 1 Gbps bandwidth by uploading multiple parts simultaneously which is the most effective optimization without infrastructure changes.\nOption A is incorrect because It does not satisfy the specific requirements stated in this scenario.\nOption B is incorrect because Upgrading Direct Connect bandwidth is a significant infrastructure change that takes weeks to provision and is not a S3 upload optimization.\nOption C is incorrect because Machine learning training data is often already in binary formats that do not compress significantly and the compression and decompression add processing time."
   },
   {
     "id": "q0424",
@@ -6297,7 +6297,7 @@
       "D. Use Amazon MemoryDB for Redis instead of ElastiCache which provides built-in cross-Region replication with strong consistency guarantees and sub-second replication for all write operations"
     ],
     "correct": 2,
-    "explanation": "Option C is correct because ElastiCache Global Datastore provides fully managed cross-Region replication with typically sub-second replication lag meeting the 2-second consistency requirement without custom implementation.\nOption A is incorrect because Adding DynamoDB as an intermediary introduces additional latency and complexity when ElastiCache Global Datastore provides direct Redis-to-Redis cross-Region replication.\nOption B is incorrect because Custom Lambda-based synchronization introduces additional latency reliability concerns and operational overhead compared to managed cross-Region replication.\nOption D is incorrect because MemoryDB for Redis does not provide built-in cross-Region replication as of the current feature set and strong consistency is a within-Region feature."
+    "explanation": "Option C is correct because ElastiCache Global Datastore provides fully managed cross-Region replication with typically sub-second replication lag meeting the 2-second consistency requirement without custom implementation.\nOption A is incorrect because Adding DynamoDB as an intermediary introduces additional latency and complexity when ElastiCache Global Datastore provides direct Redis-to-Redis cross-Region replication.\nOption B is incorrect because It does not satisfy the specific requirements stated in this scenario.\nOption D is incorrect because MemoryDB for Redis does not provide built-in cross-Region replication as of the current feature set and strong consistency is a within-Region feature."
   },
   {
     "id": "q0451",
@@ -6353,7 +6353,7 @@
       "D. Create IAM policies for each developer that restrict EFS API access to specific directory paths within the file system using resource-based conditions in the IAM policy statements"
     ],
     "correct": 0,
-    "explanation": "Option A is correct because EFS access points enforce a specific root directory and POSIX identity for each mount ensuring developers can only access their project directory and all file operations use the access point defined user and group IDs.\nOption B is incorrect because Linux file permissions require manual management on each EC2 instance and do not prevent root users from accessing other project directories.\nOption C is incorrect because EFS encryption is applied at the file system level not per-directory and different KMS keys cannot be used for different directories within the same file system.\nOption D is incorrect because IAM policies control EFS API actions like mount and describe but do not restrict access to specific directories within the file system at the file level."
+    "explanation": "Option A is correct because EFS access points enforce a specific root directory and POSIX identity for each mount ensuring developers can only access their project directory and all file operations use the access point defined user and group IDs.\nOption B is incorrect because It does not satisfy the specific requirements stated in this scenario.\nOption C is incorrect because EFS encryption is applied at the file system level not per-directory and different KMS keys cannot be used for different directories within the same file system.\nOption D is incorrect because IAM policies control EFS API actions like mount and describe but do not restrict access to specific directories within the file system at the file level."
   },
   {
     "id": "q0455",
@@ -6395,7 +6395,7 @@
       "D. Replace all 15 ALBs with a single Gateway Load Balancer that inspects traffic and routes it to the appropriate ECS service based on deep packet inspection of the request content and headers"
     ],
     "correct": 1,
-    "explanation": "Option B is correct because A single ALB with host-based or path-based routing rules can route traffic to 15 different target groups each associated with a different ECS service reducing the cost from 15 ALBs to 1 ALB.\nOption A is incorrect because Requiring unique ports for each service complicates client configuration and NLB cannot perform HTTP-level routing needed for service differentiation.\nOption C is incorrect because Removing load balancers for external traffic means losing health-check-based routing and direct Fargate IP routing does not handle task replacement gracefully.\nOption D is incorrect because Gateway Load Balancer is designed for network security appliances not application traffic routing and deep packet inspection adds unnecessary latency."
+    "explanation": "Option B is correct because A single ALB with host-based or path-based routing rules can route traffic to 15 different target groups each associated with a different ECS service reducing the cost from 15 ALBs to 1 ALB.\nOption A is incorrect because It does not satisfy the specific requirements stated in this scenario.\nOption C is incorrect because Removing load balancers for external traffic means losing health-check-based routing and direct Fargate IP routing does not handle task replacement gracefully.\nOption D is incorrect because Gateway Load Balancer is designed for network security appliances not application traffic routing and deep packet inspection adds unnecessary latency."
   },
   {
     "id": "q0458",
@@ -6409,7 +6409,7 @@
       "D. Mount an S3 bucket as a filesystem using s3fs-fuse in the container entrypoint script providing S3-backed POSIX-compatible storage that persists independently of the container lifecycle"
     ],
     "correct": 0,
-    "explanation": "Option A is correct because EFS provides a POSIX-compliant shared file system that can be mounted directly in ECS task definitions and persists independently of task lifecycle allowing files to survive task replacements.\nOption B is incorrect because EBS volumes in ECS with Fargate are ephemeral storage bound to the task lifecycle and do not persist across task replacements.\nOption C is incorrect because Docker local volumes on the host are lost when tasks are rescheduled to different hosts and Fargate does not provide persistent host-level storage.\nOption D is incorrect because S3fs-fuse has poor performance for many file operations limited POSIX compliance and requires installing additional software in the container image."
+    "explanation": "Option A is correct because EFS provides a POSIX-compliant shared file system that can be mounted directly in ECS task definitions and persists independently of task lifecycle allowing files to survive task replacements.\nOption B is incorrect because EBS volumes in ECS with Fargate are ephemeral storage bound to the task lifecycle and do not persist across task replacements.\nOption C is incorrect because It does not satisfy the specific requirements stated in this scenario.\nOption D is incorrect because S3fs-fuse has poor performance for many file operations limited POSIX compliance and requires installing additional software in the container image."
   },
   {
     "id": "q0459",
@@ -6829,7 +6829,7 @@
       "D. Deploy EC2 instances across multiple Availability Zones behind an Application Load Balancer and use an Auto Scaling group with a minimum capacity spread across AZs"
     ],
     "correct": 3,
-    "explanation": "Option D is correct because Distributing instances across multiple AZs behind an ALB ensures traffic is routed only to healthy instances, and the Auto Scaling group maintains capacity even if one AZ goes down.\nOption A is incorrect because AMIs stored in S3 do not enable automatic recovery and require manual intervention, increasing downtime.\nOption B is incorrect because Auto-recovery only handles host-level failures, not AZ-wide outages.\nOption C is incorrect because A spread placement group within a single AZ does not protect against an AZ-level failure."
+    "explanation": "Option D is correct because Distributing instances across multiple AZs behind an ALB ensures traffic is routed only to healthy instances, and the Auto Scaling group maintains capacity even if one AZ goes down.\nOption A is incorrect because It does not satisfy the specific requirements stated in this scenario.\nOption B is incorrect because Auto-recovery only handles host-level failures, not AZ-wide outages.\nOption C is incorrect because A spread placement group within a single AZ does not protect against an AZ-level failure."
   },
   {
     "id": "q0489",
@@ -7109,7 +7109,7 @@
       "D. Configure the application to use both reader and writer endpoints simultaneously and implement client-side logic to detect write failures and automatically retry against each endpoint until one succeeds"
     ],
     "correct": 1,
-    "explanation": "Option B is correct because RDS Proxy maintains a connection pool and automatically routes connections to the new writer during failover, reducing failover time and handling connection draining without requiring application changes to the connection string.\nOption A is incorrect because While the cluster endpoint does point to the current writer, it still requires the application to handle dropped connections during failover, and existing connections will be terminated.\nOption C is incorrect because A custom DNS solution adds unnecessary complexity when native solutions like RDS Proxy exist, and DNS caching may cause delays.\nOption D is incorrect because Client-side retry logic across multiple endpoints adds significant application complexity and may cause errors during the retry period."
+    "explanation": "Option B is correct because RDS Proxy maintains a connection pool and automatically routes connections to the new writer during failover, reducing failover time and handling connection draining without requiring application changes to the connection string.\nOption A is incorrect because While the cluster endpoint does point to the current writer, it still requires the application to handle dropped connections during failover, and existing connections will be terminated.\nOption C is incorrect because It does not satisfy the specific requirements stated in this scenario.\nOption D is incorrect because Client-side retry logic across multiple endpoints adds significant application complexity and may cause errors during the retry period."
   },
   {
     "id": "q0509",
@@ -7221,7 +7221,7 @@
       "D. Use a simple scaling policy with a cooldown of 60 seconds that adds one instance whenever the ApproximateNumberOfMessagesVisible metric exceeds zero, ensuring the queue is always drained quickly"
     ],
     "correct": 1,
-    "explanation": "Option B is correct because A custom backlog-per-instance metric with target tracking allows the Auto Scaling group to scale proportionally to the queue depth relative to current capacity, which is the AWS-recommended approach for SQS-based scaling.\nOption A is incorrect because Step scaling with fixed thresholds does not account for the current number of instances and may over-scale or under-scale depending on the fleet size.\nOption C is incorrect because Custom Lambda-based scaling adds operational complexity and may conflict with Auto Scaling policies.\nOption D is incorrect because Adding one instance whenever the queue is non-empty would cause unnecessary scaling for small backlogs and scale too slowly for large backlogs."
+    "explanation": "Option B is correct because It best satisfies the requirements stated in this scenario.\nOption A is incorrect because Step scaling with fixed thresholds does not account for the current number of instances and may over-scale or under-scale depending on the fleet size.\nOption C is incorrect because Custom Lambda-based scaling adds operational complexity and may conflict with Auto Scaling policies.\nOption D is incorrect because Adding one instance whenever the queue is non-empty would cause unnecessary scaling for small backlogs and scale too slowly for large backlogs."
   },
   {
     "id": "q0517",
@@ -7263,7 +7263,7 @@
       "D. Create a geolocation routing policy that routes all traffic from every continent to us-east-1 and configure a default record pointing to eu-west-1 that only activates when geolocation records are removed"
     ],
     "correct": 2,
-    "explanation": "Option C is correct because Route 53 failover routing with health checks automatically directs traffic to the secondary record in eu-west-1 when the primary in us-east-1 fails health checks, providing automated disaster recovery.\nOption A is incorrect because A weight of zero means the secondary never receives traffic and manual weight changes do not provide automatic failover.\nOption B is incorrect because Latency-based routing may send European users to eu-west-1 even during normal operations since it is closer, and it does not provide explicit failover behavior.\nOption D is incorrect because Geolocation routing does not provide automatic failover and the default record only serves requests that do not match any geolocation rule."
+    "explanation": "Option C is correct because It best satisfies the requirements stated in this scenario.\nOption A is incorrect because A weight of zero means the secondary never receives traffic and manual weight changes do not provide automatic failover.\nOption B is incorrect because Latency-based routing may send European users to eu-west-1 even during normal operations since it is closer, and it does not provide explicit failover behavior.\nOption D is incorrect because Geolocation routing does not provide automatic failover and the default record only serves requests that do not match any geolocation rule."
   },
   {
     "id": "q0520",
@@ -7459,7 +7459,7 @@
       "D. Enable AWS WAF on the internal ALB and create IP-based rules that allow requests only from the IP addresses of authorized service instances while blocking all other source IP addresses"
     ],
     "correct": 2,
-    "explanation": "Option C is correct because ALB security group inbound rules can reference other security groups, allowing only instances associated with those specific security groups to access the ALB. This is the simplest and most maintainable approach.\nOption A is incorrect because Creating separate VPCs and peering connections adds significant network complexity for what is a simple access control requirement.\nOption B is incorrect because NACLs work with CIDR ranges and cannot reference security groups, making them harder to maintain as IP addresses change.\nOption D is incorrect because WAF adds cost and complexity for basic network-level access control that security groups handle natively."
+    "explanation": "Option C is correct because ALB security group inbound rules can reference other security groups, allowing only instances associated with those specific security groups to access the ALB. This is the simplest and most maintainable approach.\nOption A is incorrect because Creating separate VPCs and peering connections adds significant network complexity for what is a simple access control requirement.\nOption B is incorrect because It does not satisfy the specific requirements stated in this scenario.\nOption D is incorrect because WAF adds cost and complexity for basic network-level access control that security groups handle natively."
   },
   {
     "id": "q0534",
@@ -7599,7 +7599,7 @@
       "D. Create a scheduled Lambda function that runs every hour and checks the queue depth, then uses the EC2 API to manually launch additional processing instances if the queue depth exceeds a predefined threshold"
     ],
     "correct": 2,
-    "explanation": "Option C is correct because A CloudWatch alarm on queue depth with an Auto Scaling step scaling policy automatically adds processing capacity when the queue grows, directly addressing the backlog during peak events.\nOption A is incorrect because Long polling and batch retrieval improve efficiency but do not add processing capacity, so a fixed number of instances will still fall behind during sustained peaks.\nOption B is incorrect because FIFO queues have lower throughput limits and do not process messages faster, and ordered delivery does not reduce per-message processing time.\nOption D is incorrect because Hourly checks are too infrequent during peak events and manual instance launches add latency compared to Auto Scaling."
+    "explanation": "Option C is correct because A CloudWatch alarm on queue depth with an Auto Scaling step scaling policy automatically adds processing capacity when the queue grows, directly addressing the backlog during peak events.\nOption A is incorrect because Long polling and batch retrieval improve efficiency but do not add processing capacity, so a fixed number of instances will still fall behind during sustained peaks.\nOption B is incorrect because FIFO queues have lower throughput limits and do not process messages faster, and ordered delivery does not reduce per-message processing time.\nOption D is incorrect because It does not satisfy the specific requirements stated in this scenario."
   },
   {
     "id": "q0544",
@@ -8145,7 +8145,7 @@
       "D. Use a Choice state that routes each record to one of 10 Lambda functions based on the record index, with each Lambda function processing 1,000 records internally using multithreading for parallel processing"
     ],
     "correct": 1,
-    "explanation": "Option B is correct because Step Functions Distributed Map mode can process thousands of items in parallel by running each item as a separate child execution, with configurable concurrency to prevent overwhelming downstream services.\nOption A is incorrect because A Parallel state requires each branch to be defined in the state machine definition at design time and cannot dynamically create 10,000 branches from runtime data.\nOption C is incorrect because Processing 1,000 records sequentially in each batch still takes significant time and does not achieve true parallel processing of individual records.\nOption D is incorrect because A Choice state evaluates conditions and routes to one branch, not multiple, and embedding parallel logic inside Lambda functions bypasses Step Functions orchestration benefits."
+    "explanation": "Option B is correct because It best satisfies the requirements stated in this scenario.\nOption A is incorrect because A Parallel state requires each branch to be defined in the state machine definition at design time and cannot dynamically create 10,000 branches from runtime data.\nOption C is incorrect because Processing 1,000 records sequentially in each batch still takes significant time and does not achieve true parallel processing of individual records.\nOption D is incorrect because A Choice state evaluates conditions and routes to one branch, not multiple, and embedding parallel logic inside Lambda functions bypasses Step Functions orchestration benefits."
   },
   {
     "id": "q0583",
@@ -8229,7 +8229,7 @@
       "D. Modify the Lambda function code to implement internal retry logic with a counter, and when the counter reaches three failed attempts, the function publishes a message to an SNS topic before exiting with an error"
     ],
     "correct": 0,
-    "explanation": "Option A is correct because Step Functions provides robust retry with configurable backoff and error handling through Catch blocks, allowing the workflow to send an SNS notification after all retry attempts are exhausted. This is the most reliable approach for managed retries with error handling.\nOption B is incorrect because EventBridge retry policies apply to event delivery to the target, not to the target execution outcome, meaning a Lambda timeout would be considered a successful delivery.\nOption C is incorrect because Event source mappings are used for stream and queue-based event sources, not EventBridge scheduled rules, and the retry behavior would not apply to this invocation pattern.\nOption D is incorrect because If the Lambda function times out, the internal retry logic cannot execute including the notification step, since timeout terminates the function execution."
+    "explanation": "Option A is correct because Step Functions provides robust retry with configurable backoff and error handling through Catch blocks, allowing the workflow to send an SNS notification after all retry attempts are exhausted. This is the most reliable approach for managed retries with error handling.\nOption B is incorrect because EventBridge retry policies apply to event delivery to the target, not to the target execution outcome, meaning a Lambda timeout would be considered a successful delivery.\nOption C is incorrect because It does not satisfy the specific requirements stated in this scenario.\nOption D is incorrect because If the Lambda function times out, the internal retry logic cannot execute including the notification step, since timeout terminates the function execution."
   },
   {
     "id": "q0589",
@@ -9349,7 +9349,7 @@
       "D. Request a service quota increase for the API Gateway account-level throttle limit and configure a usage plan with a higher rate limit for the product launch period"
     ],
     "correct": 3,
-    "explanation": "Option D is correct because Requesting a service quota increase raises the account-level throttle limit, and a usage plan with a higher rate limit ensures the API can serve 50,000 requests per second.\nOption A is incorrect because it is less appropriate than Option D for this scenario.\nOption B is incorrect because it is less appropriate than Option D for this scenario.\nOption C is incorrect because HTTP APIs also have throttling limits. Option A with CloudFront caching may not work for dynamic API responses that vary per request and user."
+    "explanation": "Option D is correct because Requesting a service quota increase raises the account-level throttle limit, and a usage plan with a higher rate limit ensures the API can serve 50,000 requests per second.\nOption A is incorrect because it is less appropriate than Option D for this scenario.\nOption B is incorrect because it is less appropriate than Option D for this scenario.\nOption C is incorrect because It does not satisfy the specific requirements stated in this scenario."
   },
   {
     "id": "q0669",
@@ -9391,7 +9391,7 @@
       "D. Switch to API Gateway WebSocket API which maintains persistent two-way connections between clients and the backend, allowing the server to push updates instantly"
     ],
     "correct": 3,
-    "explanation": "Option D is correct because API Gateway WebSocket API provides native persistent bidirectional connections, eliminating polling overhead and enabling real-time server-to-client communication.\nOption A is incorrect because ALB WebSocket in front of API Gateway does not bridge WebSocket to REST properly and adds unnecessary architecture complexity.\nOption B is incorrect because Long polling still requires repeated HTTP connections and adds Lambda invocation duration costs.\nOption C is incorrect because Server-Sent Events is not natively supported by API Gateway REST API."
+    "explanation": "Option D is correct because API Gateway WebSocket API provides native persistent bidirectional connections, eliminating polling overhead and enabling real-time server-to-client communication.\nOption A is incorrect because ALB WebSocket in front of API Gateway does not bridge WebSocket to REST properly and adds unnecessary architecture complexity.\nOption B is incorrect because It does not satisfy the specific requirements stated in this scenario.\nOption C is incorrect because Server-Sent Events is not natively supported by API Gateway REST API."
   },
   {
     "id": "q0672",
@@ -9447,7 +9447,7 @@
       "D. Configure API Gateway to use a VPC Link with a Network Load Balancer to route requests to Lambda functions running inside a VPC where timeout limits are more flexible"
     ],
     "correct": 1,
-    "explanation": "Option B is correct because An asynchronous pattern with immediate response and status polling eliminates the 29-second API Gateway timeout constraint by decoupling request submission from processing.\nOption A is incorrect because The 29-second API Gateway timeout is a hard limit that cannot be increased. Option C with ECS Fargate solves the timeout but requires containerizing the application and managing container infrastructure. Option D with VPC Link and NLB does not change the API Gateway integration timeout limit.\nOption C is incorrect because it is less appropriate than Option B for this scenario.\nOption D is incorrect because it is less appropriate than Option B for this scenario."
+    "explanation": "Option B is correct because It best satisfies the requirements stated in this scenario.\nOption A is incorrect because The 29-second API Gateway timeout is a hard limit that cannot be increased. Option C with ECS Fargate solves the timeout but requires containerizing the application and managing container infrastructure. Option D with VPC Link and NLB does not change the API Gateway integration timeout limit.\nOption C is incorrect because it is less appropriate than Option B for this scenario.\nOption D is incorrect because it is less appropriate than Option B for this scenario."
   },
   {
     "id": "q0676",
@@ -9587,7 +9587,7 @@
       "D. Create a materialized view of the join result and schedule it to refresh hourly so that the report queries the pre-computed result instead of performing the join each time"
     ],
     "correct": 0,
-    "explanation": "Option A is correct because ALL distribution on the small dimension table places a copy on every node, so the join with the large fact table happens locally on each node without any network data movement.\nOption B is incorrect because EVEN distribution on both tables still requires data redistribution during joins since matching rows may be on different nodes.\nOption C is incorrect because Sort keys helps range-restricted scans but does not reduce inter-node redistribution for join operations.\nOption D is incorrect because Materialized views avoids the join at query time but adds storage and refresh overhead."
+    "explanation": "Option A is correct because ALL distribution on the small dimension table places a copy on every node, so the join with the large fact table happens locally on each node without any network data movement.\nOption B is incorrect because EVEN distribution on both tables still requires data redistribution during joins since matching rows may be on different nodes.\nOption C is incorrect because It does not satisfy the specific requirements stated in this scenario.\nOption D is incorrect because Materialized views avoids the join at query time but adds storage and refresh overhead."
   },
   {
     "id": "q0686",
@@ -9727,7 +9727,7 @@
       "D. Move the small files into an S3 bucket with a shorter prefix depth to reduce the S3 LIST operation overhead that Athena incurs when scanning deeply nested directory structures"
     ],
     "correct": 0,
-    "explanation": "Option A is correct because Compacting millions of small files into fewer large Parquet files eliminates the per-file overhead of S3 GET requests and Parquet columnar format enables efficient column pruning.\nOption B is incorrect because Intelligent-Tiering manages storage costs and has no effect on query performance or file overhead.\nOption C is incorrect because Higher concurrency runs more queries in parallel but each individual query still faces the same small-file overhead.\nOption D is incorrect because Shorter prefix depth has negligible impact since the bottleneck is the number of files not prefix depth."
+    "explanation": "Option A is correct because It best satisfies the requirements stated in this scenario.\nOption B is incorrect because Intelligent-Tiering manages storage costs and has no effect on query performance or file overhead.\nOption C is incorrect because Higher concurrency runs more queries in parallel but each individual query still faces the same small-file overhead.\nOption D is incorrect because Shorter prefix depth has negligible impact since the bottleneck is the number of files not prefix depth."
   },
   {
     "id": "q0696",
@@ -9867,7 +9867,7 @@
       "D. Deploy the OpenSearch domain in VPC access mode and place an Application Load Balancer in front of it with an internet-facing listener to provide controlled public access"
     ],
     "correct": 0,
-    "explanation": "Option A is correct because VPC access mode places the OpenSearch endpoint within private subnets accessible only through the VPC, and security groups restrict access to the VPN CIDR.\nOption B is incorrect because A public endpoint exposes the cluster to the internet which violates the VPC-only requirement.\nOption C is incorrect because SAML on a public endpoint still has a publicly reachable endpoint.\nOption D is incorrect because An internet-facing ALB defeats the purpose of VPC access mode by exposing the service publicly."
+    "explanation": "Option A is correct because VPC access mode places the OpenSearch endpoint within private subnets accessible only through the VPC, and security groups restrict access to the VPN CIDR.\nOption B is incorrect because It does not satisfy the specific requirements stated in this scenario.\nOption C is incorrect because SAML on a public endpoint still has a publicly reachable endpoint.\nOption D is incorrect because An internet-facing ALB defeats the purpose of VPC access mode by exposing the service publicly."
   },
   {
     "id": "q0706",
@@ -9895,7 +9895,7 @@
       "D. Delete indexes older than 30 days and configure Kinesis Data Firehose to archive older metrics data to S3 where it can be queried with Athena when historical access is needed"
     ],
     "correct": 2,
-    "explanation": "Option C is correct because The shrink API reduces primary shard count on existing indexes, and reindexing daily into monthly indexes dramatically reduces total shard count while preserving all data.\nOption A is incorrect because Rollover and force-merge helps with new indexes but does not reduce shards on existing 900,000 shards.\nOption B is incorrect because Single-shard templates only affects future indexes and does not address the existing shard sprawl.\nOption D is incorrect because Deletion loses data from OpenSearch which may be needed for real-time monitoring dashboards."
+    "explanation": "Option C is correct because The shrink API reduces primary shard count on existing indexes, and reindexing daily into monthly indexes dramatically reduces total shard count while preserving all data.\nOption A is incorrect because Rollover and force-merge helps with new indexes but does not reduce shards on existing 900,000 shards.\nOption B is incorrect because Single-shard templates only affects future indexes and does not address the existing shard sprawl.\nOption D is incorrect because It does not satisfy the specific requirements stated in this scenario."
   },
   {
     "id": "q0708",
@@ -10091,7 +10091,7 @@
       "D. Enable S3 Object Lock in Governance mode on the bucket to ensure consistent reads and configure VPC endpoints in each Region for direct access"
     ],
     "correct": 0,
-    "explanation": "Option A is correct because Object Lock is for compliance immutability and VPC endpoints only serve traffic within AWS VPCs, not global auditor access.\nOption B is incorrect because Multi-Region Access Points with replication works but adds ongoing replication cost and management for content that changes only quarterly.\nOption C is incorrect because ALBs cannot natively proxy S3 calls without backend compute, adding unnecessary cost and complexity.\nOption D is incorrect because it is less appropriate than Option A for this scenario."
+    "explanation": "Option A is correct because It best satisfies the requirements stated in this scenario.\nOption B is incorrect because Multi-Region Access Points with replication works but adds ongoing replication cost and management for content that changes only quarterly.\nOption C is incorrect because ALBs cannot natively proxy S3 calls without backend compute, adding unnecessary cost and complexity.\nOption D is incorrect because it is less appropriate than Option A for this scenario."
   },
   {
     "id": "q0722",
@@ -10175,7 +10175,7 @@
       "D. Switch the Lambda function VPC configuration to use a NAT Gateway so database connections route through a single IP address and reduce overhead"
     ],
     "correct": 0,
-    "explanation": "Option A is correct because Global variable caching reuses connections within a single container but does not limit total connections across hundreds of concurrent containers.\nOption B is incorrect because it is less appropriate than Option A for this scenario.\nOption C is incorrect because Reserved concurrency limits throughput and causes API Gateway 429 errors under load.\nOption D is incorrect because NAT Gateway routes traffic but does not pool connections or reduce the connection count at the database."
+    "explanation": "Option A is correct because Global variable caching reuses connections within a single container but does not limit total connections across hundreds of concurrent containers.\nOption B is incorrect because it is less appropriate than Option A for this scenario.\nOption C is incorrect because It does not satisfy the specific requirements stated in this scenario.\nOption D is incorrect because NAT Gateway routes traffic but does not pool connections or reduce the connection count at the database."
   },
   {
     "id": "q0728",
@@ -10189,7 +10189,7 @@
       "D. Configure the Lambda function to stream the CSV data from S3 using range-GET requests and write Parquet output incrementally using response streaming"
     ],
     "correct": 1,
-    "explanation": "Option B is correct because S3 Batch Operations requires a manifest and is designed for bulk operations on existing objects, not real-time file splitting at upload time.\nOption A is incorrect because it is less appropriate than Option B for this scenario.\nOption C is incorrect because Glue is a viable alternative but adds cold start times of minutes and is not a Lambda-based solution.\nOption D is incorrect because Parquet format requires writing full row groups, so true streaming writes are not straightforward and this approach adds significant complexity."
+    "explanation": "Option B is correct because It best satisfies the requirements stated in this scenario.\nOption A is incorrect because it is less appropriate than Option B for this scenario.\nOption C is incorrect because Glue is a viable alternative but adds cold start times of minutes and is not a Lambda-based solution.\nOption D is incorrect because Parquet format requires writing full row groups, so true streaming writes are not straightforward and this approach adds significant complexity."
   },
   {
     "id": "q0729",
@@ -10567,7 +10567,7 @@
       "D. Switch the S3 origin to an Application Load Balancer backed origin so CloudFront can use connection keep-alive to reduce origin response latency on misses"
     ],
     "correct": 2,
-    "explanation": "Option C is correct because Lambda@Edge adds per-request compute cost and complexity when a simple TTL increase achieves the same result.\nOption A is incorrect because it is less appropriate than Option C for this scenario.\nOption B is incorrect because Origin Shield reduces origin load but does not increase hit ratio at edge locations if the TTL is still 60 seconds.\nOption D is incorrect because Changing the origin type does not affect caching behavior and ALB is unnecessary for static S3 content."
+    "explanation": "Option C is correct because It best satisfies the requirements stated in this scenario.\nOption A is incorrect because it is less appropriate than Option C for this scenario.\nOption B is incorrect because Origin Shield reduces origin load but does not increase hit ratio at edge locations if the TTL is still 60 seconds.\nOption D is incorrect because Changing the origin type does not affect caching behavior and ALB is unnecessary for static S3 content."
   },
   {
     "id": "q0756",
@@ -10735,7 +10735,7 @@
       "D. Use a scheduled scaling approach with EventBridge Scheduler to reduce shard count to 5 at 8 PM and increase back to 50 at 8 AM every weekday"
     ],
     "correct": 2,
-    "explanation": "Option C is correct because Lambda-based auto-scaling adds custom code to maintain and may react slowly to rapid traffic changes.\nOption A is incorrect because it is less appropriate than Option C for this scenario.\nOption B is incorrect because Firehose has different capabilities and does not support the same real-time consumer model as Data Streams.\nOption D is incorrect because Scheduled scaling uses fixed times and does not adapt to actual traffic variations that may differ from the schedule."
+    "explanation": "Option C is correct because It best satisfies the requirements stated in this scenario.\nOption A is incorrect because it is less appropriate than Option C for this scenario.\nOption B is incorrect because Firehose has different capabilities and does not support the same real-time consumer model as Data Streams.\nOption D is incorrect because Scheduled scaling uses fixed times and does not adapt to actual traffic variations that may differ from the schedule."
   },
   {
     "id": "q0768",
@@ -10763,7 +10763,7 @@
       "D. Increase the number of Kinesis shards so each shard contains fewer records per second, allowing the KCL consumer to process smaller batches more quickly"
     ],
     "correct": 1,
-    "explanation": "Option B is correct because SQS FIFO has lower throughput limits and does not support ordered stream processing with multiple consumers as efficiently.\nOption A is incorrect because Lambda event source mapping adds invocation latency and Lambda cold starts may exceed the 200 ms budget.\nOption C is incorrect because it is less appropriate than Option B for this scenario.\nOption D is incorrect because More shards distribute load but do not reduce the 5-second batching delay in the KCL consumer configuration."
+    "explanation": "Option B is correct because It best satisfies the requirements stated in this scenario.\nOption A is incorrect because Lambda event source mapping adds invocation latency and Lambda cold starts may exceed the 200 ms budget.\nOption C is incorrect because it is less appropriate than Option B for this scenario.\nOption D is incorrect because More shards distribute load but do not reduce the 5-second batching delay in the KCL consumer configuration."
   },
   {
     "id": "q0770",
@@ -10777,7 +10777,7 @@
       "D. Use a Kinesis Data Analytics application to transform the JSON stream to Parquet in real time and output the Parquet records to a second Firehose stream"
     ],
     "correct": 1,
-    "explanation": "Option B is correct because Lambda transformation requires writing and maintaining custom Parquet conversion code.\nOption A is incorrect because it is less appropriate than Option B for this scenario.\nOption C is incorrect because A Glue ETL job introduces hourly delay and adds a separate pipeline to manage.\nOption D is incorrect because Kinesis Data Analytics adds a processing layer and complexity when Firehose already supports the conversion natively."
+    "explanation": "Option B is correct because It best satisfies the requirements stated in this scenario.\nOption A is incorrect because it is less appropriate than Option B for this scenario.\nOption C is incorrect because A Glue ETL job introduces hourly delay and adds a separate pipeline to manage.\nOption D is incorrect because Kinesis Data Analytics adds a processing layer and complexity when Firehose already supports the conversion natively."
   },
   {
     "id": "q0771",
@@ -10889,7 +10889,7 @@
       "D. Deploy the Lambda function in multiple Regions and use API Gateway regional endpoints with Route 53 failover routing to distribute spike traffic across Regions"
     ],
     "correct": 1,
-    "explanation": "Option B is correct because More memory speeds cold starts but cannot eliminate them entirely for heavy initialization.\nOption A is incorrect because it is less appropriate than Option B for this scenario.\nOption C is incorrect because Caching patient records raises privacy concerns and cache misses during enrollment still trigger cold starts.\nOption D is incorrect because Multi-Region deployment adds complexity and does not prevent cold starts in each Region during the initial spike."
+    "explanation": "Option B is correct because More memory speeds cold starts but cannot eliminate them entirely for heavy initialization.\nOption A is incorrect because it is less appropriate than Option B for this scenario.\nOption C is incorrect because It does not satisfy the specific requirements stated in this scenario.\nOption D is incorrect because Multi-Region deployment adds complexity and does not prevent cold starts in each Region during the initial spike."
   },
   {
     "id": "q0779",
@@ -10917,7 +10917,7 @@
       "D. Use Amazon Route 53 with path-based routing policies to direct requests from the unified domain to the appropriate API Gateway endpoint for each microservice"
     ],
     "correct": 2,
-    "explanation": "Option C is correct because Route 53 does not support path-based routing; it operates at the DNS level with domain-based resolution only.\nOption A is incorrect because REST API works but HTTP proxy integration requires backend services to be publicly accessible, which may violate security requirements.\nOption B is incorrect because 15 separate APIs with CloudFront routing adds management complexity and CloudFront path-based routing has limitations with API Gateway stages.\nOption D is incorrect because it is less appropriate than Option C for this scenario."
+    "explanation": "Option C is correct because It best satisfies the requirements stated in this scenario.\nOption A is incorrect because REST API works but HTTP proxy integration requires backend services to be publicly accessible, which may violate security requirements.\nOption B is incorrect because 15 separate APIs with CloudFront routing adds management complexity and CloudFront path-based routing has limitations with API Gateway stages.\nOption D is incorrect because it is less appropriate than Option C for this scenario."
   },
   {
     "id": "q0781",
@@ -10931,7 +10931,7 @@
       "D. Move the JWT validation logic from the Lambda authorizer into the backend service code so the authorization check happens in parallel with business logic execution"
     ],
     "correct": 1,
-    "explanation": "Option B is correct because IAM with SigV4 requires client-side credential management that is impractical for end-user streaming clients.\nOption A is incorrect because it is less appropriate than Option B for this scenario.\nOption C is incorrect because IP-based policies remove user-level authorization, which is insufficient for a streaming service with individual user accounts.\nOption D is incorrect because Moving authorization to the backend does not reduce latency and allows unauthenticated requests to reach backend services."
+    "explanation": "Option B is correct because It best satisfies the requirements stated in this scenario.\nOption A is incorrect because it is less appropriate than Option B for this scenario.\nOption C is incorrect because IP-based policies remove user-level authorization, which is insufficient for a streaming service with individual user accounts.\nOption D is incorrect because Moving authorization to the backend does not reduce latency and allows unauthenticated requests to reach backend services."
   },
   {
     "id": "q0782",
@@ -10987,7 +10987,7 @@
       "D. Configure EBS Multi-Attach on io2 volumes and attach each volume to all instances in the Auto Scaling group for concurrent read and write access"
     ],
     "correct": 0,
-    "explanation": "Option A is correct because S3 requires rewriting all file operations to use the AWS SDK, which is a significant application change.\nOption B is incorrect because it is less appropriate than Option A for this scenario.\nOption C is incorrect because FSx for Windows uses SMB protocol, which is not native to Linux instances and requires additional configuration.\nOption D is incorrect because EBS Multi-Attach only works within a single AZ and requires a cluster-aware file system, which is complex to manage."
+    "explanation": "Option A is correct because It best satisfies the requirements stated in this scenario.\nOption B is incorrect because it is less appropriate than Option A for this scenario.\nOption C is incorrect because FSx for Windows uses SMB protocol, which is not native to Linux instances and requires additional configuration.\nOption D is incorrect because EBS Multi-Attach only works within a single AZ and requires a cluster-aware file system, which is complex to manage."
   },
   {
     "id": "q0786",
@@ -11015,7 +11015,7 @@
       "D. Switch from EFS to Amazon S3 for session storage since S3 automatically replicates data across multiple AZs and provides higher durability for session data"
     ],
     "correct": 0,
-    "explanation": "Option A is correct because EFS automatically replicates data across all AZs in the Region. Adding mount targets in each AZ lets instances in any AZ access the shared data, surviving single-AZ failures.\nOption B is incorrect because Cross-Region replication creates a read-only copy in another Region, not local AZ redundancy, and cannot be written to directly.\nOption C is incorrect because DataSync between two EFS file systems adds latency, cost, and consistency issues.\nOption D is incorrect because S3 is durable but requires application changes to replace POSIX file system calls with SDK operations."
+    "explanation": "Option A is correct because It best satisfies the requirements stated in this scenario.\nOption B is incorrect because Cross-Region replication creates a read-only copy in another Region, not local AZ redundancy, and cannot be written to directly.\nOption C is incorrect because DataSync between two EFS file systems adds latency, cost, and consistency issues.\nOption D is incorrect because S3 is durable but requires application changes to replace POSIX file system calls with SDK operations."
   },
   {
     "id": "q0788",
@@ -11127,7 +11127,7 @@
       "D. Enable Concurrency Scaling on the WLM queue used by dashboard queries so Redshift automatically provisions temporary clusters to handle the burst of concurrent users"
     ],
     "correct": 3,
-    "explanation": "Option D is correct because Concurrency Scaling automatically adds temporary compute for queued queries, handling the morning peak without permanent cluster expansion.\nOption A is incorrect because Migrating to Serverless is a larger architectural change that goes beyond the immediate budget-constrained requirement.\nOption B is incorrect because Setting concurrency to 200 divides available memory into 200 tiny slices, causing each query to run slowly or fail due to insufficient memory per slot.\nOption C is incorrect because Result caching helps only when identical queries repeat, but dashboards with different filters produce unique SQL."
+    "explanation": "Option D is correct because Concurrency Scaling automatically adds temporary compute for queued queries, handling the morning peak without permanent cluster expansion.\nOption A is incorrect because Migrating to Serverless is a larger architectural change that goes beyond the immediate budget-constrained requirement.\nOption B is incorrect because Setting concurrency to 200 divides available memory into 200 tiny slices, causing each query to run slowly or fail due to insufficient memory per slot.\nOption C is incorrect because It does not satisfy the specific requirements stated in this scenario."
   },
   {
     "id": "q0796",
@@ -11155,7 +11155,7 @@
       "D. Convert JSON to Parquet with Snappy compression and partition data by date so Athena reads only the relevant partitions in a compact columnar format"
     ],
     "correct": 3,
-    "explanation": "Option D is correct because Federated query to a database introduces different latency characteristics and does not leverage S3 data lake investments.\nOption A is incorrect because it is less appropriate than Option D for this scenario.\nOption B is incorrect because Athena does not have a configurable DPU count and bytes-scanned limits abort queries rather than speed them up.\nOption C is incorrect because Result reuse helps repeated identical queries but does not optimize the underlying scan for unique queries."
+    "explanation": "Option D is correct because It best satisfies the requirements stated in this scenario.\nOption A is incorrect because it is less appropriate than Option D for this scenario.\nOption B is incorrect because Athena does not have a configurable DPU count and bytes-scanned limits abort queries rather than speed them up.\nOption C is incorrect because Result reuse helps repeated identical queries but does not optimize the underlying scan for unique queries."
   },
   {
     "id": "q0798",
@@ -11211,7 +11211,7 @@
       "D. Run the MSCK REPAIR TABLE command before each query to ensure the Glue Data Catalog partition metadata is synchronized with the actual S3 data structure"
     ],
     "correct": 1,
-    "explanation": "Option B is correct because Monthly partitions reduce granularity and force Athena to scan entire months when only 7 days are needed.\nOption A is incorrect because it is less appropriate than Option B for this scenario.\nOption C is incorrect because Separate databases per campaign does not reduce per-query partition resolution within a single table.\nOption D is incorrect because MSCK REPAIR adds overhead and does not reduce the partition count or resolution time."
+    "explanation": "Option B is correct because It best satisfies the requirements stated in this scenario.\nOption A is incorrect because it is less appropriate than Option B for this scenario.\nOption C is incorrect because Separate databases per campaign does not reduce per-query partition resolution within a single table.\nOption D is incorrect because MSCK REPAIR adds overhead and does not reduce the partition count or resolution time."
   },
   {
     "id": "q0802",
@@ -11225,7 +11225,7 @@
       "D. Create an Athena workgroup with S3 encryption settings for results, a dedicated output bucket path, and a per-query bytes-scanned limit to enforce all three controls"
     ],
     "correct": 3,
-    "explanation": "Option D is correct because Lake Formation and CloudWatch alarms are separate tools that notify rather than enforce limits.\nOption A is incorrect because it is less appropriate than Option D for this scenario.\nOption B is incorrect because IAM policies cannot limit Athena bytes scanned per query, and bucket policies handle source encryption but not results.\nOption C is incorrect because Glue catalog encryption and S3 default encryption address some requirements but there is no bytes-scanned limit."
+    "explanation": "Option D is correct because It best satisfies the requirements stated in this scenario.\nOption A is incorrect because it is less appropriate than Option D for this scenario.\nOption B is incorrect because IAM policies cannot limit Athena bytes scanned per query, and bucket policies handle source encryption but not results.\nOption C is incorrect because Glue catalog encryption and S3 default encryption address some requirements but there is no bytes-scanned limit."
   },
   {
     "id": "q0803",
@@ -11309,7 +11309,7 @@
       "D. Configure the Glue job to use the ResolveChoice transform for all columns to standardize data types and eliminate formatting inconsistencies across source files"
     ],
     "correct": 1,
-    "explanation": "Option B is correct because Glue FindMatches ML Transform uses machine learning to identify duplicate and matching records without custom code, handling the deduplication requirement.\nOption A is incorrect because Glue Data Quality rules validate data against rules but do not perform intelligent fuzzy deduplication.\nOption C is incorrect because Glue Crawlers catalog schema metadata and do not modify or deduplicate source data.\nOption D is incorrect because ResolveChoice handles ambiguous data types in the DynamicFrame but does not deduplicate records or fix formatting issues."
+    "explanation": "Option B is correct because Glue FindMatches ML Transform uses machine learning to identify duplicate and matching records without custom code, handling the deduplication requirement.\nOption A is incorrect because Glue Data Quality rules validate data against rules but do not perform intelligent fuzzy deduplication.\nOption C is incorrect because Glue Crawlers catalog schema metadata and do not modify or deduplicate source data.\nOption D is incorrect because It does not satisfy the specific requirements stated in this scenario."
   },
   {
     "id": "q0809",
@@ -12009,7 +12009,7 @@
       "D. Convert all incoming data to Parquet format upon ingestion and store it in S3 One Zone-IA from day one to reduce both query and storage costs"
     ],
     "correct": 1,
-    "explanation": "Option B is correct because Date partitioning with lifecycle to Standard-IA after 30 days reduces storage costs for aging data while keeping it Athena-queryable.\nOption A is incorrect because Ignores storage optimization for growing data.\nOption C is incorrect because Is invalid because Athena cannot query directly from Glacier.\nOption D is incorrect because Puts hot data in One Zone-IA from day one, incurring retrieval charges for frequent queries."
+    "explanation": "Option B is correct because It best satisfies the requirements stated in this scenario.\nOption A is incorrect because Ignores storage optimization for growing data.\nOption C is incorrect because Is invalid because Athena cannot query directly from Glacier.\nOption D is incorrect because Puts hot data in One Zone-IA from day one, incurring retrieval charges for frequent queries."
   },
   {
     "id": "q0859",
@@ -12275,7 +12275,7 @@
       "D. Migrate the database to an EC2 instance with multiple instance store NVMe volumes in a RAID configuration for higher throughput at lower cost"
     ],
     "correct": 1,
-    "explanation": "Option B is correct because ElastiCache reduces database IOPS by serving cached reads, which is cheaper than Provisioned IOPS or doubling storage.\nOption A is incorrect because Doubles storage cost to get more IOPS.\nOption C is incorrect because Auto-scales storage size but does not address IOPS spikes specifically.\nOption D is incorrect because Loses RDS managed features and requires manual database administration."
+    "explanation": "Option B is correct because ElastiCache reduces database IOPS by serving cached reads, which is cheaper than Provisioned IOPS or doubling storage.\nOption A is incorrect because Doubles storage cost to get more IOPS.\nOption C is incorrect because Auto-scales storage size but does not address IOPS spikes specifically.\nOption D is incorrect because It does not satisfy the specific requirements stated in this scenario."
   },
   {
     "id": "q0878",
@@ -12513,7 +12513,7 @@
       "D. Consolidate the 20 functions into a single long-running ECS Fargate task that executes all ETL steps sequentially in one container instance"
     ],
     "correct": 3,
-    "explanation": "Option D is correct because Reduces Step Functions cost but not the dominant Lambda compute cost.\nOption A is incorrect because Runs in parallel but does not reduce total Lambda compute cost.\nOption B is incorrect because it is less appropriate than Option D for this scenario.\nOption C is incorrect because Increases per-millisecond cost significantly."
+    "explanation": "Option D is correct because It best satisfies the requirements stated in this scenario.\nOption A is incorrect because Runs in parallel but does not reduce total Lambda compute cost.\nOption B is incorrect because it is less appropriate than Option D for this scenario.\nOption C is incorrect because Increases per-millisecond cost significantly."
   },
   {
     "id": "q0895",
@@ -12527,7 +12527,7 @@
       "D. Implement Lambda response streaming to return results faster to clients and reduce the billed execution time for each function invocation call"
     ],
     "correct": 0,
-    "explanation": "Option A is correct because API Gateway caching eliminates most Lambda invocations for repeated requests to the same 50 resources, dramatically cutting costs.\nOption B is incorrect because Optimizes per-invocation cost but does not reduce invocation count.\nOption C is incorrect because Reduces API costs but not Lambda invocation volume.\nOption D is incorrect because Does not reduce invocation count or significantly change billing."
+    "explanation": "Option A is correct because API Gateway caching eliminates most Lambda invocations for repeated requests to the same 50 resources, dramatically cutting costs.\nOption B is incorrect because Optimizes per-invocation cost but does not reduce invocation count.\nOption C is incorrect because It does not satisfy the specific requirements stated in this scenario.\nOption D is incorrect because Does not reduce invocation count or significantly change billing."
   },
   {
     "id": "q0896",
@@ -12863,7 +12863,7 @@
       "D. Keep both buckets but enable S3 lifecycle policies on the replica to transition all objects to Glacier Deep Archive to minimize the standby cost"
     ],
     "correct": 0,
-    "explanation": "Option A is correct because CloudFront origin failover uses the replica bucket only when the primary fails, providing DR value from the existing replicated bucket.\nOption B is incorrect because Reduces DR capability.\nOption C is incorrect because Adds EC2 costs and management.\nOption D is incorrect because Makes replica content inaccessible through CloudFront since Glacier objects cannot be served directly."
+    "explanation": "Option A is correct because CloudFront origin failover uses the replica bucket only when the primary fails, providing DR value from the existing replicated bucket.\nOption B is incorrect because Reduces DR capability.\nOption C is incorrect because Adds EC2 costs and management.\nOption D is incorrect because It does not satisfy the specific requirements stated in this scenario."
   },
   {
     "id": "q0920",
