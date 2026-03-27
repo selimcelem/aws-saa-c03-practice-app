@@ -129,9 +129,25 @@ aws-saa-c03-practice-app/
 
 ---
 
-## Upcoming: 1000-Question Expansion
+## CI/CD
 
-The question bank will be expanded from 100 to 1000 questions, maintaining SAA-C03 domain proportions. See `docs/build-log.md` for progress.
+The project uses GitHub Actions (`.github/workflows/ci.yml`) to build on every push and PR to `master`.
+
+**Pipeline steps:**
+1. **Build** — runs `dotnet build` for the Windows target on `windows-latest`
+2. **Validate** — checks `questions.json` has exactly 1000 questions
+3. **Deploy** — on push to `master` only, syncs `questions.json` to the S3 bucket
+
+**Required GitHub Secrets** (set in repo Settings > Secrets and variables > Actions):
+
+| Secret | Value |
+|---|---|
+| `AWS_ACCESS_KEY_ID` | IAM access key with `s3:PutObject` on the app bucket |
+| `AWS_SECRET_ACCESS_KEY` | Corresponding secret key |
+| `AWS_REGION` | `eu-west-1` |
+| `S3_BUCKET_NAME` | `saa-c03-practice-60270d19` |
+
+To set up: go to your GitHub repo > Settings > Secrets and variables > Actions > New repository secret, and add each of the four secrets above.
 
 ---
 

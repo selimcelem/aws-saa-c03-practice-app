@@ -432,7 +432,30 @@ Keeping the app free with optional donations respects users and removes friction
 Ko-fi URL is hardcoded in DashboardPage.xaml.cs and ResultsPage.xaml.cs. To change: update the URL string in both code-behind files.
 
 ### What's next
-Step 3 -- CI/CD pipeline (GitHub Actions), then Step 4 -- release signing keystore, Step 5 -- crash reporting, Step 6 -- Play Store submission.
+Phase 9 -- CI/CD pipeline.
+
+---
+
+## [Phase 9] — CI/CD Pipeline
+**Date:** 2026-03-27
+**Status:** Complete
+
+### What was done
+- Created `.github/workflows/ci.yml` GitHub Actions workflow
+- **Trigger:** every push to `master` and every PR targeting `master`
+- **Build job** (windows-latest): installs .NET 8 + MAUI workloads, restores NuGet, builds Windows target (`net8.0-windows10.0.19041.0`), validates `questions.json` has 1000 questions
+- **Deploy job** (ubuntu-latest): runs only on push to `master` after build succeeds. Syncs `src/Data/questions.json` to S3 using `aws-actions/configure-aws-credentials@v4`
+- AWS credentials stored as GitHub Secrets: `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_REGION`, `S3_BUCKET_NAME`
+- Added CI/CD setup instructions to `README.md`
+
+### Why
+Automated builds catch regressions on every commit. Automatic S3 sync ensures the live question bank stays in sync with the repository without manual uploads.
+
+### How to reproduce on a new machine
+Set the four GitHub Secrets in repo Settings, then push to `master`. The pipeline runs automatically.
+
+### What's next
+Release signing keystore, crash reporting integration, Play Store submission.
 
 ---
 
