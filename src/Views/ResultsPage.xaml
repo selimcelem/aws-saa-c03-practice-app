@@ -159,6 +159,16 @@
                             FontSize="12" Padding="8,10" />
                 </Grid>
 
+                <!-- Support link -->
+                <Label Text="Enjoying the app? Support it ☕" FontSize="11"
+                       TextColor="{StaticResource TextSecondary}"
+                       HorizontalOptions="Center" Margin="0,0,0,16"
+                       TextDecorations="Underline">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnSupportTapped" />
+                    </Label.GestureRecognizers>
+                </Label>
+
             </VerticalStackLayout>
         </ScrollView>
     </Grid>

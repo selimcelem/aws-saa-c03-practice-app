@@ -18,4 +18,9 @@ public partial class DashboardPage : ContentPage
         base.OnAppearing();
         await _vm.LoadCommand.ExecuteAsync(null);
     }
+
+    private async void OnSupportTapped(object? sender, EventArgs e)
+    {
+        await Launcher.OpenAsync("https://ko-fi.com/selimcelem");
+    }
 }

@@ -29,4 +29,9 @@ public partial class ResultsPage : ContentPage
             await Shell.Current.GoToAsync("//dashboard");
         }
     }
+
+    private async void OnSupportTapped(object? sender, EventArgs e)
+    {
+        await Launcher.OpenAsync("https://ko-fi.com/selimcelem");
+    }
 }
