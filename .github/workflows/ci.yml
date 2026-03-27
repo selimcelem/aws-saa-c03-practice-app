@@ -19,7 +19,7 @@ jobs:
           dotnet-version: 8.0.x
 
       - name: Install MAUI workloads
-        run: dotnet workload install maui-windows
+        run: dotnet workload install maui-windows maui-android
 
       - name: Restore NuGet packages
         run: dotnet restore src/AwsSaaC03Practice.csproj
