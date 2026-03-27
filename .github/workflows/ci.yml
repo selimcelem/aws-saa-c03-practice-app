@@ -22,7 +22,7 @@ jobs:
         run: dotnet workload install maui-windows
 
       - name: Restore NuGet packages
-        run: dotnet restore src/AwsSaaC03Practice.csproj
+        run: dotnet restore src/AwsSaaC03Practice.csproj -p:TargetFramework=net8.0-windows10.0.19041.0
 
       - name: Build Windows
         run: dotnet build src/AwsSaaC03Practice.csproj -f net8.0-windows10.0.19041.0 --no-restore -c Release
