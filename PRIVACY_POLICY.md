@@ -57,7 +57,7 @@ We may update this policy from time to time. Changes will be reflected in the "L
 
 For questions about this privacy policy or to request data deletion:
 
-**Email:** [your-email@example.com]
+**Email:** [selim.celem@gmail.com]
 
 ---
 
