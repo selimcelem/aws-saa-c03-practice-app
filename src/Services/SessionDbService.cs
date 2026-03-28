@@ -14,6 +14,7 @@ public class SessionDbService
         var path = Path.Combine(FileSystem.AppDataDirectory, "sessions.db");
         _db = new SQLiteAsyncConnection(path);
         await _db.CreateTableAsync<QuizSession>();
+        await _db.CreateTableAsync<ReportedQuestion>();
         return _db;
     }
 
@@ -128,5 +129,24 @@ public class SessionDbService
     {
         var db = await GetDb();
         await db.ExecuteAsync("DELETE FROM sessions WHERE UserSub = ?", userSub);
+    }
+
+    public async Task<bool> IsReportedThisSessionAsync(string questionId, DateTime sessionStart)
+    {
+        var db = await GetDb();
+        var count = await db.Table<ReportedQuestion>()
+            .Where(r => r.QuestionId == questionId && r.SessionStarted == sessionStart)
+            .CountAsync();
+        return count > 0;
+    }
+
+    public async Task MarkAsReportedAsync(string questionId, DateTime sessionStart)
+    {
+        var db = await GetDb();
+        await db.InsertAsync(new ReportedQuestion
+        {
+            QuestionId = questionId,
+            SessionStarted = sessionStart,
+        });
     }
 }
