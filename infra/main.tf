@@ -289,6 +289,15 @@ resource "aws_iam_role_policy" "cognito_s3_per_user" {
         Action   = ["s3:GetObject"]
         Resource = "${aws_s3_bucket.main.arn}/questions.json"
       },
+      {
+        Sid    = "AllowReportReadWrite"
+        Effect = "Allow"
+        Action = [
+          "s3:GetObject",
+          "s3:PutObject",
+        ]
+        Resource = "${aws_s3_bucket.main.arn}/reports/*"
+      },
     ]
   })
 }
