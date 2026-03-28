@@ -6,7 +6,7 @@ A cross-platform quiz application for Windows desktop and Android that helps you
 
 ---
 
-## Features (Roadmap)
+## Features
 
 - 1,000 scenario-based practice questions across all 4 SAA-C03 exam domains
 - Four study modes: Random, Exam Simulation (65Q / 130min), Quick 30, Quick 10
@@ -115,7 +115,7 @@ aws-saa-c03-practice-app/
 │   └── build-log.md          # Detailed step-by-step build history
 ├── src/
 │   ├── Data/
-│   │   └── questions.json    # 100–1000 practice questions
+│   │   └── questions.json    # 1,000 practice questions
 │   ├── Models/               # C# data models
 │   ├── ViewModels/           # MVVM view models
 │   ├── Views/                # MAUI XAML pages
