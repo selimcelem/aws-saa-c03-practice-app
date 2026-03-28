@@ -310,3 +310,154 @@ resource "aws_cognito_identity_pool_roles_attachment" "main" {
     authenticated = aws_iam_role.cognito_authenticated.arn
   }
 }
+
+# ─── Question Report Digest ─────────────────────────────────────────────────
+# SNS topic for report digest emails, Lambda function, and EventBridge cron rules.
+
+# --- SNS ---
+
+resource "aws_sns_topic" "report_digest" {
+  name = "saa-c03-report-digest"
+  tags = local.tags
+}
+
+resource "aws_sns_topic_subscription" "report_digest_email" {
+  topic_arn = aws_sns_topic.report_digest.arn
+  protocol  = "email"
+  endpoint  = "selim.celem@gmail.com"
+}
+
+# --- Lambda IAM Role ---
+
+resource "aws_iam_role" "lambda_report_digest" {
+  name = "${var.project_name}-lambda-report-digest-${local.suffix}"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Principal = {
+          Service = "lambda.amazonaws.com"
+        }
+        Action = "sts:AssumeRole"
+      }
+    ]
+  })
+
+  tags = local.tags
+}
+
+resource "aws_iam_role_policy_attachment" "lambda_basic_execution" {
+  role       = aws_iam_role.lambda_report_digest.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+}
+
+resource "aws_iam_role_policy" "lambda_report_digest_s3_sns" {
+  name = "${var.project_name}-lambda-report-s3-sns"
+  role = aws_iam_role.lambda_report_digest.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid    = "AllowListReports"
+        Effect = "Allow"
+        Action = ["s3:ListBucket"]
+        Resource = aws_s3_bucket.main.arn
+        Condition = {
+          StringLike = {
+            "s3:prefix" = "reports/*"
+          }
+        }
+      },
+      {
+        Sid    = "AllowReadWriteReports"
+        Effect = "Allow"
+        Action = [
+          "s3:GetObject",
+          "s3:PutObject",
+        ]
+        Resource = "${aws_s3_bucket.main.arn}/reports/*"
+      },
+      {
+        Sid      = "AllowPublishSNS"
+        Effect   = "Allow"
+        Action   = ["sns:Publish"]
+        Resource = aws_sns_topic.report_digest.arn
+      },
+    ]
+  })
+}
+
+# --- Lambda Function ---
+
+data "archive_file" "report_digest_lambda" {
+  type        = "zip"
+  source_file = "${path.module}/lambda/report_digest/lambda_function.py"
+  output_path = "${path.module}/lambda/report_digest/lambda_function.zip"
+}
+
+resource "aws_lambda_function" "report_digest" {
+  function_name    = "${var.project_name}-report-digest-${local.suffix}"
+  role             = aws_iam_role.lambda_report_digest.arn
+  handler          = "lambda_function.lambda_handler"
+  runtime          = "python3.12"
+  timeout          = 60
+  filename         = data.archive_file.report_digest_lambda.output_path
+  source_code_hash = data.archive_file.report_digest_lambda.output_base64sha256
+
+  environment {
+    variables = {
+      S3_BUCKET_NAME  = aws_s3_bucket.main.bucket
+      SNS_TOPIC_ARN   = aws_sns_topic.report_digest.arn
+      AWS_REGION_NAME = var.region
+    }
+  }
+
+  tags = local.tags
+}
+
+# --- EventBridge Rules (twice daily) ---
+
+resource "aws_cloudwatch_event_rule" "digest_noon" {
+  name                = "${var.project_name}-report-digest-noon"
+  description         = "Trigger report digest Lambda at 12:00 Amsterdam (11:00 UTC)"
+  schedule_expression = "cron(0 11 * * ? *)"
+  tags                = local.tags
+}
+
+resource "aws_cloudwatch_event_rule" "digest_afternoon" {
+  name                = "${var.project_name}-report-digest-afternoon"
+  description         = "Trigger report digest Lambda at 16:00 Amsterdam (15:00 UTC)"
+  schedule_expression = "cron(0 15 * * ? *)"
+  tags                = local.tags
+}
+
+resource "aws_cloudwatch_event_target" "digest_noon" {
+  rule      = aws_cloudwatch_event_rule.digest_noon.name
+  target_id = "report-digest-lambda"
+  arn       = aws_lambda_function.report_digest.arn
+}
+
+resource "aws_cloudwatch_event_target" "digest_afternoon" {
+  rule      = aws_cloudwatch_event_rule.digest_afternoon.name
+  target_id = "report-digest-lambda"
+  arn       = aws_lambda_function.report_digest.arn
+}
+
+resource "aws_lambda_permission" "allow_eventbridge_noon" {
+  statement_id  = "AllowEventBridgeNoon"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.report_digest.function_name
+  principal     = "events.amazonaws.com"
+  source_arn    = aws_cloudwatch_event_rule.digest_noon.arn
+}
+
+resource "aws_lambda_permission" "allow_eventbridge_afternoon" {
+  statement_id  = "AllowEventBridgeAfternoon"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.report_digest.function_name
+  principal     = "events.amazonaws.com"
+  source_arn    = aws_cloudwatch_event_rule.digest_afternoon.arn
+}

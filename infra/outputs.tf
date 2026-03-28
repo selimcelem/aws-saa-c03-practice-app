@@ -40,3 +40,13 @@ output "google_idp_configured" {
   description = "Whether the Google identity provider has been wired in"
   value       = length(aws_cognito_identity_provider.google) > 0
 }
+
+output "sns_topic_arn" {
+  description = "SNS topic ARN for question report digest emails"
+  value       = aws_sns_topic.report_digest.arn
+}
+
+output "lambda_function_name" {
+  description = "Lambda function name for report digest"
+  value       = aws_lambda_function.report_digest.function_name
+}
