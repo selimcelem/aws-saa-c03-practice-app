@@ -63,3 +63,9 @@ credentials
 
 # Claude Code local config
 .claude/
+
+docs/superpowers/
+fix_explanations.js
+rewrite_explanations.js
+tmp_questions.txt
+infra/lambda/*.zip
