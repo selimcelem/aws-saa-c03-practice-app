@@ -33,6 +33,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<QuestionService>();
         builder.Services.AddSingleton<SessionDbService>();
         builder.Services.AddSingleton<S3SyncService>();
+        builder.Services.AddSingleton<ReportService>();
 
         // ── ViewModels ───────────────────────────────────────────────────────
         builder.Services.AddTransient<LoginViewModel>();
