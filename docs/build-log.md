@@ -5,11 +5,12 @@
 ## Current Status — Last updated 2026-03-28
 
 ### Completed
-- Phases 1-12 complete -- app built, tested, signed release APK working on device
+- Phases 1-13 complete -- app built, tested, signed release APK working on device
 - CI/CD pipeline working (GitHub Actions)
 - Ko-fi support button integrated
 - Privacy policy live at GitHub URL
 - Release keystore generated and backed up
+- Phase 13: Question reporting (UI, ReportService, S3 storage, Lambda digest)
 
 ### Waiting
 - Google Play identity verification -- submitted, waiting 1-3 days for approval
@@ -20,6 +21,42 @@
 - Play Store description needs to be written
 - Screenshots need to be taken (Dashboard, Quiz, Results, ModePicker)
 - App icon 512x512 PNG needed for Play Store listing
+
+---
+
+## [Phase 13] — Question Reporting
+**Date:** 2026-03-28
+**Status:** Complete
+
+### What was done
+- Added a "Report" button on the quiz screen, visible before and after answer reveal
+- Tapping Report shows a popup with optional comment, then a confirmation popup
+- Reports stored in S3 at `reports/{questionId}.json` — each file is a JSON array of report objects
+- Local SQLite `reported_questions` table prevents duplicate reports per session
+- New `ReportService.cs` handles S3 upload (same Cognito credential pattern as S3SyncService)
+- S3 upload runs in background — UI is never blocked; failures logged silently
+- Terraform infrastructure added:
+  - SNS topic (`saa-c03-report-digest`) with email subscription
+  - Lambda function (Python 3.12) reads new report files, composes digest email
+  - Two EventBridge cron rules: 12:00 and 16:00 Amsterdam time (11:00 / 15:00 UTC)
+  - IAM role for Lambda with S3 read + SNS publish permissions
+  - IAM policy updated: authenticated users can read/write `reports/*` in S3
+
+### Report object schema
+```json
+{
+  "questionId": "q042",
+  "reportedAt": "2026-03-28T14:23:00Z",
+  "userSub": "abc-123",
+  "comment": "Answer seems incorrect",
+  "appVersion": "1.0"
+}
+```
+
+### How to deploy
+1. `cd infra && terraform apply` — creates SNS topic, Lambda, EventBridge rules
+2. Confirm the SNS subscription email sent to selim.celem@gmail.com
+3. Digest emails arrive at 12:00 and 16:00 Amsterdam time if there are new reports
 
 ---
 

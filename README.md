@@ -8,12 +8,13 @@ A cross-platform quiz application for Windows desktop and Android that helps you
 
 ## Features (Roadmap)
 
-- 100 → 1000 scenario-based practice questions across all 4 SAA-C03 exam domains
+- 1,000 scenario-based practice questions across all 4 SAA-C03 exam domains
 - Four study modes: Random, Exam Simulation (65Q / 130min), Quick 30, Quick 10
 - Detailed answer explanations with AWS concept references
 - Performance dashboard: score by domain, radar chart, "needs work" categories
 - Google Sign-In via Cognito, score history synced to S3
 - Local SQLite history — works offline
+- Question reporting — flag problematic questions directly from the quiz
 
 ---
 
@@ -49,7 +50,8 @@ aws configure
 cd infra
 terraform init
 terraform apply
-# Note the outputs: cognito_user_pool_id, cognito_client_id, s3_bucket_name, cognito_domain
+# Note the outputs: cognito_user_pool_id, cognito_client_id, s3_bucket_name, cognito_domain, sns_topic_arn
+# After apply: confirm the SNS subscription email for question report digests
 ```
 
 ### 4. Set up Google OAuth
@@ -119,7 +121,8 @@ aws-saa-c03-practice-app/
 │   ├── Views/                # MAUI XAML pages
 │   └── Services/             # AWS, auth, storage services
 ├── infra/
-│   ├── main.tf               # S3, Cognito, IAM resources
+│   ├── main.tf               # S3, Cognito, IAM, Lambda, SNS, EventBridge
+│   ├── lambda/               # Lambda function source code
 │   ├── variables.tf
 │   └── outputs.tf
 ├── .gitignore
@@ -148,6 +151,18 @@ The project uses GitHub Actions (`.github/workflows/ci.yml`) to build on every p
 | `S3_BUCKET_NAME` | `saa-c03-practice-60270d19` |
 
 To set up: go to your GitHub repo > Settings > Secrets and variables > Actions > New repository secret, and add each of the four secrets above.
+
+---
+
+## Question Reporting
+
+Users can report problematic questions directly from the quiz screen. Reports are stored in S3 and a digest email is sent twice daily (12:00 and 16:00 Amsterdam time).
+
+**Infrastructure:** SNS topic + Lambda function + EventBridge cron rules (deployed via `terraform apply`)
+
+**After deploying:** Confirm the SNS subscription email sent to the configured address. Reports won't trigger emails until the subscription is confirmed.
+
+**Report storage:** `reports/{questionId}.json` in the S3 bucket — each file contains a JSON array of report objects with question ID, timestamp, user ID, optional comment, and app version.
 
 ---
 
