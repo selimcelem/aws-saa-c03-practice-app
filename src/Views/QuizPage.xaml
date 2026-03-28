@@ -34,6 +34,16 @@
                            TextColor="{StaticResource TextPrimary}" />
                 </Border>
 
+                <!-- Report button -->
+                <Button Text="⚑ Report"
+                        Command="{Binding ReportCommand}"
+                        IsVisible="{Binding CanReport}"
+                        HorizontalOptions="End"
+                        BackgroundColor="Transparent"
+                        TextColor="{StaticResource AccentSubtle}"
+                        FontSize="12" Padding="8,4"
+                        BorderWidth="1" BorderColor="{StaticResource AccentSubtle}" />
+
                 <!-- Option buttons — BackgroundColor driven by ViewModel Color properties -->
                 <!-- Answer options — using Border+Label for reliable text wrapping -->
                 <VerticalStackLayout Spacing="10">
