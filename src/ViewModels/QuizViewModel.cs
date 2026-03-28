@@ -14,6 +14,7 @@ public partial class QuizViewModel : BaseViewModel, IDisposable
     private readonly QuestionService _questions;
     private readonly SessionDbService _db;
     private readonly AuthService _auth;
+    private readonly ReportService _report;
 
     private List<Question> _deck = new();
     private List<AnswerRecord> _answers = new();
@@ -52,12 +53,18 @@ public partial class QuizViewModel : BaseViewModel, IDisposable
     [ObservableProperty] private string _option2Text = "";
     [ObservableProperty] private string _option3Text = "";
 
+    [ObservableProperty] private bool _isQuestionReported;
+
+    public bool CanReport => !IsQuestionReported;
+
+    partial void OnIsQuestionReportedChanged(bool value) => OnPropertyChanged(nameof(CanReport));
+
     private QuizMode _mode;
     private TimeSpan _remaining;
 
-    public QuizViewModel(QuestionService questions, SessionDbService db, AuthService auth)
+    public QuizViewModel(QuestionService questions, SessionDbService db, AuthService auth, ReportService report)
     {
-        _questions = questions; _db = db; _auth = auth;
+        _questions = questions; _db = db; _auth = auth; _report = report;
     }
 
     public async Task InitialiseAsync()
@@ -93,7 +100,7 @@ public partial class QuizViewModel : BaseViewModel, IDisposable
         ShowQuestion(0);
     }
 
-    private void ShowQuestion(int index)
+    private async void ShowQuestion(int index)
     {
         var q = _deck[index];
         CurrentIndex = index;
@@ -111,6 +118,8 @@ public partial class QuizViewModel : BaseViewModel, IDisposable
         ResetOptionColours();
         ProgressText = $"Question {index + 1} of {TotalCount}";
         _questionStart = DateTime.Now;
+        IsQuestionReported = _currentSession is not null &&
+            await _db.IsReportedThisSessionAsync(q.Id, _currentSession.StartedAt);
     }
 
     [RelayCommand]
@@ -154,6 +163,47 @@ public partial class QuizViewModel : BaseViewModel, IDisposable
             "End session", "Keep going");
         if (confirm)
             await FinishSessionAsync(completed: false);
+    }
+
+    [RelayCommand]
+    private async Task ReportAsync()
+    {
+        if (_currentSession is null || CurrentIndex >= _deck.Count) return;
+        var q = _deck[CurrentIndex];
+
+        // Show report popup
+        string comment = await Shell.Current.DisplayPromptAsync(
+            "Report this question",
+            "Describe the issue (optional)",
+            accept: "Send Report",
+            cancel: "Cancel",
+            placeholder: "Describe the issue (optional)",
+            maxLength: 500);
+
+        // Cancel returns null
+        if (comment is null) return;
+
+        // Mark locally first
+        await _db.MarkAsReportedAsync(q.Id, _currentSession.StartedAt);
+        IsQuestionReported = true;
+
+        // Show confirmation
+        await Shell.Current.DisplayAlert("Thank you!", "Thank you for your report!", "Close");
+
+        // Fire-and-forget S3 upload
+        var userSub = _currentSession.UserSub;
+        var version = Microsoft.Maui.ApplicationModel.AppInfo.Current.VersionString;
+        _ = Task.Run(async () =>
+        {
+            try
+            {
+                await _report.SubmitReportAsync(q.Id, comment, userSub, version);
+            }
+            catch (Exception ex)
+            {
+                App.LogCrash("ReportService.SubmitReportAsync", ex);
+            }
+        });
     }
 
     private async Task FinishSessionAsync(bool completed)
