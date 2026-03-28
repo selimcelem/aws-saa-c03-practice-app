@@ -195,7 +195,7 @@ The signed APK will be in `bin/Release/net8.0-android/publish/`.
 - Alias: `saa-c03-practice`
 - Algorithm: RSA 2048-bit
 - Validity: 10,000 days (~27 years)
-- DN: `CN=Selim Celem, O=Personal, L=Haarlem, ST=Noord-Holland, C=NL`
+- DN: `CN=Selim Celem, O=Personal, L=Utrecht, ST=Utrecht, C=NL`
 
 ---
 

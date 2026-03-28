@@ -527,7 +527,7 @@ Phase 10 -- Release signing keystore.
   ```
   keytool -genkey -v -keystore release.keystore -alias saa-c03-practice
           -keyalg RSA -keysize 2048 -validity 10000
-          -dname "CN=Selim Celem, O=Personal, L=Haarlem, ST=Noord-Holland, C=NL"
+          -dname "CN=Selim Celem, O=Personal, L=Utrecht, ST=Utrecht, C=NL"
   ```
 - Keystore stored at `D:\Projects\release.keystore` (outside the repository)
 - `*.keystore` already in `.gitignore` -- keystore is never committed
