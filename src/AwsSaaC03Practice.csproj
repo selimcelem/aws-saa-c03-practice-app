@@ -3,7 +3,7 @@
   <PropertyGroup>
     <ApplicationTitle>AWS SAA-C03</ApplicationTitle>
     <ApplicationId>com.dev.awssaac03practice</ApplicationId>
-    <ApplicationVersion>1</ApplicationVersion>
+    <ApplicationVersion>2</ApplicationVersion>
     <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
     <!-- Windows and Android locally; Windows only on CI (avoids Android SDK requirement) -->
     <TargetFrameworks Condition="'$(CI)' != 'true'">net8.0-android34.0;net8.0-windows10.0.19041.0</TargetFrameworks>
