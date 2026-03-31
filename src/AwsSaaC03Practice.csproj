@@ -6,7 +6,7 @@
     <ApplicationVersion>1</ApplicationVersion>
     <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
     <!-- Windows and Android locally; Windows only on CI (avoids Android SDK requirement) -->
-    <TargetFrameworks Condition="'$(CI)' != 'true'">net8.0-android;net8.0-windows10.0.19041.0</TargetFrameworks>
+    <TargetFrameworks Condition="'$(CI)' != 'true'">net8.0-android35.0;net8.0-windows10.0.19041.0</TargetFrameworks>
     <TargetFrameworks Condition="'$(CI)' == 'true'">net8.0-windows10.0.19041.0</TargetFrameworks>
     <OutputType>Exe</OutputType>
     <RootNamespace>AwsSaaC03Practice</RootNamespace>
@@ -65,7 +65,7 @@
   </ItemGroup>
 
   <!-- Android-only packages -->
-  <ItemGroup Condition="'$(TargetFramework)' == 'net8.0-android'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'net8.0-android35.0'">
     <PackageReference Include="Xamarin.AndroidX.Browser" Version="1.8.0.1" />
     <!-- Pin AndroidX Collection to a single version family to prevent duplicate class errors.
          Collection.Jvm 1.4.x absorbed classes that Collection.Ktx 1.2.x contained separately. -->
