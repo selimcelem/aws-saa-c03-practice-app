@@ -6,6 +6,14 @@ A cross-platform quiz application for Windows desktop and Android that helps you
 
 ---
 
+## Download
+
+[Download the latest Android APK](https://github.com/selimcelem/aws-saa-c03-practice-app/releases/latest) directly from GitHub Releases.
+
+Enable "Install from unknown sources" on your Android device, then open the APK to install.
+
+---
+
 ## Features
 
 - 1,000 scenario-based practice questions across all 4 SAA-C03 exam domains
