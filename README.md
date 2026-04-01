@@ -14,6 +14,15 @@ Enable "Install from unknown sources" on your Android device, then open the APK 
 
 ---
 
+## Screenshots
+
+![Quiz](screenshots/Screenshot_20260327_233548.jpg)
+![Results](screenshots/Screenshot_20260327_235118.jpg)
+![Dashboard](screenshots/Screenshot_20260327_235153.jpg)
+![Category breakdown](screenshots/Screenshot_20260328_004252.jpg)
+
+---
+
 ## Features
 
 - 1,000 scenario-based practice questions across all 4 SAA-C03 exam domains
