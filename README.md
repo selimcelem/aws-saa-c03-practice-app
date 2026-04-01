@@ -16,10 +16,10 @@ Enable "Install from unknown sources" on your Android device, then open the APK 
 
 ## Screenshots
 
-![Quiz](screenshots/Screenshot_20260327_233548.jpg)
-![Results](screenshots/Screenshot_20260327_235118.jpg)
-![Dashboard](screenshots/Screenshot_20260327_235153.jpg)
-![Category breakdown](screenshots/Screenshot_20260328_004252.jpg)
+<img src="screenshots/Screenshot_20260327_233548.jpg" width="200" alt="Quiz screen">
+<img src="screenshots/Screenshot_20260327_235118.jpg" width="200" alt="Results screen">
+<img src="screenshots/Screenshot_20260327_235153.jpg" width="200" alt="Dashboard">
+<img src="screenshots/Screenshot_20260328_004252.jpg" width="200" alt="Category breakdown">
 
 ---
 
